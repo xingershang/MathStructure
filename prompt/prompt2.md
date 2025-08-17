@@ -1,0 +1,1112 @@
+你需要你帮我提取自然语言数学证明中的结构。
+
+## 结构的定义
+
+以下是结构的json定义：
+
+```
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+        "ProofStructure": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"$ref": "#/$defs/Show"},
+                    {"$ref": "#/$defs/Assume"},
+                    {"$ref": "#/$defs/Have"},
+                    {"$ref": "#/$defs/Fix"},
+                    {"$ref": "#/$defs/Find"},
+                    {"$ref": "#/$defs/Perform"},
+                    {"$ref": "#/$defs/Define"},
+                    {"$ref": "#/$defs/Hint"}
+                ]
+            }
+        }
+    },
+    "required": ["ProofStructure"],
+    "additionalProperties": False,
+    "$defs": {
+        "Show": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Show"}),
+                ("proposition", {"type": "string"}),
+                ("scope", {"$ref": "#"})
+            ]),
+            "required": ["type", "proposition", "scope"],
+            "additionalProperties": False
+        },
+        "Assume": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Assume"}),
+                ("assumption", {"type": "string"}),
+                ("scope", {"$ref": "#"})
+            ]),
+            "required": ["type", "assumption", "scope"],
+            "additionalProperties": False
+        },
+        "Have": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Have"}),
+                ("proposition", {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "default": []
+                }),
+                ("reasons", {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "default": []
+                })
+            ]),
+            "required": ["type", "proposition", "reasons"],
+            "additionalProperties": False
+        },
+        "Fix": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Fix"}),
+                ("var_list", {"type": "array", "items": {"type": "string"}}),
+                ("condition", {"type": "string"}),
+                ("scope", {"$ref": "#"})
+            ]),
+            "required": ["type", "var_list", "condition", "scope"],
+            "additionalProperties": False
+        },
+        "Find": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Find"}),
+                ("var_list", {"type": "array", "items": {"type": "string"}}),
+                ("condition", {"type": "string"}),
+                ("scope", {"$ref": "#"})
+            ]),
+            "required": ["type", "var_list", "condition", "scope"],
+            "additionalProperties": False
+        },
+        "Perform": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Perform"}),
+                ("action", {"type": "string"}),
+                ("target", {"type": "string"})
+            ]),
+            "required": ["type", "action", "target"],
+            "additionalProperties": False
+        },
+        "Define": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Define"}),
+                ("symbol", {"type": "string"}),
+                ("meaning", {"type": "string"})
+            ]),
+            "required": ["type", "symbol", "meaning"],
+            "additionalProperties": False
+        },
+        "Hint": {
+            "type": "object",
+            "properties": OrderedDict([
+                ("type", {"type": "string", "const": "Hint"}),
+                ("comment", {"type": "string"})
+            ]),
+            "required": ["type", "comment"],
+            "additionalProperties": False
+        }
+    }
+}
+```
+
+## 结构提取要求
+
+节点类型的含义：
+
+[Show: "P"] - 下面证明命题P (P可以是列表)
+    常见的可以识别为Show的自然语言表达：
+        "下面证明集合S不为空"；
+        "我们来证明集合S⊆T"
+[Assume: "P"] - 假设命题P成立 (P可以是列表)
+    常见的可以识别为Assume的自然语言表达：
+        "假设a+b>1"
+        "假设a+b>1不成立"
+        "不妨设x>0"
+[Have: P by Q] - 根据一列“定理/已得到的命题/自然语言提示”Q，得出命题P成立 (P,Q可以是列表)
+    常见的可以识别为Have的自然语言表达：
+        "根据逆的唯一性，我们有A=B"
+        "我们有x^2>0"
+        "因此f(x)=g(x)"
+[Fix: {var_list} such that "P"] - 取定变量列表var_list，这些变量满足命题P (P可以是列表)
+    常见的可以识别为Fix的自然语言表达：
+        "给定任意X ∈ A"
+        "取 x ∈ R"
+[Find: {var_list} such that "P"] - 求解满足命题P的变量列表 (P可以是列表)
+    常见的可以识别为Find的自然语言表达：
+        "求满足x^2+2x+1=0的x"；
+        "我们要找出满足x>y的f(x)的取值范围"；
+        "求$\int x^2 dx$"（此时P为空）
+[Perform: "A" to "B"] - 做A动作，动作的对象是B (A,B可以是列表)
+    常见的可以识别为Perform的自然语言表达：
+        "我们对x^2+2x+1做因式分解"
+        "对等式f(x)=g(x)两边同时求导"
+[Define: "A" as "B"] - 定义一个“符号/概念”A，其含义是B (A,B不能是列表)
+    常见的可以识别为Define的自然语言表达：
+        "我们用符号a ⊆ b来表示∀x, (x∈a) -> (x∈b)"
+        "令f(x):=x^2"
+[Hint: "string"] - 一个自然语言注释
+    常见的可以识别为Hint的自然语言表达：
+        "我们按照...的思路来证明"
+        "于是我们可以得到答案了"
+        "让我们看看接下来会发生什么"
+
+注意事项：
+
+1. 按照自然语言的顺序逐句转化，不要擅自增加或删减自然语言表达
+2. 需用Fix提取新引入的变量
+3. 需补充必要的逻辑关系，例如“只需证”、“要使得...只需...”、“等价于”等表述中的逻辑关系需显式写出
+
+## 样例
+
+### 样例 1
+
+输入：
+
+If $A \subseteq B$, then $\mathcal{P}(A) \subseteq \mathcal{P}(B)$:
+
+Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. Since $A \subseteq B$, it follows that $X \subseteq B$. Therefore, $X \in \mathcal{P}(B)$. Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$.
+
+输出：
+
+{
+  "ProofStructure": [
+    {
+      "type": "Show",
+      "proposition": "If $A \\subseteq B$, then $\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$",
+      "scope": [
+        {
+          "type": "Fix",
+          "var_list": ["X"],
+          "condition": "$X \\in \\mathcal{P}(A)$",
+          "scope": [
+            {
+              "type": "Have",
+              "proposition": "$X \\subseteq A$",
+              "reasons": ["definition of power set"]
+            },
+            {
+              "type": "Have",
+              "proposition": "$X \\subseteq B$",
+              "reasons": ["$A \\subseteq B$"]
+            },
+            {
+              "type": "Have",
+              "proposition": "$X \\in \\mathcal{P}(B)$",
+              "reasons": []
+            }
+          ]
+        },
+        {
+          "type": "Have",
+          "proposition": "every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$",
+          "reasons": []
+        },
+        {
+          "type": "Have",
+          "proposition": "$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$",
+          "reasons": []
+        }
+      ]
+    }
+  ]
+}
+
+> 在接下来的样例中，我不再完整写出json作为示例，而是写一个简洁的图示。我用缩进来表示scope。
+
+### 样例 2
+
+输入：
+
+下面我们对$x^3-4x^2+2x+1$做因式分解。观察到$x=1$是$\text{原式}=0$的一个解，所以可以令$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$。有$(x-1)(x^2+ax+b)=x^3+(a-1)x^2+(b-a)x-b$。对比系数可得$a-1=-4,b-a=2,-b=1$。解得$a=-3,b=-1$。于是完成因式分解：$x^3-4x^2+2x+1=(x-1)(x^2-3x-1)$。
+
+输出：
+
+[Perform: "因式分解" to "$x^3-4x^2+2x+1$"]
+[Have: "$x=1$是$x^3-4x^2+2x+1=0$的一个解"]
+[Fix: {a,b} st "$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$"]
+  [Have: "$(x-1)(x^2+ax+b)=x^3+(a-1)x^2+(b-a)x-b$"]
+  [Have: "$a-1=-4,b-a=2,-b=1$" by "对比系数"]
+  [Have: "$a=-3,b=-1$" by "解得"]
+[Hint: "于是完成因式分解"]
+[Have: "$x^3-4x^2+2x+1=(x-1)(x^2-3x-1)$"]
+
+### 样例 3
+
+输入：
+
+$1 + 2 + \cdots  + n = \frac{n\left( {n + 1}\right) }{2}$ .
+
+证：
+我们用数学归纳法证明
+当 $n = 1$ 时，等式成立.
+假设$n=k$时等式成立
+则$n=k+1$时有
+$1 + 2 + \cdots  + k + \left( {k + 1}\right)  = \frac{k\left( {k + 1}\right) }{2} + k + 1 = \frac{\left( {k + 1}\right) \left\lbrack  {\left( {k + 1}\right)  + 1}\right\rbrack  }{2}$
+所以$n = k+ 1$ 时等式也成立.
+于是,对于任何正整数 $n$ ,有 $1 + 2 + \cdots  + n = \frac{n\left( {n + 1}\right) }{2}$ .
+
+输出：
+
+[Show: "$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$"]
+  [Hint: "我们用数学归纳法证明"]
+  [Have: "当$n=1$时$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$成立"]
+  [Assume: "$n=k$时$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$成立"]
+    [Have: "$1 + 2 + \cdots  + k + \left( {k + 1}\right)  = \frac{k\left( {k + 1}\right) }{2} + k + 1 = \frac{\left( {k + 1}\right) \left\lbrack  {\left( {k + 1}\right)  + 1}\right\rbrack  }{2}$"]
+    [Have: "$n=k+1$时$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$成立"]
+  [Have: "对于任何正整数$n$,有$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$"]
+
+### 样例 4
+
+输入：
+
+$\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1\;\left( {a > 0}\right)$ .
+
+提示 分别就 $a = 1,a > 1$ 及 $0 < a < 1$ 三种情形加以证明.
+
+证 (1) 当 $a = 1$ 时,等式显然成立;
+
+(2)当 $a > 1$ 时,因为 ${\left( 1 + \varepsilon \right) }^{n} > 1 + {n\varepsilon }\left( {n > 1,\varepsilon  > 0}\right)$ ,则当 $n$ 充分大后,可使 $1 + {n\varepsilon } > a$ ,即 ${\left( 1 + \varepsilon \right) }^{n} > a$ . 事实上,只要取 $N = \left\lceil  \frac{a - 1}{\varepsilon }\right\rceil$ ,当 $n > N$ 时,就可保证这点. 所以, $1 < \sqrt[n]{a} < 1 + \varepsilon$ ,于是,当 $n > N$ 时, $\left| {\sqrt[n]{a} - 1}\right|  < \varepsilon$ ,此即 $\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1$ ;
+
+(3) 当 $0 < a < 1$ 时,则令 $a = \frac{1}{{a}^{\prime }}$ ,其中 ${a}^{\prime } > 1$ . 于是,当 $n \rightarrow  \infty$ 时, $\sqrt[n]{a} = \frac{1}{\sqrt[n]{{a}^{\prime }}} \rightarrow  1$ . 总之,当 $a > 0$ 时, $\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1$ .
+
+输出：
+
+[Show: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1\;\left( {a > 0}\right)$"]
+  [Hint: "分别就$a=1,a>1$及$0<a<1$三种情形加以证明"]
+  [Fix: {a} st "$a=1$"]
+    [Have: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1$成立"]
+  [Fix: {a} st "$a>1$"]
+    [Have: "${\left( 1 + \varepsilon \right) }^{n} > 1 + {n\varepsilon }\left( {n > 1,\varepsilon  > 0}\right)$"]
+    [Have: "当 $n$ 充分大时, $1 + {n\varepsilon } > a$"]
+    [Have: "当 $n$ 充分大时, ${\left( 1 + \varepsilon \right) }^{n} > a$"]
+    [Define: {N} as "$N = \left\lceil  \frac{a - 1}{\varepsilon }\right\rceil$"]
+    [Have: "当$n > N$时${\left( 1 + \varepsilon \right) }^{n} > a$"]
+    [Have: "$1 < \sqrt[n]{a} < 1 + \varepsilon$"]
+    [Have: "当$n > N$时$\left| {\sqrt[n]{a} - 1}\right|  < \varepsilon$"]
+    [Have: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1$"]
+  [Fix: {a} st "$0 < a < 1$"]
+    [Fix: {a'} st "$a = \frac{1}{{a}^{\prime }} , a'>1$"]
+      [Have: "当$n \rightarrow  \infty$时$\sqrt[n]{a} = \frac{1}{\sqrt[n]{{a}^{\prime }}} \rightarrow  1$"]
+      [Have: "当$a > 0$时$\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1$"]
+
+### 样例 5
+
+输入：
+
+假设 $f(x)$ 在 $[0,1]$ 上连续，证明: $\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$
+
+Pf:
+
+$\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
+
+令$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$, $I_2 = \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
+
+其中
+
+$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx \quad (0 \leq \xi \leq h^{1/4})$
+
+$= f(\xi) \arctan \frac{x}{h} \Big|_0^{h^{1/4}} = f(\xi) \arctan \frac{1}{h^{3/4}} \to f(0)\dfrac{\pi}{2} \quad (h \to 0^+)$
+
+$|I_2| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx(\quad \forall x\in [0,1], |f(x)|\leq M\quad)$
+
+$= M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) \to 0 \quad (h \to 0^+)$
+
+因此$h\to 0^+$时$I_1+I_2\to f(0)\dfrac{\pi}{2}$
+
+Qed.
+
+输出：
+
+[Assume: "$f(x)$ 在 $[0,1]$ 上连续"]
+  [Show: "$\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$"]
+    [Have: "$\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$"]
+      [Fix: {I1} st "$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$"]
+        [Fix: {I2} st "$I_2 = \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$"]
+          [Have: "$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$"]
+          [Have: "$\exists \xi, 0 \leq \xi \leq h^{1/4}\land \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx$"]
+          [Have: "$f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx= f(\xi) \arctan \frac{x}{h} \Big|_0^{h^{1/4}}= f(\xi) \arctan \frac{1}{h^{3/4}}$"]
+          [Have: "$h \to 0^+$时$f(\xi) \arctan \frac{1}{h^{3/4}}\to f(0)\dfrac{\pi}{2}$"]
+          [Have: "$|I_2| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right|$"]
+          [Have: "$\exists M \forall x\in [0,1], |f(x)|\leq M$ and $\left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx$"]
+          [Have: "$M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx=M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right)$"]
+          [Have: "$h \to 0^+$时$M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right)\to 0$"]
+          [Have: "$|I_2| \leq  \to 0 \quad (h \to 0^+)$"]
+          [Have: "$I_1 + I_2 \to f(0)\dfrac{\pi}{2} \quad (h \to 0^+)$"]
+
+</output_content>
+
+### 样例 6
+
+设 $|q| < 1$，证明等比数列  $x_n=q^{n-1}$ 的极限是 0。
+证  
+$\forall \varepsilon > 0$（设 $\varepsilon < 1$），因为  $|x_n - 0| = |q^{n-1} - 0| = |q|^{n-1},$ 
+要使 $|x_n - 0| < \varepsilon$，只要  $|q|^{n-1} < \varepsilon.$
+取自然对数，得  $(n-1) \ln |q| < \ln \varepsilon.$
+因 $|q| < 1$，$\ln |q| < 0$，故  $n > 1 + \frac{\ln \varepsilon}{\ln |q|}.$
+取  $N = \left\lceil 1 + \frac{\ln \varepsilon}{\ln |q|} \right\rceil,$
+则当 $n > N$ 时，就有  $|q^{n-1} - 0| < \varepsilon,$
+即  $\lim_{n \to \infty} q^{n-1} = 0.$
+
+输出：
+
+[Assume: "$|q| < 1$"]
+  [Show: "$\lim_{n \to \infty} q^{n-1} = 0$"]
+    [Fix: {ε} st "$ε > 0$ and $ε < 1$"]
+      [Have: "$|x_n - 0| = |q^{n-1} - 0| = |q|^{n-1}$"]
+      [Have: "要使$|x_n - 0| < ε$，只要$|q|^{n-1} < ε$"]
+      [Have: "要使$|x_n - 0| < ε$，只要$(n-1) \ln |q| < \ln ε$" by "取自然对数"]
+      [Have: "要使$|x_n - 0| < ε$，只要$n > 1 + \frac{\ln ε}{\ln |q|}$" by "$|q| < 1$ and $\ln |q| < 0$"]
+      [Fix: {N} st "$N = \left\lceil 1 + \frac{\ln ε}{\ln |q|} \right\rceil$"]
+        [Have: "当$n > N$时，$|q^{n-1} - 0| < ε$"]
+    [Have: "$\lim_{n \to \infty} q^{n-1} = 0$"]
+
+### 样例 7
+
+输入：
+
+【819】求对于所有实数 $x$ 和 $y$ 都满足方程组:
+
+$$
+f\left( {x + y}\right)  = f\left( x\right) f\left( y\right)  - g\left( x\right) g\left( y\right) ,
+$$
+
+$$
+g\left( {x + y}\right)  = f\left( x\right) g\left( y\right)  + f\left( y\right) g\left( x\right) ,
+$$
+
+以及规范条件
+
+$$
+f\left( 0\right)  = 1\text{ 和 }g\left( 0\right)  = 0
+$$
+
+的所有的有界连续函数 $f\left( x\right)$ 和 $g\left( x\right) \left( {-\infty  < x <  + \infty }\right)$ .
+
+提示 考虑函数 $F\left( x\right)  = {f}^{2}\left( x\right)  + {g}^{2}\left( x\right)$ .
+
+解 考虑函数 $F\left( x\right)  = {f}^{2}\left( x\right)  + {g}^{2}\left( x\right)$ ,则
+
+$$
+F\left( {x + y}\right)  = {f}^{2}\left( {x + y}\right)  + {g}^{2}\left( {x + y}\right)
+$$
+
+$$
+= {\left\lbrack  f\left( x\right) f\left( y\right)  - g\left( x\right) g\left( y\right) \right\rbrack  }^{2} + {\left\lbrack  f\left( x\right) g\left( y\right)  + f\left( y\right) g\left( x\right) \right\rbrack  }^{2} = F\left( x\right) F\left( y\right) ,
+$$
+
+由于 $F\left( 0\right)  = 1$ 及 $F\left( x\right)  ≢ 0$ ,故
+
+$$
+F\left( x\right)  = {a}^{x}\;\left( {-\infty  < x <  + \infty }\right) ,
+$$
+
+式中 $a = F\left( 1\right)$ 为正的常数 ${}^{*)}$ .
+
+由于 $f\left( x\right)$ 及 $g\left( x\right)$ 有界,故只能有 $a = 1$ . 因此,对于所有的实数 $x$ ,有 ${f}^{2}\left( x\right)  + {g}^{2}\left( x\right)  = 1$ . 因为
+
+$$
+0 = g\left( 0\right)  = g\left( {x - x}\right)  = f\left( x\right) g\left( {-x}\right)  + f\left( {-x}\right) g\left( x\right)
+$$
+
+及
+
+$$
+1 = f\left( 0\right)  = f\left( {x - x}\right)  = f\left( x\right) f\left( {-x}\right)  - g\left( {-x}\right) g\left( x\right) .
+$$
+
+上面二式分别乘以 $g\left( {-x}\right)$ 及 $f\left( {-x}\right)$ ,然后相加,得
+
+$$
+f\left( {-x}\right)  = f\left( x\right) \left\lbrack  {{f}^{2}\left( {-x}\right)  + {g}^{2}\left( {-x}\right) }\right\rbrack   = f\left( x\right) ;
+$$
+
+如果上面二式分别乘以 $f\left( {-x}\right)$ 及 $g\left( {-x}\right)$ ,然后相减,得
+
+$$
+g\left( {-x}\right)  =  - g\left( x\right) \left\lbrack  {{g}^{2}\left( {-x}\right)  + {f}^{2}\left( {-x}\right) }\right\rbrack   =  - g\left( x\right) .
+$$
+
+从而可得
+
+$$
+f\left( {x + y}\right)  + f\left( {x - y}\right)  = f\left( x\right) f\left( y\right)  - g\left( x\right) g\left( y\right)  + f\left( x\right) f\left( {-y}\right)  - g\left( x\right) g\left( {-y}\right)  = {2f}\left( x\right) f\left( y\right) .
+$$
+
+于是,考虑到 $f\left( x\right)$ 的有界性,可得
+
+$$
+f\left( x\right)  = \cos a{x}^{* * )},
+$$
+
+再由 ${f}^{2}\left( x\right)  + {g}^{2}\left( x\right)  = 1$ 可得
+
+$$
+g\left( x\right)  =  \pm  \sin {ax}.
+$$
+
+输出：
+
+[Find: {f,g} st {"对于所有实数 $x$ 和 $y$ 都满足方程组 $f(x + y) = f(x) f(y) - g(x) g(y)$, $g(x + y) = f(x) g(y) + f(y) g(x)$"; "规范条件$f(0) = 1$, $g(0) = 0$"; "$f(x), g(x)$ 连续且有界"}]
+    [Hint: "提示：考虑 $F(x) = f^2(x) + g^2(x)$"]
+    [Define: "F" as "$F(x) = f^2(x) + g^2(x)$"]
+    [Have: "$F(x+y) = f^2(x+y) + g^2(x+y) ={\left\lbrack  f\left( x\right) f\left( y\right)  - g\left( x\right) g\left( y\right) \right\rbrack  }^{2} + {\left\lbrack  f\left( x\right) g\left( y\right)  + f\left( y\right) g\left( x\right) \right\rbrack  }^{2} = F\left( x\right) F\left( y\right)$"]
+    [Have: "$F(x) = a^x$，其中$a = F(1) > 0$" by ["$F(0)=1$" ; "$F(x) \not\equiv 0$"]]
+    [Have: "a = 1" by "$f(x)$ 和 $g(x)$ 有界"]
+    [Have: "$f^2(x) + g^2(x) = 1$ 对所有实数 $x$ 成立"]
+    [Have: "$0=g(0)=g(x-x) = f(x)g(-x) + f(-x)g(x)$"]
+    [Have: "$1=f(0)=f(x-x) = f(x)f(-x) - g(-x)g(x)$"]
+    [Have: "$f(-x) = f(x)[f^2(-x) + g^2(-x)] = f(x)$" by "上面两式分别乘以$g(-x)$和$f(-x)$，然后相加"]
+    [Have: "$g(-x) = -g(x)[g^2(-x) + f^2(-x)] = -g(x)$" by "上面两式分别乘以$f(-x)$和$g(-x)$，然后相减"]
+    [Have: "$f(x+y)+f(x-y)=f(x)f(y) - g(x)g(y) + f(x)f(-y) - g(x)g(-y) = 2f(x)f(y)$"]
+    [Have: "$f(x) = \cos a x$" by "$f(x)$的有界性"]
+    [Have: "$g(x) = \pm \sin a x$" by "$f^2(x) + g^2(x) = 1$"]
+
+### 样例 8
+
+输入：
+
+设 $\{x_n\}$ 是实数上的数列，满足 $\forall n \geq 1, x_n = n^{(-1)^n}$。请证明：$\{x_n\}$ 无界，且$\lim\limits_{n \to \infty} x_n=\infty$不成立。
+
+Pf:
+
+首先，我们有对于任意正整数 $k$，$x_{2k} = 2k$, $x_{2k-1}=\frac{1}{2k-1}$
+
+(1) 下面证明 $\{x_n\}$ 无界：
+
+考虑$\{x_n\}$的子列 $y_k=x_{2k}$。下面证明$\{y_n\}$无界。对于任意给定的 $M > 0$，存在 $k_0 = \lceil M/2 \rceil$，使得当 $k \geq k_0$ 时，$y_k=x_{2k} = 2k \geq 2k_0 \geq M$。因此，$\{y_n\}$ 无界。
+
+因为$\{y_n\}$无界，因此 $\{x_n\}$ 无界。
+
+(2) 证明 $\lim\limits_{n \to \infty} x_n=\infty$ 不成立：
+
+考虑两个子列$y_k=x_{2k}$与$z_k=x_{2k-1}$，我们有 $\lim\limits_{k \to \infty} y_k = \lim\limits_{k \to \infty} x_{2k}=\lim\limits_{k \to \infty} 2k=+\infty$；又有 $\lim\limits_{k \to \infty} z_k=\lim\limits_{k \to \infty}x_{2k-1} =\lim\limits_{k \to \infty} \frac{1}{2k-1}= 0$。所以$\lim\limits_{n \to \infty} x_n=\infty$ 不成立。
+
+Qed.
+
+输出：
+
+[Assume: "$\{x_n\}$ 是实数上的数列，满足 $\forall n \geq 1, x_n = n^{(-1)^n}$"]
+    [Show: {"$\{x_n\}$ 无界"; "$\lim\limits_{n \to \infty} x_n=\infty$ 不成立"}]
+        [Have: "对于任意正整数 $k$，$x_{2k} = 2k$, $x_{2k-1}=\frac{1}{2k-1}$"]
+        [Show: "$\{x_n\}$ 无界"]
+          [Define: "$\{x_n\}$的子列$y$" as "$y_k=x_{2k}$。"]
+          [Show: "$\{y_n\}$无界"]
+            [Have: "对于任意给定的 $M > 0$，存在 $k_0 = \lceil M/2 \rceil$，使得当 $k \geq k_0$ 时，$y_k=x_{2k} = 2k \geq 2k_0 \geq M$"]
+            [Have: "$\{y_n\}$ 无界"]
+          [Have: "$\{x_n\}$ 无界" by "$\{y_n\}$无界"]
+        [Show: "$\lim\limits_{n \to \infty} x_n=\infty$ 不成立"]
+          [Define: "两个子列y,z" as "$y_k=x_{2k}$与$z_k=x_{2k-1}$"]
+          [Have: "$\lim\limits_{k \to \infty} y_k = \lim\limits_{k \to \infty} x_{2k}=\lim\limits_{k \to \infty} 2k=+\infty$"]
+          [Have: "$\lim\limits_{k \to \infty} z_k=\lim\limits_{k \to \infty}x_{2k-1} =\lim\limits_{k \to \infty} \frac{1}{2k-1}= 0$"]
+          [Have: "$\lim\limits_{n \to \infty} x_n=\infty$ 不成立"]
+
+### 样例 9
+
+输入：
+
+**Theorem 4** (Schröder-Bernstein's Theorem). If $f: A \to B$ and $g: B \to A$ are both injections, then there is a bijection from $A$ into $B$.
+
+**Proof.**
+
+Suppose $f: A \to B, g: B \to A$ are injections. Let’s construct the bijection $h$ from $A$ into $B$.
+
+$$
+C_0 = \{ a \in A \mid \forall b \in B. \, g(b) \neq a \}
+$$
+
+$$
+D_0 = \{ f(a) \mid a \in C_0 \}
+$$
+
+$$
+C_1 = \{ a \in A \setminus C_0 \mid \forall b \in B \setminus D_0. \, g(b) \neq a \}. \, \text{We can prove that} \, C_1 = \{ g(b) \mid b \in D_0 \} \, \text{also}.
+$$
+
+$$
+D_1 = \{ f(a) \mid a \in C_1 \}
+$$
+
+So that we can define
+
+$$
+C_{n+1} = \{ a \in A \setminus \bigcup_{i=0}^{n} C_i \mid \forall b \in B \setminus \bigcup_{i=0}^{n} D_i. \, g(b) \neq a \}
+$$
+
+$$
+D_{n+1} = \{ f(a) \mid a \in C_{n+1} \}
+$$
+
+And similarly, we can prove that $C_{n+1} = \{ g(b) \mid b \in D_n \}$.
+
+In the end, we can define
+
+$$
+h(a) := \begin{cases} 
+f(a), & \text{if} \, a \in \bigcup_{i=0}^{\infty} C_i \\
+b, \, \text{such that} \, g(b) = a, & \text{if} \, a \in A \setminus \bigcup_{i=0}^{\infty} C_i 
+\end{cases}
+$$
+
+Obviously, the $f$ part is a bijection from $C_n$ into $D_n$.
+
+So we just need to prove that the $g$ part is a bijection from $D := B \setminus \bigcup_{i=0}^{\infty} D_i$ into $C := A \setminus \bigcup_{i=0}^{\infty} C_i$.
+
+Thus, it is suffice to prove: (1) $\forall d \in D. \, \exists c \in C. \, g(d) = c$ and (2) $\forall c \in C. \, \exists d \in D. \, g(d) = c$.
+
+- $\forall d \in D. \exists c \in C. g(d) = c$.
+
+  As $g$ is an injection from $B$ into $A$, $\exists c \in A, g(d) = c$.
+
+  Let prove $c \notin C_n$.
+
+  Suppose $c \in C_n$.
+
+  - $n = 0$, Obviously contradiction.
+  - $n = m + 1$, $c \in C_{m+1} \Rightarrow d \in D_m$, contradiction.
+
+  Therefore, $c \in C$.
+
+- $\forall c \in C. \exists d \in D. g(d) = c$.
+
+  $\exists d \in B. g(d) = c$. Otherwise, $c \in C_0$, contradiction.
+
+  Let’s prove $d \notin D_n$.
+
+  Suppose $d \in D_n$, so that $c \in C_{n+1}$, contradiction.
+
+  Therefore, $d \in D$.
+
+Qed.
+
+输出：
+
+[Assume: {"$f: A \to B$ injection"; "$g: B \to A$ injection"}]
+    [Show: "There exists a bijection from $A$ to $B$"]
+        [Hint: "Let’s construct the bijection $h$ from $A$ into $B$."]
+        [Define: "$C_0$" as "C_0 = \{ a \in A \mid \forall b \in B.\, g(b) \neq a \}$"]
+        [Define: "$D_0$" as "$D_0 = \{ f(a) \mid a \in C_0 \}$"]
+        [Define: "$C_1$" as "$C_1 = \{ a \in A \setminus C_0 \mid \forall b \in B \setminus D_0.\, g(b) \neq a \}$"]
+        [Have: "$C_1 = \{ g(b) \mid b \in D_0 \}$" by "We can prove"]
+        [Define: "$D_1$" as "$D_1 = \{ f(a) \mid a \in C_1 \}$"]
+        [Define: "$C_{n+1}$" as "$C_{n+1} = \{ a \in A \setminus \bigcup_{i=0}^{n} C_i \mid \forall b \in B \setminus \bigcup_{i=0}^{n} D_i.\, g(b) \neq a \}$"]
+        [Define: "$D_{n+1}$" as "$D_{n+1} = \{ f(a) \mid a \in C_{n+1} \}$"]
+        [Have: "$C_{n+1} = \{g(b) \mid b \in D_n \}$" by "Similarly, we can prove that"]
+        [Define: "$h(a)$" as "$h(a) := \begin{cases} f(a), & \text{if} \, a \in \bigcup_{i=0}^{\infty} C_i \\ b, \, \text{such that}\, g(b) = a, & \text{if} \, a \in A \setminus \bigcup_{i=0}^{\infty} C_i \end{cases}$"]
+        [Have: "The $f$ part is a bijection from $C_n$ into $D_n$."]
+        [Have: "It's suffice to prove that the $g$ part is a bijection from $D := B \setminus \bigcup_{i=0}^{\infty} D_i$ into $C := A \setminus \bigcup_{i=0}^{\infty} C_i$."]
+        [Have: "It is suffice to prove: (1) $\forall d \in D.\, \exists c \in C.\, g(d) = c$ and (2) $\forall c \in C.\, \exists d \in D.\, g(d) = c$."]
+        [Show: "$\forall d \in D.\, \exists c \in C.\, g(d) = c$"]
+            [Have: "$\forall d \in D. \exists c \in C. g(d) = c$"]
+            [Have: "$\exists c \in A, g(d) = c$" by "$g$ is an injection from $B$ into $A$"]
+            [Show: "$c \notin C_n$"]
+                [Assume: "$c \in C_n$"]
+                    [Assume: "$n = 0$"]
+                        [Have: "contradiction" by "Obviously"]
+                    [Assume: "$n = m+1$"]
+                        [Have: "$c \in C_{m+1} \Rightarrow d \in D_m$"]
+                        [Have: "contradiction"]
+                [Have: "$c \in C$"]
+        [Show: "$\forall c \in C.\, \exists d \in D.\, g(d) = c$"]
+            [Have: "$\forall c \in C. \exists d \in D. g(d) = c$"]
+            [Have: "$\exists d \in B. g(d) = c$" by "Otherwise, $c \in C_0$, contradiction."]
+            [Show: "$d \notin D_n$"]
+                [Assume: "$d \notin D_n$"]
+                    [Have: "$c \in C_{n+1}$"]
+                    [Have: "contradiction"]
+                [Have: "$d \in D$"]
+
+--------------------------------------------------
+
+### 样例 10
+
+输入：
+
+求$\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} \, dx$
+
+先将被积函数分解成简单分式之和。设：
+$\displaystyle\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}.$
+
+将右边通分后，两边的分子应该相等，所以：
+$4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 +$
+$C(x+1)(x-2)(x-1) + D(x+1)(x-2).$
+令 $x = -1$，得到 $A = 1$；
+令 $x = 2$，得到 $B = -2$；
+令 $x = 1$，得到 $D = -1$；
+两边求导后再令 $x = 1$，得到 $C = 5$，
+于是：
+$\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} \, dx = \int \left[ \frac{1}{x+1} - \frac{2}{x-2} + \frac{5}{x-1} - \frac{1}{(x-1)^2} \right] \, dx$
+计算得：
+$$
+= \ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C.
+$$
+
+输出：
+
+[Find: "\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} \, dx" such that []]
+    [Perform: "将被积函数分解成简单分式之和" to "$\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}$"]
+    [Fix: {A,B,C,D} such that "$\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}$"]
+        [Have: "$4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 + C(x+1)(x-2)(x-1) + D(x+1)(x-2)$" by "将右边通分后，两边的分子应该相等"]
+        [Have: "$A = 1$" by "令$x=-1$"]
+        [Have: "$B = -2$" by "令$x=2$"]
+        [Have: "$D = -1$" by "令$x=1$"]
+        [Have: "$C = 5$" by "两边求导后再令$x=1$"]
+    [Have: "$\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} \, dx = \int \left[ \frac{1}{x+1} - \frac{2}{x-2} + \frac{5}{x-1} - \frac{1}{(x-1)^2} \right] \, dx$"]
+    [Have: "$\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} \, dx = = \ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C$"]
+
+--------------------------------------------------
+
+### 样例 11
+
+输入：
+
+求 $\int x \ln x \, dx$.
+
+解：
+
+设 $u = \ln x$, $dv = x \, dx$, 则 $\int x \ln x \, dx = \int \ln x \, d \frac{x^2}{2} = \frac{x^2}{2} \ln x - \int \frac{x^2}{2} d(\ln x)$
+$= \frac{x^2}{2} \ln x - \frac{1}{2} \int x \, dx = \frac{x^2}{2} \ln x - \frac{x^2}{4} + C$
+
+输出：
+
+[Find: "$\int x \ln x \, dx$" such that []]
+    [Define: "u" as "u = \ln x"]
+    [Define: "v" as "dv = x \, dx"]
+    [Have: "\int x \ln x \, dx = \int \ln x \, d \frac{x^2}{2} = \frac{x^2}{2} \ln x - \int \frac{x^2}{2} d(\ln x)= \frac{x^2}{2} \ln x - \frac{1}{2} \int x \, dx = \frac{x^2}{2} \ln x - \frac{x^2}{4} + C"]
+
+--------------------------------------------------
+
+### 样例 12
+
+输入：
+
+**例2** 计算反常积分 $\int_0^{+\infty} te^{-pt} dt$，其中 $p$ 是常数，且 $p > 0$。
+
+**解**
+
+$\int_0^{+\infty} te^{-pt} dt = \left[ \int te^{-pt} dt \right]_0^{+\infty} = \left[ -\frac{1}{p} \int t d(e^{-pt}) \right]_0^{+\infty}$
+
+$= \left[ -\frac{t}{p} e^{-pt} + \frac{1}{p} \int e^{-pt} dt \right]_0^{+\infty}$
+
+$= \left[ -\frac{t}{p} e^{-pt} \right]_0^{+\infty} - \left[ \frac{1}{p^2} e^{-pt} \right]_0^{+\infty}$
+
+$= -\frac{1}{p} \lim_{t \to +\infty} te^{-pt} - 0 - \frac{1}{p^2} (0 - 1) = \frac{1}{p^2}$
+
+注意，上式中的极限 $\lim_{t \to +\infty} te^{-pt}$ 是未定式，可用洛必达法则确定。
+
+输出：
+
+[Fix: {p} such that "$p > 0$"]
+[Find: "反常积分$\int_0^{+\infty} te^{-pt} dt$"]
+    [Have: "$\int_0^{+\infty} te^{-pt} dt = \left[ \int te^{-pt} dt \right]_0^{+\infty} = \left[ -\frac{1}{p} \int t d(e^{-pt}) \right]_0^{+\infty}$= \left[ -\frac{t}{p} e^{-pt} + \frac{1}{p} \int e^{-pt} dt \right]_0^{+\infty}= \left[ -\frac{t}{p} e^{-pt} \right]_0^{+\infty} - \left[ \frac{1}{p^2} e^{-pt} \right]_0^{+\infty}= -\frac{1}{p} \lim_{t \to +\infty} te^{-pt} - 0 - \frac{1}{p^2} (0 - 1) = \frac{1}{p^2}"]
+    [Hint: "注意，上式中的极限 $\lim_{t \to +\infty} te^{-pt}$ 是未定式，可用洛必达法则确定。"]
+
+--------------------------------------------------
+
+### 样例 13
+
+输入：
+
+**例1** 求微分方程$\frac{dy}{dx} = 2xy$的通解。
+
+**解** 方程是可分离变量的，分离变量后得$\frac{dy}{y} = 2x dx,$
+
+两端积分$\int \frac{dy}{y} = \int 2x dx,$
+
+得$\ln |y| = x^2 + C_1,$
+
+从而$y = \pm e^{x^2 + C_1} = \pm e^{C_1} e^{x^2}.$
+
+因 $\pm e^{C_1}$ 是任意非零常数，又 $y=0$ 也是方程的解，故得通解$y = C e^{x^2}.$
+
+输出：
+
+[Find: "y" such that "y是微分方程$\frac{dy}{dx} = 2xy$的通解"]
+    [Hint: "方程是可分离变量的"]
+    [Have: "$\frac{dy}{y} = 2x dx$" by "分离变量"]
+    [Have: "\int \frac{dy}{y} = \int 2x dx" by "两端积分"]
+    [Have: "$\ln |y| = x^2 + C_1$"]
+    [Have: "$y = \pm e^{x^2 + C_1} = \pm e^{C_1} e^{x^2}.$"]
+[Have: "$\pm e^{C_1}$ 是任意非零常数"]
+[Have: "$y=0$ 也是原方程的解"]
+[Have: "通解$y = C e^{x^2}$" by "$\pm e^{C_1} 是任意非零常数"; "$y=0$ 也是原方程的解"]
+
+--------------------------------------------------
+
+### 样例 14
+
+输入：
+
+对于正实数数列$\{x_n\}$和任意正整数$n$，请证明：
+
+$$
+\prod\limits_{i=1}^{n}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{n}{x}_{i},
+$$
+
+Pf:
+
+我们使用数学归纳法证明。
+
+归纳基础：当 $n = 1$ 时，$1+x_1=1+x_1$，成立.
+
+归纳步骤：设对于任意的正整数$k$，成立$\prod\limits_{i=1}^{k}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{k}{x}_{i}$。下面证明$\prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{k+1}{x}_{i}$。由于 $\forall 1\leq i \leq n,{x}_{i}>0$,所以, $1 + {x}_{i} > 0$。 因而,有
+
+$$
+\prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq   (1 + \sum\limits_{i=1}^{k}{x}_{i})(1+x_{k+1})
+$$
+
+$$
+=(1 + \sum\limits_{i=1}^{k+1}{x}_{i})+\sum\limits_{i=1}^{k}(x_i x_{k+1})
+$$
+
+由于 $\forall 1\leq i,j \leq n,{x}_{i}{x}_{j} \geq  0$。所以,
+
+$$
+\prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq 1 + \sum\limits_{i=1}^{k+1}{x}_{i}
+$$
+
+归纳证明结束。
+
+于是,对于任何正整数 $n$ ,有
+
+所以
+
+$$
+\prod\limits_{i=1}^{n}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{n}{x}_{i},
+$$
+
+Qed.
+
+输出：
+
+[Fix：{x,n} such that "x是正实数数列"; "n是正整数"]
+    [Show: "$\prod\limits_{i=1}^{n}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{n}{x}_{i}$"]
+        [Hint: "我们使用数学归纳法证明。"]
+        [Hint: "归纳基础"]
+        [Have: "当 $n = 1$ 时，$1+x_1=1+x_1$，成立."]
+        [Hint: "归纳步骤"]
+        [Fix: {k} such that "k是正整数"; "$\prod\limits_{i=1}^{k}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{k}{x}_{i}$"]
+            [Show: "$\prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{k+1}{x}_{i}$"]
+                [Have: "$\forall 1\leq i \leq n,1 + {x}_{i} > 0$" by "$\forall 1\leq i \leq n,{x}_{i}>0$"]
+                [Have: "$\prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq   (1 + \sum\limits_{i=1}^{k}{x}_{i})(1+x_{k+1})=(1 + \sum\limits_{i=1}^{k+1}{x}_{i})+\sum\limits_{i=1}^{k}(x_i x_{k+1})$"]
+                [Have: "$\prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq 1 + \sum\limits_{i=1}^{k+1}{x}_{i}$" by "$\forall 1\leq i,j \leq n,{x}_{i}{x}_{j} \geq  0$"]
+                [Hint: "归纳证明结束。"]
+        [Have: "对于任何正整数 $n$ ,有 $\prod\limits_{i=1}^{n}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{n}{x}_{i}$"]
+
+--------------------------------------------------
+
+### 样例 15
+
+输入：
+
+设 $\{x_n\}$是实数上的数列，满足$\forall n\geq 1,{x}_{n} = \frac{n}{n + 1}$。请证明：$\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$。
+
+Pf: 
+
+我们有 $\forall n\geq 1, \left| {{x}_{n} - 1}\right|  = \frac{1}{n + 1}$.
+
+对于任意的 $\varepsilon  > 0$ , 我们可以取$N  = \left\lbrack  \frac{1}{\varepsilon }\right\rbrack$。我们证明$\forall n>N,|x_n-1|<\varepsilon$。只需证$\frac{1}{n + 1} < \varepsilon$。只需证 $n > \frac{1}{\varepsilon } - 1$。我们有$n>\left\lbrack  \frac{1}{\varepsilon }\right\rbrack$，得证。
+
+所以, $\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$ .
+
+Qed.
+
+输出：
+
+[Fix: {x} such that "$\{x_n\}$是实数上的数列，满足$\forall n\geq 1,{x}_{n} = \frac{n}{n + 1}$"]
+    [Show: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$"]
+        [Have: "$\forall n\geq 1, \left| {{x}_{n} - 1}\right|  = \frac{1}{n + 1}$"]
+        [Fix: {ɛ} such that "$\varepsilon  > 0$"]
+            [Define: {N} as "$N  = \left\lbrack  \frac{1}{\varepsilon }\right\rbrack$"]
+            [Show: "$\forall n>N,|x_n-1|<\varepsilon$"]
+                [Have: "只需证$\frac{1}{n + 1} < \varepsilon$"]
+                [Have: "只需证 $n > \frac{1}{\varepsilon } - 1$"]
+                [Have: "$n>\left\lbrack  \frac{1}{\varepsilon }\right\rbrack$"]
+                [Hint: "得证"]
+        [Have: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$"]
+
+--------------------------------------------------
+
+### 样例 16
+
+输入：
+
+假设 $f(x)$ 在 $[0,1]$ 上连续，证明: $\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$
+
+**证 ** （拟合法）因 $\lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} dx = \frac{\pi}{2}$，故极限值可改写为
+$$
+\frac{\pi}{2} f(0) = \lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} f(0) dx.
+$$
+
+问题归结为证明：$\lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx = 0.$ 但是
+
+$$
+\int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx = \left( \int_0^\delta + \int_\delta^1 \right) \frac{h}{h^2 + x^2} [f(x) - f(0)] dx.
+$$
+
+因为 $f(x)$ 在 $x = 0$ 处连续，所以 $\forall \varepsilon > 0$，当 $\delta > 0$ 充分小时，在 $[0, \delta]$ 上，$|f(x) - f(0)| < \frac{\varepsilon}{\pi}$。从而
+
+$$
+\left| \int_0^\delta \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| \\
+\leq \int_0^\delta \frac{h|f(x)-f(0)|}{h^2 + x^2} \cdot dx \leq \frac{\varepsilon}{\pi} \cdot \int_{0}^{\delta}\frac{h}{h^2+x^2}dx \\
+= \frac{\varepsilon}{\pi} \arctan \frac{\delta}{h} \leq \frac{\varepsilon}{\pi} \cdot \frac{\pi}{2} = \frac{\varepsilon}{2}.
+$$
+
+再将 $\delta$ 固定，这时第二个积分
+
+$$
+\left| \int_\delta^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| \leq h \int_\delta^1 \frac{1}{x^2} |f(x) - f(0)| dx \equiv h \cdot M_0.
+$$
+
+故当 $0 < h < \frac{\epsilon}{2M_0}$ 时，$\left| \int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon.$ 证毕。
+
+输出：
+
+[Assume: "$f(x)$ 在 $[0,1]$ 上连续"]
+    [Show: "$\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$"]
+        [Hint: "拟合法"]
+        [Have: "$\frac{\pi}{2} f(0) = \lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} f(0) dx$" by "$\lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} dx = \frac{\pi}{2}$"]
+        [Have: "$\lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx = 0 \implies \lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$"]
+        [Show: "$\lim_{h \to 0} \int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx = 0$"]
+            [Have: "$\int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx = \left( \int_0^\delta + \int_\delta^1 \right) \frac{h}{h^2 + x^2} [f(x) - f(0)] dx$"]
+            [Have: "$\forall \varepsilon > 0$, 当 $\delta > 0$ 充分小时，在 $[0, \delta]$ 上，$|f(x) - f(0)| < \frac{\varepsilon}{\pi}$" by ""$f(x)$ 在 $x=0$ 处连续""]
+            [Have: "$\left| \int_0^\delta \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| \\ \leq \int_0^\delta \frac{h|f(x)-f(0)|}{h^2 + x^2} \cdot dx \leq \frac{\varepsilon}{\pi} \cdot \int_{0}^{\delta}\frac{h}{h^2+x^2}dx \\ = \frac{\varepsilon}{\pi} \arctan \frac{\delta}{h} \leq \frac{\varepsilon}{\pi} \cdot \frac{\pi}{2} = \frac{\varepsilon}{2}.$"]
+            [Perform: "固定" to "δ"]
+            [Have: "$\left| \int_\delta^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| \leq h \int_\delta^1 \frac{1}{x^2} |f(x) - f(0)| dx \equiv h \cdot M_0$"]
+            [Have: "当 $0 < h < \frac{\epsilon}{2M_0}$ 时，$\left| \int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| < \epsilon$"]
+
+--------------------------------------------------
+
+### 样例 17
+
+输入：
+
+【41】设 ${x}_{n} = \frac{n}{n + 1}\left( {n = 1,2,\cdots }\right)$ . 证明: $\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$
+
+证 $\left| {{x}_{n} - 1}\right|  = \frac{1}{n + 1}$ . 任给 $\varepsilon  > 0$ ,要 $\left| {{x}_{n} - 1}\right|  < \varepsilon$ ,只要 $\frac{1}{n + 1} < \varepsilon$ . 即只要 $n > \frac{1}{\varepsilon } - 1$ .
+
+可取 $N = N\left( \varepsilon \right)  = \left\lbrack  \frac{1}{\varepsilon }\right\rbrack$ ,则当 $n > N$ 时, $\left| {{x}_{n} - 1}\right|  < \varepsilon$ ,所以, $\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$ .
+
+输出：
+
+[Fix: {x} such that "{x}_{n} = \frac{n}{n + 1}\left( {n = 1,2,\cdots }\right)"]
+    [Show: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$"]
+        [Have: "$|x_n - 1| = \frac{1}{n + 1}$"]
+        [Fix: {\varepsilon} st "$\varepsilon  > 0$"]
+            [Have: "$\frac{1}{n+1} < \varepsilon \implies |x_n - 1| < \varepsilon$"]
+            [Have: "$n > \frac{1}{\varepsilon} - 1 \implies \frac{1}{n+1} < \varepsilon$"]
+            [Define: {N} as "$N = N(\varepsilon) = \left\lbrack  \frac{1}{\varepsilon }\right\rbrack$"]
+            [Have: "当$n > N$时，$|x_n - 1| < \varepsilon$"]
+        [Have: "$\lim_{n\to \infty} x_n = 1$"]
+
+--------------------------------------------------
+
+### 样例 18
+
+输入：
+
+【90】证明: 若单调数列的某一子数列收敛, 则此单调数列本身是收敛的.
+
+证 不失一般性,假设数列 $\left\{  {x}_{n}\right\}$ 单调增加,其一子数列 $\left\{  {x}_{{p}_{n}}\right\}$ 收敛于 $a$ . 则对于任给的 $\varepsilon  > 0$ ,存在正整数 $N$ ,使当 $k > N$ 时, $\left| {{x}_{{p}_{k}} - a}\right|  < \varepsilon$ ,令 ${N}^{\prime } = {p}_{N + 1}$ . 设 $n > {N}^{\prime }$ ,由于 ${p}_{1} < {p}_{2} < {p}_{3} < \cdots  \rightarrow   + \infty$ ,故必有 ${p}_{k}\left( {k > N}\right)$ 使 ${p}_{k} \leq  n < {p}_{k + 1}$ . 由上知
+
+$$
+\left| {{x}_{{p}_{k}} - a}\right|  < \varepsilon ,\;\left| {{x}_{{p}_{k + 1}} - a}\right|  < \varepsilon .
+$$
+
+而 ${x}_{{p}_{k}} \leq  {x}_{n} \leq  {x}_{{p}_{k + 1}}$ (因 ${x}_{n}$ 递增),故必 $\left| {{x}_{n} - a}\right|  < \varepsilon$ . 由此可知 $\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = a$ ,即 $\left\{  {x}_{n}\right\}$ 是收敛的.
+
+输出：
+
+[Show: "若单调数列的某一子数列收敛, 则此单调数列本身是收敛的"]  
+    [Fix: {x,a} such that "数列 $\left\{  {x}_{n}\right\}$ 单调增加,其一子数列 $\left\{  {x}_{{p}_{n}}\right\}$ 收敛于 $a$"]
+        [Fix: {ɛ} such that "$\varepsilon > 0$"]
+            [Have: "存在正整数 $N$, 使当 $k > N$ 时, $\left| x_{p_k} - a \right| < \varepsilon$"]
+            [Define: {N'} as "$N' = p_{N+1}$"]
+            [Fix: {n} st "$n > N'$"]
+                [Have: "有 $p_k (k > N)$ 使 $p_k \leq n < p_{k+1}$" by "$p_1 < p_2 < p_3 < \cdots \rightarrow +\infty$"]
+                [Have: {"$\left| x_{p_k} - a \right| < \varepsilon$"; "$\left| x_{p_{k+1}} - a \right| < \varepsilon$"} by "由上知"]
+                [Have: "$x_{p_k} \leq x_n \leq x_{p_{k+1}}$" by "$x_n$ 递增"]
+                [Have: "$\left| x_n - a \right| < \varepsilon$"]
+        [Have: {"$\lim_{n \to \infty} x_n = a$"; "$\left\{x_n\right\}$ 是收敛的"}]
+
+--------------------------------------------------
+
+### 样例 19
+
+输入：
+
+证明: 对于所有实数 $x$ 和 $y$ 都满足方程
+
+$$
+f\left( {x + y}\right)  = f\left( x\right)  + f\left( y\right)  \tag{1}
+$$
+
+的唯一的连续函数 $f\left( x\right) \left( {-\infty  < x <  + \infty }\right)$ 是线性齐次函数:
+
+$$
+f\left( x\right)  = {ax},
+$$
+
+式中 $a = f\left( 1\right)$ 是任意的常数.
+
+证 先证: 若 $f\left( x\right)$ 满足 (1),则对任何有理数 $c$ ,必有
+
+$$
+f\left( {cx}\right)  = {cf}\left( x\right) \;\left( {-\infty  < x <  + \infty }\right) .
+$$
+
+事实上,当 $m$ 与 $n$ 为正整数时,有
+
+$$
+f\left( {mx}\right)  = f\left( {x + \left( {m - 1}\right) x}\right)  = f\left( x\right)  + f\left( {\left( {m - 1}\right) x}\right)  = f\left( x\right)  + f\left( x\right)  + f\left( {\left( {m - 2}\right) x}\right)  = \cdots
+$$
+
+$$
+= f\left( x\right)  + f\left( x\right)  + \cdots  + f\left( x\right)  = {mf}\left( x\right) \text{;}
+$$
+
+$$
+f\left( x\right)  = f\left( {n \cdot  \frac{x}{n}}\right)  = {nf}\left( \frac{x}{n}\right) ,\;\text{ 故 }f\left( \frac{x}{n}\right)  = \frac{1}{n}f\left( x\right) .
+$$
+
+于是,
+
+$$
+f\left( {\frac{m}{n}x}\right)  = {mf}\left( \frac{x}{n}\right)  = \frac{m}{n}f\left( x\right) .
+$$
+
+又在 (1) 中令 $y = 0$ ,得 $f\left( x\right)  = f\left( x\right)  + f\left( 0\right)$ ,故 $f\left( 0\right)  = 0$ ; 又在 (1) 中令 $y =  - x$ ,并注意到已证的结果 $f\left( 0\right)  = 0$ , 得 $f\left( {-x}\right)  =  - f\left( x\right)$ . 于是,
+
+$$
+f\left( {-\frac{m}{n}x}\right)  =  - f\left( {\frac{m}{n}x}\right)  =  - \frac{m}{n}f\left( x\right) .
+$$
+
+故对任何有理数 $c$ ,有 $f\left( {cx}\right)  = {cf}\left( x\right) \left( {-\infty  < x <  + \infty }\right)$ . 下面,我们利用 $f\left( x\right)$ 的连续性证明对任何无理数 $c$ , 此式也成立. 事实上,设 $c$ 为无理数. 取一串有理数 ${c}_{n}$ ,使 ${c}_{n} \rightarrow  c\left( {n \rightarrow  \infty }\right)$ . 于是,
+
+$$
+f\left( {{c}_{n}x}\right)  = {c}_{n}f\left( x\right) \;\left( {n = 1,2,\cdots }\right) ,
+$$
+
+在此式两端令 $n \rightarrow  \infty$ 取极限,并注意到函数 $f$ 在点 ${cx}$ 连续,即得 $f\left( {cx}\right)  = {cf}\left( x\right)$ . 于是,对任何实数 $x$ 和 $c$ , 有 $f\left( {cx}\right)  = {cf}\left( x\right)$ . 由此可知,对任何实数 $x$ ,有
+
+$$
+f\left( x\right)  = f\left( {x \cdot  1}\right)  = {xf}\left( 1\right)  = {ax},
+$$
+
+其中 $a = f\left( 1\right)$ . 证毕.
+
+输出：
+
+[Fix: {a,f} such that "$a \in \R$"; "f是连续函数"; "对于所有实数 $x$ 和 $y$ 都满足方程$f\left( {x + y}\right)  = f\left( x\right)  + f\left( y\right)  \tag{1}$"; "a=f(1)"]
+    [Show: "f唯一"; "f是线性齐次函数f(x)=ax"]
+        [Show: "若 $f(x)$ 满足 (1),则对任何有理数 $c$ ,必有 $f(cx) = cf(x) \;(-\infty < x < +\infty)$"]
+            [Fix: {n,m} such that "$m$ 与 $n$ 为正整数"]
+                [Have: "$f\left( {mx}\right)  = f\left( {x + \left( {m - 1}\right) x}\right)  = f\left( x\right)  + f\left( {\left( {m - 1}\right) x}\right)  = f\left( x\right)  + f\left( x\right)  + f\left( {\left( {m - 2}\right) x}\right)  = \cdots = = f\left( x\right)  + f\left( x\right)  + \cdots  + f\left( x\right)  = {mf}\left( x\right) \text{;}f\left( x\right)  = f\left( {n \cdot  \frac{x}{n}}\right)  = {nf}\left( \frac{x}{n}\right)$"]
+                [Have: "$f(\frac{x}{n}) = \frac{1}{n} f(x)$"]
+                [Have: "$f(\frac{m}{n}x) = mf(\frac{x}{n}) = \frac{m}{n} f(x)$"]
+                [Have: "$f(x) = f(x) + f(0)$" by "在 (1) 中令 $y = 0$"]
+                [Have: "$f(0) = 0$"]
+                [Have: "$f(-x) = -f(x)$" by "$f(0)=0$"; "在 (1) 中令 $y = -x$"]
+                [Have: "$f(-\frac{m}{n}x) = -f(\frac{m}{n}x) = -\frac{m}{n} f(x)$"]
+                [Have: "对任何有理数 $c$ ,有 $f(cx) = cf(x)$"]
+        [Hint: "下面,我们利用 $f(x)$ 的连续性证明对任何无理数 $c$ , 此式也成立."]
+        [Show: "对任何无理数 $c$ ,必有 $f(cx) = cf(x) \;(-\infty < x < +\infty)$"]
+        [Fix: {c} such that "$c$ 为无理数"]
+            [Fix: {c_n} such that "${c}_{n} \rightarrow  c\left( {n \rightarrow  \infty }\right)$"]
+                [Have: "$f(c_n x) = c_n f(x)\;(n=1,2,\cdots)$"]
+            [Have: "$f(cx) = c f(x)$" by "在此式两端令 $n \to \infty$ 取极限"; "$f$ 在点 $cx$ 连续"]
+        [Have: "对任何实数 $x$ 和 $c$, 有 $f(cx) = c f(x)$"]
+        [Have: "对任何实数 $x$, 有 $f(x) = f(x \cdot 1) = x f(1) = ax$, 其中 $a = f(1)$"]
+
+--------------------------------------------------
+
+### 样例 20
+
+输入：
+
+Let $\{x_n\}$ and $\{y_n\}$ be numerical sequences. Prove that if $\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$, then $\lim_{n \to \infty} (x_n + y_n) = A + B$.
+
+$Proof.$
+
+Denote $|A - x_n| = \Delta(x_n)$, $|B - y_n| = \Delta(y_n)$. Then we have
+
+$$
+|(A + B) - (x_n + y_n)| \leq \Delta(x_n) + \Delta(y_n).
+$$
+
+Suppose $\varepsilon > 0$ is given. Since $\lim_{n \to \infty} x_n = A$, there exists $N'$ such that $\Delta(x_n) < \varepsilon / 2$ for all $n > N'$. Similarly, since $\lim_{n \to \infty} y_n = B$, there exists $N''$ such that $\Delta(y_n) < \varepsilon / 2$ for all $n > N''$. Then for $n > \max\{N', N''\}$ we shall have
+
+$$
+|(A + B) - (x_n + y_n)| < \varepsilon,
+$$
+
+which, by definition of limit, gives us $\lim_{n \to \infty} (x_n + y_n) = A + B$.
+
+$Qed.$
+
+输出：
+
+[Fix: {x,y,A,B} such that "$\{x_n\}$ and $\{y_n\}$ be numerical sequences"; " $\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$"]
+    [Show: "$\lim_{n \to \infty} (x_n + y_n) = A + B$"]
+        [Define: "\Delta(x_n)" as " $|A - x_n| = \Delta(x_n)$"]
+        [Define: "\Delta(y_n)" as " $|B - y_n| = \Delta(y_n)$"]
+        [Have: "$|(A + B) - (x_n + y_n)| \leq \Delta(x_n) + \Delta(y_n)$"]
+        [Fix: {ɛ} such that "$\varepsilon > 0$"]
+            [Have: "there exists $N'$ such that $\Delta(x_n) < \varepsilon / 2$ for all $n > N'$" by "$\lim_{n \to \infty} x_n = A$"]
+            [Have: "there exists $N''$ such that $\Delta(y_n) < \varepsilon / 2$ for all $n > N''$" by "Similarly, $\lim_{n \to \infty} y_n = B$"]
+            [Have: "Then for $n > \max\{N', N''\}$, $|(A + B) - (x_n + y_n)| < \varepsilon$"]
+        [Have: "$\lim_{n \to \infty} (x_n + y_n) = A + B$" by "by definition of limit"]
+
+--------------------------------------------------
+
+### 样例 21
+
+输入：
+
+$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x$ .
+
+解 $\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{1}{2}\int x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{1}{2}}\mathrm{\;d}\left( {{a}^{2} + {x}^{2}}\right)  = \frac{1}{3}\int x\mathrm{\;d}\left\lbrack  {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\right\rbrack$
+
+$$
+= \frac{1}{3}x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}} - \frac{1}{3}\int {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\mathrm{\;d}x
+$$
+
+$$
+= \frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x - \frac{1}{3}\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x.
+$$
+
+于是,得 $\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{3}{4}\left\lbrack  {\frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x}\right\rbrack$
+
+$$
+= \frac{1}{4}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{4}{\left\lbrack  \frac{x}{2}\sqrt{{a}^{2} + {x}^{2}} + \frac{{a}^{2}}{2}\ln \left( x + \sqrt{{a}^{2} + {x}^{2}}\right) \right\rbrack  } + C
+$$
+
+$$
+= \frac{x\left( {2{x}^{2} + {a}^{2}}\right) }{8}\sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{4}}{8}\ln \left( {x + \sqrt{{x}^{2} + {a}^{2}}}\right)  + C.
+$$
+
+输出：
+
+[Find: "$\int x^2 \sqrt{a^2 + x^2}\;dx$" such that []]
+    [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{1}{2}\int x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{1}{2}}\mathrm{\;d}\left( {{a}^{2} + {x}^{2}}\right)  = \frac{1}{3}\int x\mathrm{\;d}\left\lbrack  {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\right\rbrack= \frac{1}{3}x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}} - \frac{1}{3}\int {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\mathrm{\;d}x= \frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x - \frac{1}{3}\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x.$"]
+    [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{3}{4}\left\lbrack  {\frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x}\right\rbrack= \frac{1}{4}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{4}{\left\lbrack  \frac{x}{2}\sqrt{{a}^{2} + {x}^{2}} + \frac{{a}^{2}}{2}\ln \left( x + \sqrt{{a}^{2} + {x}^{2}}\right) \right\rbrack  } + C= \frac{x\left( {2{x}^{2} + {a}^{2}}\right) }{8}\sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{4}}{8}\ln \left( {x + \sqrt{{x}^{2} + {a}^{2}}}\right)  + C.$"]
+
+## 特别提醒
+
+注意观察上述样例，你会发现提取结构时，从不补充自然语言没有的表达，不自行补充reasons，不自行补充hint。结构提取必须完全以原文为准！（如果文本是英文的，你也用英文；文本是中文的，你也用中文）
+
+注意，hint是指那些没有提出具体断言、假设、定义等等的自然语言句子。例如“我们考虑使用某某方法”，或“于是我们可以得到答案了”这样的表达。对于有具体数学内容的句子，一般不识别为hint！
+
+如果要提取的自然语言文本是一个证明文本，总是先把证明目标用show写出（如果证明目标较长，可以在show前面使用assume，在assume里写证明目标所包含的前提），然后在show的scope内提取证明过程的结构。
+
