@@ -1,0 +1,51 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Assume",
+      "assumption": [
+        "$A \\subseteq B$"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "Let $X \\in \\mathcal{P}(A)$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "By definition of power set, $X \\subseteq A$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "Since $A \\subseteq B$, it follows that $X \\subseteq B$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "Therefore, $X \\in \\mathcal{P}(B)$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "Hence, every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$, so $\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"
+      ],
+      "reasons": []
+    }
+  ]
+}

@@ -34,10 +34,9 @@ def get_proof_structure_schema():
                         "type": "array",
                         "items": {"type": "string"},
                         "default": []
-                    }),
-                    ("scope", {"$ref": "#"})
+                    })
                 ]),
-                "required": ["type", "proposition", "scope"],
+                "required": ["type", "proposition"],
                 "additionalProperties": False
             },
             "Assume": {
@@ -48,10 +47,9 @@ def get_proof_structure_schema():
                         "type": "array",
                         "items": {"type": "string"},
                         "default": []
-                    }),
-                    ("scope", {"$ref": "#"})
+                    })
                 ]),
-                "required": ["type", "assumption", "scope"],
+                "required": ["type", "assumption"],
                 "additionalProperties": False
             },
             "Have": {
@@ -81,10 +79,9 @@ def get_proof_structure_schema():
                         "type": "array",
                         "items": {"type": "string"},
                         "default": []
-                    }),
-                    ("scope", {"$ref": "#"})
+                    })
                 ]),
-                "required": ["type", "var_list", "condition", "scope"],
+                "required": ["type", "var_list", "condition"],
                 "additionalProperties": False
             },
             "Find": {
@@ -96,10 +93,9 @@ def get_proof_structure_schema():
                         "type": "array",
                         "items": {"type": "string"},
                         "default": []
-                    }),
-                    ("scope", {"$ref": "#"})
+                    })
                 ]),
-                "required": ["type", "var_list", "condition", "scope"],
+                "required": ["type", "var_list", "condition"],
                 "additionalProperties": False
             },
             "Perform": {
@@ -198,17 +194,11 @@ def format_proof_structure_to_pretty(data, indent_level=0):
         
         if proof_type == "Show":
             prop = format_list(data.get("proposition", []))
-            scope = data.get("scope", {})
             result.append(f"{indent}[Show: {prop}]")
-            if scope:
-                result.append(format_proof_structure_to_pretty(scope, indent_level + 1))
                 
         elif proof_type == "Assume":
             assumption = format_list(data.get("assumption", []))
-            scope = data.get("scope", {})
             result.append(f"{indent}[Assume: {assumption}]")
-            if scope:
-                result.append(format_proof_structure_to_pretty(scope, indent_level + 1))
                 
         elif proof_type == "Have":
             prop = format_list(data.get("proposition", []))
@@ -219,20 +209,14 @@ def format_proof_structure_to_pretty(data, indent_level=0):
         elif proof_type == "Fix":
             var_list = data.get("var_list", [])
             condition = format_list(data.get("condition", []))
-            scope = data.get("scope", {})
             vars_str = ", ".join(var_list)
             result.append(f"{indent}[Fix: {{{vars_str}}} st {condition}]")
-            if scope:
-                result.append(format_proof_structure_to_pretty(scope, indent_level + 1))
                 
         elif proof_type == "Find":
             var_list = data.get("var_list", [])
             condition = format_list(data.get("condition", []))
-            scope = data.get("scope", {})
             vars_str = ", ".join(var_list)
             result.append(f"{indent}[Find: {{{vars_str}}} st {condition}]")
-            if scope:
-                result.append(format_proof_structure_to_pretty(scope, indent_level + 1))
                 
         elif proof_type == "Perform":
             action = format_list(data.get("action", []))
@@ -256,10 +240,10 @@ def format_proof_structure_to_pretty(data, indent_level=0):
     
     return "\n".join(result)
 
-with open("prompt2.md", "r", encoding="utf-8") as f:
+with open("../prompt/prompt_node_type.md", "r", encoding="utf-8") as f:
     prompt = f.read()
 
-with open("input.md", "r", encoding="utf-8") as f:
+with open("../display/informal_proof.md", "r", encoding="utf-8") as f:
     input_text = f.read()
 
 client = OpenAI(
@@ -299,13 +283,14 @@ try:
         
         pretty_output = format_proof_structure_to_pretty(ordered_output)
 
-    with open("output.json", "w", encoding="utf-8") as f:
+    with open("../display/output_node_type.json", "w", encoding="utf-8") as f:
         f.write(output)
+    print("Generated: output_node_type.json")
         
-    with open("pretty_output.md", "w", encoding="utf-8") as f:
+    with open("../display/pretty_output_node_type.md", "w", encoding="utf-8") as f:
         f.write(pretty_output)
+    print("Generated: pretty_output_node_type.md")
 
-    print("Structure Generated in output.json and pretty_output.md.")
 
 except Exception as e:
     print(f"\nError occurred: {str(e)}")

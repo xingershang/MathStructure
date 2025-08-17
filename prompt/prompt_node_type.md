@@ -1,129 +1,10 @@
-你需要你帮我提取自然语言数学证明中的结构。
+你需要你帮我提取数学自然语言的结构，用json格式输出。
 
-## 结构的定义
+## 数学结构的定义
 
-以下是结构的json定义：
+### 结构介绍
 
-```
-{
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "type": "object",
-    "properties": {
-        "ProofStructure": {
-            "type": "array",
-            "items": {
-                "anyOf": [
-                    {"$ref": "#/$defs/Show"},
-                    {"$ref": "#/$defs/Assume"},
-                    {"$ref": "#/$defs/Have"},
-                    {"$ref": "#/$defs/Fix"},
-                    {"$ref": "#/$defs/Find"},
-                    {"$ref": "#/$defs/Perform"},
-                    {"$ref": "#/$defs/Define"},
-                    {"$ref": "#/$defs/Hint"}
-                ]
-            }
-        }
-    },
-    "required": ["ProofStructure"],
-    "additionalProperties": False,
-    "$defs": {
-        "Show": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Show"}),
-                ("proposition", {"type": "string"}),
-                ("scope", {"$ref": "#"})
-            ]),
-            "required": ["type", "proposition", "scope"],
-            "additionalProperties": False
-        },
-        "Assume": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Assume"}),
-                ("assumption", {"type": "string"}),
-                ("scope", {"$ref": "#"})
-            ]),
-            "required": ["type", "assumption", "scope"],
-            "additionalProperties": False
-        },
-        "Have": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Have"}),
-                ("proposition", {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "default": []
-                }),
-                ("reasons", {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "default": []
-                })
-            ]),
-            "required": ["type", "proposition", "reasons"],
-            "additionalProperties": False
-        },
-        "Fix": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Fix"}),
-                ("var_list", {"type": "array", "items": {"type": "string"}}),
-                ("condition", {"type": "string"}),
-                ("scope", {"$ref": "#"})
-            ]),
-            "required": ["type", "var_list", "condition", "scope"],
-            "additionalProperties": False
-        },
-        "Find": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Find"}),
-                ("var_list", {"type": "array", "items": {"type": "string"}}),
-                ("condition", {"type": "string"}),
-                ("scope", {"$ref": "#"})
-            ]),
-            "required": ["type", "var_list", "condition", "scope"],
-            "additionalProperties": False
-        },
-        "Perform": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Perform"}),
-                ("action", {"type": "string"}),
-                ("target", {"type": "string"})
-            ]),
-            "required": ["type", "action", "target"],
-            "additionalProperties": False
-        },
-        "Define": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Define"}),
-                ("symbol", {"type": "string"}),
-                ("meaning", {"type": "string"})
-            ]),
-            "required": ["type", "symbol", "meaning"],
-            "additionalProperties": False
-        },
-        "Hint": {
-            "type": "object",
-            "properties": OrderedDict([
-                ("type", {"type": "string", "const": "Hint"}),
-                ("comment", {"type": "string"})
-            ]),
-            "required": ["type", "comment"],
-            "additionalProperties": False
-        }
-    }
-}
-```
-
-## 结构提取要求
-
-节点类型的含义：
+数学自然语言的结构是带有类型的节点序列。节点共有八种类型：
 
 [Show: "P"] - 下面证明命题P (P可以是列表)
     常见的可以识别为Show的自然语言表达：
@@ -133,8 +14,7 @@
     常见的可以识别为Assume的自然语言表达：
         "假设a+b>1"
         "假设a+b>1不成立"
-        "不妨设x>0"
-[Have: P by Q] - 根据一列“定理/已得到的命题/自然语言提示”Q，得出命题P成立 (P,Q可以是列表)
+[Have: "P" by "Q"] - 根据一列“定理/已得到的命题/自然语言提示”Q，得出命题P成立 (P,Q可以是列表)
     常见的可以识别为Have的自然语言表达：
         "根据逆的唯一性，我们有A=B"
         "我们有x^2>0"
@@ -162,13 +42,156 @@
         "于是我们可以得到答案了"
         "让我们看看接下来会发生什么"
 
-注意事项：
+### JSON定义
+
+以下是数学结构的json定义：
+
+```
+{
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+            "ProofStructure": {
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {"$ref": "#/$defs/Show"},
+                        {"$ref": "#/$defs/Assume"},
+                        {"$ref": "#/$defs/Have"},
+                        {"$ref": "#/$defs/Fix"},
+                        {"$ref": "#/$defs/Find"},
+                        {"$ref": "#/$defs/Perform"},
+                        {"$ref": "#/$defs/Define"},
+                        {"$ref": "#/$defs/Hint"}
+                    ]
+                }
+            }
+        },
+        "required": ["ProofStructure"],
+        "additionalProperties": False,
+        "$defs": {
+            "Show": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Show"}),
+                    ("proposition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "proposition"],
+                "additionalProperties": False
+            },
+            "Assume": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Assume"}),
+                    ("assumption", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "assumption"],
+                "additionalProperties": False
+            },
+            "Have": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Have"}),
+                    ("proposition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    }),
+                    ("reasons", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "proposition", "reasons"],
+                "additionalProperties": False
+            },
+            "Fix": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Fix"}),
+                    ("var_list", {"type": "array", "items": {"type": "string"}}),
+                    ("condition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "var_list", "condition"],
+                "additionalProperties": False
+            },
+            "Find": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Find"}),
+                    ("var_list", {"type": "array", "items": {"type": "string"}}),
+                    ("condition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "var_list", "condition"],
+                "additionalProperties": False
+            },
+            "Perform": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Perform"}),
+                    ("action", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    }),
+                    ("target", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "action", "target"],
+                "additionalProperties": False
+            },
+            "Define": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Define"}),
+                    ("symbol", {"type": "string"}),
+                    ("meaning", {"type": "string"})
+                ]),
+                "required": ["type", "symbol", "meaning"],
+                "additionalProperties": False
+            },
+            "Hint": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "Hint"}),
+                    ("comment", {"type": "string"})
+                ]),
+                "required": ["type", "comment"],
+                "additionalProperties": False
+            }
+        }
+    }
+```
+
+## 结构提取要求
 
 1. 按照自然语言的顺序逐句转化，不要擅自增加或删减自然语言表达
-2. 需用Fix提取新引入的变量
-3. 需补充必要的逻辑关系，例如“只需证”、“要使得...只需...”、“等价于”等表述中的逻辑关系需显式写出
+2. 当引入一个新的变量名时，需用Fix或Define结构
+3. 需补充必要的逻辑关系，具体见下面的样例
 
 ## 样例
+
+在样例中，我不完整写出json作为示例，而是写一个简洁的图示。在一些样例中，我包含了“解释”部分的内容，这部分内容是我为了向你说明如何提取结构以及要注意的事项，不是你要输出的内容！！！
 
 ### 样例 1
 
@@ -178,52 +201,36 @@ If $A \subseteq B$, then $\mathcal{P}(A) \subseteq \mathcal{P}(B)$:
 
 Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. Since $A \subseteq B$, it follows that $X \subseteq B$. Therefore, $X \in \mathcal{P}(B)$. Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$.
 
-输出：
+解释：
 
-{
-  "ProofStructure": [
-    {
-      "type": "Show",
-      "proposition": "If $A \\subseteq B$, then $\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$",
-      "scope": [
-        {
-          "type": "Fix",
-          "var_list": ["X"],
-          "condition": "$X \\in \\mathcal{P}(A)$",
-          "scope": [
-            {
-              "type": "Have",
-              "proposition": "$X \\subseteq A$",
-              "reasons": ["definition of power set"]
-            },
-            {
-              "type": "Have",
-              "proposition": "$X \\subseteq B$",
-              "reasons": ["$A \\subseteq B$"]
-            },
-            {
-              "type": "Have",
-              "proposition": "$X \\in \\mathcal{P}(B)$",
-              "reasons": []
-            }
-          ]
-        },
-        {
-          "type": "Have",
-          "proposition": "every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$",
-          "reasons": []
-        },
-        {
-          "type": "Have",
-          "proposition": "$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$",
-          "reasons": []
-        }
-      ]
-    }
-  ]
-}
+下面我们向你示范如何提取该证明的结构。
 
-> 在接下来的样例中，我不再完整写出json作为示例，而是写一个简洁的图示。我用缩进来表示scope。
+首先，引入了变量A,B以及一个假设$A \subseteq B$。所以这一小句被识别为Fix类型的节点：[Fix: {A,B} such that "$A \subseteq B$"]，表示固定变量A,B，这两个变量满足条件$A \subseteq B$。
+
+在这一假设下，我们要证明$\mathcal{P}(A) \subseteq \mathcal{P}(B)$，所以这一小句被识别为Show类型节点：[Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+
+Let $X \in \mathcal{P}(A)$，引入了一个新变量X，满足$X \in \mathcal{P}(A)$。所以这是一个Fix类型的节点：[Fix: {X} such that "$X \in \mathcal{P}(A)$"]
+
+By definition of power set, $X \subseteq A$. 这是一个断言，因此是Have类型节点。其中，断言内容是$X \subseteq A$，其依据是By definition of power set。所以结构为：[Have: "$X \subseteq A$" by "definition of power set"]
+
+Since $A \subseteq B$, it follows that $X \subseteq B$。这是一个断言，因此是Have类型节点。其中，断言内容是$X \subseteq B$，其依据是$A \subseteq B$。所以结构为：[Have: "$X \subseteq B$" by "$A \subseteq B$"]
+
+Therefore, $X \in \mathcal{P}(B)$. 这是一个断言，推理依据为空。所以结构为：[Have: "$X \in \mathcal{P}(B)$"]
+
+Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$. 这是一个断言，推理依据为空。所以结构为：[Have: "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$"]
+
+$\mathcal{P}(A) \subseteq \mathcal{P}(B)$. 这是一个断言，推理依据为空。所以结构为：[Have: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+
+结构：
+
+[Fix: {A,B} such that "$A \subseteq B$"]
+[Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+[Fix: {X} such that "$X \in \mathcal{P}(A)$"]
+[Have: "$X \subseteq A$" by "definition of power set"]
+[Have: "$X \subseteq B$" by "$A \subseteq B$"]
+[Have: "$X \in \mathcal{P}(B)$"]
+[Have: "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$"]
+[Have: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
 
 ### 样例 2
 
@@ -231,15 +238,24 @@ Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. Since $
 
 下面我们对$x^3-4x^2+2x+1$做因式分解。观察到$x=1$是$\text{原式}=0$的一个解，所以可以令$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$。有$(x-1)(x^2+ax+b)=x^3+(a-1)x^2+(b-a)x-b$。对比系数可得$a-1=-4,b-a=2,-b=1$。解得$a=-3,b=-1$。于是完成因式分解：$x^3-4x^2+2x+1=(x-1)(x^2-3x-1)$。
 
-输出：
+解释：
+
+在这个样例的结构提取中要注意以下几点：
+
+“下面我们对$x^3-4x^2+2x+1$做因式分解”应该被识别为一个Perform类型节点，表示接下来我要对$x^3-4x^2+2x+1$做“因式分解”这一动作。
+
+“观察到$x=1$是$\text{原式}=0$的一个解”是一个断言，所以是Have类型节点。注意，在结构提取的时候，你需要把“原式”给补充出来。也即，你不要写[Have: "$x=1$是$\text{原式}=0$的一个解"]，而是写[Have: "$x=1$是$x^3-4x^2+2x+1=0$的一个解"]
+
+“所以可以令$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$”中，虽然没有显示说明，但其实引入了两个新的变量a,b。引入变量必须用Fix或Define。在这里，因为a,b并不是被“定义”的，而是“待定系数法”的系数，所以我们将其识别为Fix类型节点。写[Fix: {a,b} st "$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$"]
+
+结构：
 
 [Perform: "因式分解" to "$x^3-4x^2+2x+1$"]
 [Have: "$x=1$是$x^3-4x^2+2x+1=0$的一个解"]
 [Fix: {a,b} st "$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$"]
-  [Have: "$(x-1)(x^2+ax+b)=x^3+(a-1)x^2+(b-a)x-b$"]
-  [Have: "$a-1=-4,b-a=2,-b=1$" by "对比系数"]
-  [Have: "$a=-3,b=-1$" by "解得"]
-[Hint: "于是完成因式分解"]
+[Have: "$(x-1)(x^2+ax+b)=x^3+(a-1)x^2+(b-a)x-b$"]
+[Have: "$a-1=-4,b-a=2,-b=1$" by "对比系数"]
+[Have: "$a=-3,b=-1$" by "解得"]
 [Have: "$x^3-4x^2+2x+1=(x-1)(x^2-3x-1)$"]
 
 ### 样例 3
@@ -257,7 +273,7 @@ $1 + 2 + \cdots  + k + \left( {k + 1}\right)  = \frac{k\left( {k + 1}\right) }{2
 所以$n = k+ 1$ 时等式也成立.
 于是,对于任何正整数 $n$ ,有 $1 + 2 + \cdots  + n = \frac{n\left( {n + 1}\right) }{2}$ .
 
-输出：
+结构：
 
 [Show: "$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$"]
   [Hint: "我们用数学归纳法证明"]
@@ -281,7 +297,7 @@ $\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1\;\left( {a > 0}
 
 (3) 当 $0 < a < 1$ 时,则令 $a = \frac{1}{{a}^{\prime }}$ ,其中 ${a}^{\prime } > 1$ . 于是,当 $n \rightarrow  \infty$ 时, $\sqrt[n]{a} = \frac{1}{\sqrt[n]{{a}^{\prime }}} \rightarrow  1$ . 总之,当 $a > 0$ 时, $\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1$ .
 
-输出：
+结构：
 
 [Show: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}\sqrt[n]{a} = 1\;\left( {a > 0}\right)$"]
   [Hint: "分别就$a=1,a>1$及$0<a<1$三种情形加以证明"]
@@ -327,7 +343,7 @@ $= M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) \to 0 \quad 
 
 Qed.
 
-输出：
+结构：
 
 [Assume: "$f(x)$ 在 $[0,1]$ 上连续"]
   [Show: "$\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$"]
@@ -359,7 +375,7 @@ $\forall \varepsilon > 0$（设 $\varepsilon < 1$），因为  $|x_n - 0| = |q^{
 则当 $n > N$ 时，就有  $|q^{n-1} - 0| < \varepsilon,$
 即  $\lim_{n \to \infty} q^{n-1} = 0.$
 
-输出：
+结构：
 
 [Assume: "$|q| < 1$"]
   [Show: "$\lim_{n \to \infty} q^{n-1} = 0$"]
@@ -456,7 +472,7 @@ $$
 g\left( x\right)  =  \pm  \sin {ax}.
 $$
 
-输出：
+结构：
 
 [Find: {f,g} st {"对于所有实数 $x$ 和 $y$ 都满足方程组 $f(x + y) = f(x) f(y) - g(x) g(y)$, $g(x + y) = f(x) g(y) + f(y) g(x)$"; "规范条件$f(0) = 1$, $g(0) = 0$"; "$f(x), g(x)$ 连续且有界"}]
     [Hint: "提示：考虑 $F(x) = f^2(x) + g^2(x)$"]
@@ -495,7 +511,7 @@ Pf:
 
 Qed.
 
-输出：
+结构：
 
 [Assume: "$\{x_n\}$ 是实数上的数列，满足 $\forall n \geq 1, x_n = n^{(-1)^n}$"]
     [Show: {"$\{x_n\}$ 无界"; "$\lim\limits_{n \to \infty} x_n=\infty$ 不成立"}]
@@ -590,7 +606,7 @@ Thus, it is suffice to prove: (1) $\forall d \in D. \, \exists c \in C. \, g(d) 
 
 Qed.
 
-输出：
+结构：
 
 [Assume: {"$f: A \to B$ injection"; "$g: B \to A$ injection"}]
     [Show: "There exists a bijection from $A$ to $B$"]
@@ -652,7 +668,7 @@ $$
 = \ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C.
 $$
 
-输出：
+结构：
 
 [Find: "\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} \, dx" such that []]
     [Perform: "将被积函数分解成简单分式之和" to "$\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}$"]
@@ -678,7 +694,7 @@ $$
 设 $u = \ln x$, $dv = x \, dx$, 则 $\int x \ln x \, dx = \int \ln x \, d \frac{x^2}{2} = \frac{x^2}{2} \ln x - \int \frac{x^2}{2} d(\ln x)$
 $= \frac{x^2}{2} \ln x - \frac{1}{2} \int x \, dx = \frac{x^2}{2} \ln x - \frac{x^2}{4} + C$
 
-输出：
+结构：
 
 [Find: "$\int x \ln x \, dx$" such that []]
     [Define: "u" as "u = \ln x"]
@@ -705,7 +721,7 @@ $= -\frac{1}{p} \lim_{t \to +\infty} te^{-pt} - 0 - \frac{1}{p^2} (0 - 1) = \fra
 
 注意，上式中的极限 $\lim_{t \to +\infty} te^{-pt}$ 是未定式，可用洛必达法则确定。
 
-输出：
+结构：
 
 [Fix: {p} such that "$p > 0$"]
 [Find: "反常积分$\int_0^{+\infty} te^{-pt} dt$"]
@@ -730,7 +746,7 @@ $= -\frac{1}{p} \lim_{t \to +\infty} te^{-pt} - 0 - \frac{1}{p^2} (0 - 1) = \fra
 
 因 $\pm e^{C_1}$ 是任意非零常数，又 $y=0$ 也是方程的解，故得通解$y = C e^{x^2}.$
 
-输出：
+结构：
 
 [Find: "y" such that "y是微分方程$\frac{dy}{dx} = 2xy$的通解"]
     [Hint: "方程是可分离变量的"]
@@ -788,7 +804,7 @@ $$
 
 Qed.
 
-输出：
+结构：
 
 [Fix：{x,n} such that "x是正实数数列"; "n是正整数"]
     [Show: "$\prod\limits_{i=1}^{n}\left( {1 + {x}_{i}}\right)\geq  1 + \sum\limits_{i=1}^{n}{x}_{i}$"]
@@ -822,7 +838,7 @@ Pf:
 
 Qed.
 
-输出：
+结构：
 
 [Fix: {x} such that "$\{x_n\}$是实数上的数列，满足$\forall n\geq 1,{x}_{n} = \frac{n}{n + 1}$"]
     [Show: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$"]
@@ -871,7 +887,7 @@ $$
 
 故当 $0 < h < \frac{\epsilon}{2M_0}$ 时，$\left| \int_0^1 \frac{h}{h^2 + x^2} [f(x) - f(0)] dx \right| < \frac{\epsilon}{2} + \frac{\epsilon}{2} = \epsilon.$ 证毕。
 
-输出：
+结构：
 
 [Assume: "$f(x)$ 在 $[0,1]$ 上连续"]
     [Show: "$\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$"]
@@ -898,7 +914,7 @@ $$
 
 可取 $N = N\left( \varepsilon \right)  = \left\lbrack  \frac{1}{\varepsilon }\right\rbrack$ ,则当 $n > N$ 时, $\left| {{x}_{n} - 1}\right|  < \varepsilon$ ,所以, $\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$ .
 
-输出：
+结构：
 
 [Fix: {x} such that "{x}_{n} = \frac{n}{n + 1}\left( {n = 1,2,\cdots }\right)"]
     [Show: "$\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = 1$"]
@@ -926,7 +942,7 @@ $$
 
 而 ${x}_{{p}_{k}} \leq  {x}_{n} \leq  {x}_{{p}_{k + 1}}$ (因 ${x}_{n}$ 递增),故必 $\left| {{x}_{n} - a}\right|  < \varepsilon$ . 由此可知 $\mathop{\lim }\limits_{{n \rightarrow  \infty }}{x}_{n} = a$ ,即 $\left\{  {x}_{n}\right\}$ 是收敛的.
 
-输出：
+结构：
 
 [Show: "若单调数列的某一子数列收敛, 则此单调数列本身是收敛的"]  
     [Fix: {x,a} such that "数列 $\left\{  {x}_{n}\right\}$ 单调增加,其一子数列 $\left\{  {x}_{{p}_{n}}\right\}$ 收敛于 $a$"]
@@ -1006,7 +1022,7 @@ $$
 
 其中 $a = f\left( 1\right)$ . 证毕.
 
-输出：
+结构：
 
 [Fix: {a,f} such that "$a \in \R$"; "f是连续函数"; "对于所有实数 $x$ 和 $y$ 都满足方程$f\left( {x + y}\right)  = f\left( x\right)  + f\left( y\right)  \tag{1}$"; "a=f(1)"]
     [Show: "f唯一"; "f是线性齐次函数f(x)=ax"]
@@ -1055,7 +1071,7 @@ which, by definition of limit, gives us $\lim_{n \to \infty} (x_n + y_n) = A + B
 
 $Qed.$
 
-输出：
+结构：
 
 [Fix: {x,y,A,B} such that "$\{x_n\}$ and $\{y_n\}$ be numerical sequences"; " $\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$"]
     [Show: "$\lim_{n \to \infty} (x_n + y_n) = A + B$"]
@@ -1096,7 +1112,7 @@ $$
 = \frac{x\left( {2{x}^{2} + {a}^{2}}\right) }{8}\sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{4}}{8}\ln \left( {x + \sqrt{{x}^{2} + {a}^{2}}}\right)  + C.
 $$
 
-输出：
+结构：
 
 [Find: "$\int x^2 \sqrt{a^2 + x^2}\;dx$" such that []]
     [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{1}{2}\int x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{1}{2}}\mathrm{\;d}\left( {{a}^{2} + {x}^{2}}\right)  = \frac{1}{3}\int x\mathrm{\;d}\left\lbrack  {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\right\rbrack= \frac{1}{3}x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}} - \frac{1}{3}\int {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\mathrm{\;d}x= \frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x - \frac{1}{3}\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x.$"]

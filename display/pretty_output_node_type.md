@@ -1,0 +1,7 @@
+[Assume: "$A \subseteq B$"]
+[Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+[Have: "Let $X \in \mathcal{P}(A)$"]
+[Have: "By definition of power set, $X \subseteq A$"]
+[Have: "Since $A \subseteq B$, it follows that $X \subseteq B$"]
+[Have: "Therefore, $X \in \mathcal{P}(B)$"]
+[Have: "Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
