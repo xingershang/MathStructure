@@ -2,15 +2,15 @@ import os
 
 def create_informal_files():
     # Range of numbers we want (3 to 8 inclusive)
-    start_num = 3
-    end_num = 8
+    start_num = 24
+    end_num = 32
     
     created_count = 0
     
     for num in range(start_num, end_num + 1):
         # Format the number with leading zeros (003, 004, etc.)
         num_str = f"{num:03d}"
-        filename = f"informal{num_str}.md"
+        filename = f"node_type_{num_str}.md"
         
         try:
             # Create empty file

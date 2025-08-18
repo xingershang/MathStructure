@@ -15,8 +15,10 @@ def get_proof_structure_schema():
                         {"$ref": "#/$defs/Assume"},
                         {"$ref": "#/$defs/Have"},
                         {"$ref": "#/$defs/Fix"},
+                        {"$ref": "#/$defs/SufficeToProve"},
+                        {"$ref": "#/$defs/ToHave"},
+                        {"$ref": "#/$defs/OnlyNeeds"},
                         {"$ref": "#/$defs/Find"},
-                        {"$ref": "#/$defs/Perform"},
                         {"$ref": "#/$defs/Define"},
                         {"$ref": "#/$defs/Hint"}
                     ]
@@ -84,6 +86,55 @@ def get_proof_structure_schema():
                 "required": ["type", "var_list", "condition"],
                 "additionalProperties": False
             },
+            "SufficeToProve": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "SufficeToProve"}),
+                    ("proposition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    }),
+                    ("reasons", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "proposition", "reasons"],
+                "additionalProperties": False
+            },
+            "ToHave": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "ToHave"}),
+                    ("proposition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    }),
+                ]),
+                "required": ["type", "proposition"],
+                "additionalProperties": False
+            },
+            "OnlyNeeds": {
+                "type": "object",
+                "properties": OrderedDict([
+                    ("type", {"type": "string", "const": "OnlyNeeds"}),
+                    ("proposition", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    }),
+                    ("reasons", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
+                ]),
+                "required": ["type", "proposition", "reasons"],
+                "additionalProperties": False
+            },
             "Find": {
                 "type": "object",
                 "properties": OrderedDict([
@@ -98,30 +149,16 @@ def get_proof_structure_schema():
                 "required": ["type", "var_list", "condition"],
                 "additionalProperties": False
             },
-            "Perform": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Perform"}),
-                    ("action", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("target", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "action", "target"],
-                "additionalProperties": False
-            },
             "Define": {
                 "type": "object",
                 "properties": OrderedDict([
                     ("type", {"type": "string", "const": "Define"}),
                     ("symbol", {"type": "string"}),
-                    ("meaning", {"type": "string"})
+                    ("meaning", {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "default": []
+                    })
                 ]),
                 "required": ["type", "symbol", "meaning"],
                 "additionalProperties": False
@@ -137,43 +174,6 @@ def get_proof_structure_schema():
             }
         }
     }
-
-def enforce_type_first(data, schema=None):
-    if schema is None:
-        schema = get_proof_structure_schema()
-    
-    if isinstance(data, dict):
-        obj_schema = None
-        if "type" in data and "$defs" in schema:
-            obj_schema = schema["$defs"].get(data["type"])
-        
-        if obj_schema and "properties" in obj_schema:
-            ordered = OrderedDict()
-            if "type" in data:
-                ordered["type"] = enforce_type_first(data["type"], schema)
-            
-            for prop in obj_schema["properties"]:
-                if prop != "type" and prop in data:
-                    ordered[prop] = enforce_type_first(data[prop], schema)
-            
-            for key in data:
-                if key not in ordered and key != "type":
-                    ordered[key] = enforce_type_first(data[key], schema)
-            
-            return ordered
-        else:
-            if "type" in data:
-                ordered = OrderedDict([("type", enforce_type_first(data["type"], schema))])
-                for key, value in data.items():
-                    if key != "type":
-                        ordered[key] = enforce_type_first(value, schema)
-                return ordered
-            return OrderedDict((k, enforce_type_first(v, schema)) for k, v in data.items())
-    
-    elif isinstance(data, list):
-        return [enforce_type_first(item, schema) for item in data]
-    else:
-        return data
 
 def format_proof_structure_to_pretty(data, indent_level=0):
     indent = "    " * indent_level
@@ -212,20 +212,31 @@ def format_proof_structure_to_pretty(data, indent_level=0):
             vars_str = ", ".join(var_list)
             result.append(f"{indent}[Fix: {{{vars_str}}} st {condition}]")
                 
+        elif proof_type == "SufficeToProve":
+            prop = format_list(data.get("proposition", []))
+            reasons = data.get("reasons", [])
+            reason_str = " by " + format_list(reasons) if reasons else ""
+            result.append(f"{indent}[SufficeToProve: {prop} by {reason_str}]")
+            
+        elif proof_type == "ToHave":
+            prop = format_list(data.get("proposition", []))
+            result.append(f"{indent}[ToHave: {prop}]")
+            
+        elif proof_type == "OnlyNeeds":
+            prop = format_list(data.get("proposition", []))
+            reasons = data.get("reasons", [])
+            reason_str = " by " + format_list(reasons) if reasons else ""
+            result.append(f"{indent}[OnlyNeeds: {prop} by {reason_str}]")
+            
         elif proof_type == "Find":
             var_list = data.get("var_list", [])
             condition = format_list(data.get("condition", []))
             vars_str = ", ".join(var_list)
             result.append(f"{indent}[Find: {{{vars_str}}} st {condition}]")
-                
-        elif proof_type == "Perform":
-            action = format_list(data.get("action", []))
-            target = format_list(data.get("target", []))
-            result.append(f"{indent}[Perform: {action} to {target}]")
             
         elif proof_type == "Define":
             symbol = data.get("symbol", "")
-            meaning = data.get("meaning", "")
+            meaning = format_list(data.get("meaning", []))
             result.append(f"{indent}[Define: \"{symbol}\" as \"{meaning}\"]")
             
         elif proof_type == "Hint":
@@ -239,6 +250,7 @@ def format_proof_structure_to_pretty(data, indent_level=0):
                 result.append(formatted)
     
     return "\n".join(result)
+
 
 with open("../prompt/prompt_node_type.md", "r", encoding="utf-8") as f:
     prompt = f.read()
@@ -278,10 +290,9 @@ try:
         output = f"Refusal: {msg.refusal}"
     else:
         output_data = json.loads(msg.content)
-        ordered_output = enforce_type_first(output_data)
-        output = json.dumps(ordered_output, indent=2, ensure_ascii=False)
+        output = json.dumps(output_data, indent=2, ensure_ascii=False)
         
-        pretty_output = format_proof_structure_to_pretty(ordered_output)
+        pretty_output = format_proof_structure_to_pretty(output_data)
 
     with open("../display/output_node_type.json", "w", encoding="utf-8") as f:
         f.write(output)
