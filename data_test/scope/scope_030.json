@@ -1,0 +1,101 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [],
+      "scope": [
+        {
+          "proposition": [
+            " \\left(\\sum_{k=1}^{n}\\frac{1+x^{2k}}{1+x^{4k}}\\right)\\left(\\sum_{k=1}^{n}\\frac{1+y^{2k}}{1+y^{4k}}\\right)<\\frac{1}{(1-x)(1-y)} "
+          ],
+          "scope": [
+            {
+              "condition": [
+                "0<t<1"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    " \\frac{1+t^2}{1+t^4}=\\frac{1}{t}-\\frac{(1-t)(1-t^3)}{t(1+t^4)}<\\frac{1}{t} "
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    " \\frac{1+x^{2k}}{1+x^{4k}}<\\frac{1}{x^{k}}\\;(1\\le k\\le n)"
+                  ],
+                  "reasons": [
+                    "令 t=x^{k} 于上式"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "0<\\sum_{k=1}^{n}\\frac{1+x^{2k}}{1+x^{4k}}<\\sum_{k=1}^{n}\\frac{1}{x^{k}}=\\frac{1-x^{n}}{x^{n}(1-x)}"
+                  ],
+                  "reasons": [
+                    "对 k 求和"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    " \\frac{1+y^{2k}}{1+y^{4k}}<\\frac{1}{y^{k}}\\;(1\\le k\\le n)"
+                  ],
+                  "reasons": [
+                    "令 t=y^{k} 于上式"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "0<\\sum_{k=1}^{n}\\frac{1+y^{2k}}{1+y^{4k}}<\\sum_{k=1}^{n}\\frac{1}{y^{k}}=\\frac{1-y^{n}}{y^{n}(1-y)}"
+                  ],
+                  "reasons": [
+                    "对 k 求和"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Fix",
+              "var_list": [
+                "t"
+              ]
+            },
+            {
+              "proposition": [
+                "1-y^{n}=x^{n}",
+                "1-x^{n}=y^{n}"
+              ],
+              "reasons": [
+                "x^{n}+y^{n}=1"
+              ],
+              "type": "Have"
+            },
+            {
+              "proposition": [
+                " \\frac{1-x^{n}}{x^{n}(1-x)}=\\frac{y^{n}}{x^{n}(1-x)} ",
+                " \\frac{1-y^{n}}{y^{n}(1-y)}=\\frac{x^{n}}{y^{n}(1-y)} "
+              ],
+              "reasons": [
+                "上一命题"
+              ],
+              "type": "Have"
+            },
+            {
+              "proposition": [
+                " \\left(\\sum_{k=1}^{n}\\frac{1+x^{2k}}{1+x^{4k}}\\right)\\left(\\sum_{k=1}^{n}\\frac{1+y^{2k}}{1+y^{4k}}\\right)<\\frac{y^{n}}{x^{n}(1-x)}\\cdot\\frac{x^{n}}{y^{n}(1-y)}=\\frac{1}{(1-x)(1-y)} "
+              ],
+              "reasons": [
+                "组合前述不等式"
+              ],
+              "type": "Have"
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Show"
+    }
+  ]
+}

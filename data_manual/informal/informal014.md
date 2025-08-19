@@ -20,7 +20,7 @@ $$
 =(1 + \sum\limits_{i=1}^{k+1}{x}_{i})+\sum\limits_{i=1}^{k}(x_i x_{k+1})
 $$
 
-由于 $\forall 1\leq i,j \leq n,{x}_{i}{x}_{j} \geq  0$。所以,
+由于 ${x}_{i}{x}_{j} \geq  0$。所以,
 
 $$
 \prod\limits_{i=1}^{k+1}\left( {1 + {x}_{i}}\right)\geq 1 + \sum\limits_{i=1}^{k+1}{x}_{i}

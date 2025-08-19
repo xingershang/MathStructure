@@ -1,0 +1,20 @@
+[Hint: "Proof extracted structure"]
+[Assume: "q>1"]
+{
+    [Show: "lim_{n\to\infty}\frac{n}{q^n}=0"]
+    {
+        [Define: "x" as ""x_n=\frac{n}{q^n}""]
+        [Have: "x_{n+1}=\frac{n+1}{nq}x_n \;(n\in\mathbb{N})"]
+        [Have: "\lim_{n\to\infty}\frac{n+1}{nq}=\frac{1}{q}<1"]
+        [Have: "\exists N\,\forall n>N:\frac{n+1}{nq}<1" by "convergence to a constant <1"]
+        [Have: "x_{n+1}<x_n\;(n>N)" by "previous inequality times x_n>0"]
+        [Hint: "A finite number of terms does not affect the limit, so we examine the decreasing tail."]
+        [Have: "x_n>0\;(\forall n)"]
+        [Have: "\{x_n\} \text{ is bounded below and eventually decreasing }\Rightarrow \text{ convergent}" by "Monotone convergence theorem"]
+        [Define: "x" as ""x=\lim_{n\to\infty}x_n""]
+        [Have: "x=\frac{1}{q}x" by "taking limits in x_{n+1}=\frac{n+1}{nq}x_n"]
+        [Have: "(1-\frac{1}{q})x=0"]
+        [Have: "x=0"]
+        [Have: "\lim_{n\to\infty}\frac{n}{q^n}=0" by "x=0"]
+    }
+}

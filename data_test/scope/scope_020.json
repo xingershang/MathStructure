@@ -1,0 +1,186 @@
+{
+  "ProofStructure": [
+    {
+      "assumption": [
+        "T = { x \\mid x \\in \\mathbb{Q}, x>0, x^2<2 }"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "T has no least upper bound in \\mathbb{Q}"
+          ],
+          "scope": [
+            {
+              "assumption": [
+                "T has a least upper bound in \\mathbb{Q}"
+              ],
+              "scope": [
+                {
+                  "condition": [
+                    "m,n\\in\\mathbb{N}^*",
+                    "m,n \\text{ are coprime}",
+                    "\\sup T = \\dfrac{n}{m}"
+                  ],
+                  "scope": [
+                    {
+                      "proposition": [
+                        "1 < \\left(\\dfrac{n}{m}\\right)^2 < 3"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "The square of a rational number cannot be 2"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "comment": "There are two possible cases",
+                      "type": "Hint"
+                    },
+                    {
+                      "assumption": [
+                        "1 < \\left(\\dfrac{n}{m}\\right)^2 < 2"
+                      ],
+                      "scope": [
+                        {
+                          "meaning": [
+                            "\\dfrac{n^2}{m^2} = 2 - t",
+                            "0 < t < 1"
+                          ],
+                          "symbol": "t",
+                          "type": "Define"
+                        },
+                        {
+                          "meaning": [
+                            "r = \\dfrac{n}{6m}"
+                          ],
+                          "symbol": "r",
+                          "type": "Define"
+                        },
+                        {
+                          "proposition": [
+                            "n + r > 0",
+                            "\\dfrac{n+r}{m} \\in \\mathbb{Q}"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\dfrac{n^2}{3m^2} t < \\dfrac{2}{3}",
+                            "\\dfrac{2n}{m} - r < \\dfrac{n}{18} t"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\left(\\dfrac{n+r}{m}\\right)^2 = 2 - t + \\dfrac{2n}{m} r + r^2 < 2"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\dfrac{n+r}{m} \\in T"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "This contradicts that \\dfrac{n}{m} is the least upper bound of T"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        }
+                      ],
+                      "type": "Assume"
+                    },
+                    {
+                      "assumption": [
+                        "2 < \\left(\\dfrac{n}{m}\\right)^2 < 3"
+                      ],
+                      "scope": [
+                        {
+                          "meaning": [
+                            "\\dfrac{n^2}{m^2} = 2 + t",
+                            "0 < t < 1"
+                          ],
+                          "symbol": "t",
+                          "type": "Define"
+                        },
+                        {
+                          "meaning": [
+                            "r = \\dfrac{n}{6m}"
+                          ],
+                          "symbol": "r",
+                          "type": "Define"
+                        },
+                        {
+                          "proposition": [
+                            "n - r > 0",
+                            "\\dfrac{n-r}{m} \\in \\mathbb{Q}"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\dfrac{2n}{m} - r < \\dfrac{n^2}{3m^2} t < 1"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\left(\\dfrac{n-r}{m}\\right)^2 = 2 + t - \\dfrac{2n}{m} r + r^2 > 2"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\dfrac{n-r}{m} \\in T"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "This contradicts that \\dfrac{n}{m} is the least upper bound of T"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        }
+                      ],
+                      "type": "Assume"
+                    }
+                  ],
+                  "type": "Fix",
+                  "var_list": [
+                    "m",
+                    "n"
+                  ]
+                }
+              ],
+              "type": "Assume"
+            },
+            {
+              "proposition": [
+                "Therefore, T has no least upper bound in \\mathbb{Q}"
+              ],
+              "reasons": [],
+              "type": "Have"
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Assume"
+    }
+  ]
+}

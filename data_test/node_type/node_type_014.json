@@ -1,0 +1,67 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$f(x)=\\sin x$ 在 $(-\\infty,+\\infty)$ 上连续",
+        "$f(x)=\\sin x$ 在 $(-\\infty,+\\infty)$ 上一致连续"
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$f(x)=\\sin x$"
+      ],
+      "symbol": "f",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$|\\sin x' - \\sin x''| = 2\\left|\\cos \\dfrac{x'+x''}{2}\\,\\sin \\dfrac{x'-x''}{2}\\right| \\le |x'-x''|"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "$\\varepsilon>0$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "\\varepsilon"
+      ]
+    },
+    {
+      "meaning": [
+        "$\\delta=\\varepsilon$"
+      ],
+      "symbol": "\\delta",
+      "type": "Define"
+    },
+    {
+      "condition": [
+        "$x',x''\\in(-\\infty,+\\infty)$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x'",
+        "x''"
+      ]
+    },
+    {
+      "proposition": [
+        "如果 $|x'-x''|<\\delta$，则 $|\\sin x'-\\sin x''|<\\varepsilon$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\sin x$ 在 $(-\\infty,+\\infty)$ 上一致连续"
+      ],
+      "reasons": [
+        "定义"
+      ],
+      "type": "Have"
+    }
+  ]
+}

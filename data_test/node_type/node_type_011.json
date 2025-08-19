@@ -1,0 +1,76 @@
+{
+  "ProofStructure": [
+    {
+      "condition": [
+        "$\\alpha>-1$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "\\alpha"
+      ]
+    },
+    {
+      "condition": [
+        "$n\\in\\mathbb{N}$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "n"
+      ]
+    },
+    {
+      "proposition": [
+        "$(1+\\alpha)^n\\ge 1+n\\alpha$"
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$(1+\\alpha)^1\\ge 1+1\\alpha$"
+      ],
+      "reasons": [
+        "$n=1$"
+      ],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "$(1+\\alpha)^n\\ge 1+n\\alpha$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "$(1+\\alpha)^{n+1}\\ge 1+(n+1)\\alpha$"
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$(1+\\alpha)^{n+1}=(1+\\alpha)(1+\\alpha)^n\\ge(1+\\alpha)(1+n\\alpha)=1+(n+1)\\alpha+n\\alpha^2\\ge 1+(n+1)\\alpha$"
+      ],
+      "reasons": [
+        "计算"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "对所有$n\\in\\mathbb{N}$, $(1+\\alpha)^n\\ge 1+n\\alpha$"
+      ],
+      "reasons": [
+        "数学归纳法"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "若$\\alpha\\neq 0$且$n>1$则严格不等式成立"
+      ],
+      "reasons": [
+        "同上计算"
+      ],
+      "type": "Have"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "ProofStructure": [
+    {
+      "comment": "Let $a_1, a_2, \\dots , a_{100}$ be non-negative real numbers with $\\sum_{k=1}^{100}a_k^{2}=1$",
+      "type": "Hint"
+    },
+    {
+      "condition": [
+        "a_1,\\dots ,a_{100}\\ge 0",
+        "$a_1^{2}+\\dots +a_{100}^{2}=1$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "a_1,\\dots ,a_{100}"
+      ]
+    },
+    {
+      "proposition": [
+        "$a_1^{2}a_2+a_2^{2}a_3+\\dots +a_{100}^{2}a_1<\\dfrac{12}{25}$"
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$S=\\sum_{k=1}^{100}a_k^{2}a_{k+1}$ (indices modulo $100$)"
+      ],
+      "symbol": "S",
+      "type": "Define"
+    },
+    {
+      "comment": "Apply Cauchy–Schwarz and then AM–GM",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "$(3S)^{2}\\le\\left(\\sum_{k=1}^{100}a_{k+1}^{2}\\right)\\left(\\sum_{k=1}^{100}(a_k^{2}+2a_ka_{k+1}a_{k+2})^{2}\\right)"
+      ],
+      "reasons": [
+        "Cauchy–Schwarz on sequences $(a_{k+1})$ and $(a_k^{2}+2a_ka_{k+1}a_{k+2})$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$(3S)^{2}\\le\\sum_{k=1}^{100}\\bigl(a_k^{4}+4a_k^{2}a_{k+1}a_ka_{k+2}+4a_k^{2}a_{k+1}^{2}\\bigr)"
+      ],
+      "reasons": [
+        "$\\sum_{k=1}^{100}a_{k+1}^{2}=1$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$(3S)^{2}\\le\\sum_{k=1}^{100}\\bigl(a_k^{4}+6a_k^{2}a_{k+1}^{2}+2a_k^{2}a_{k+2}^{2}\\bigr)"
+      ],
+      "reasons": [
+        "AM–GM: $4a_k^{2}a_{k+1}a_ka_{k+2}\\le 2a_k^{2}(a_k^{2}+a_{k+2}^{2})$"
+      ],
+      "type": "Have"
+    },
+    {
+      "comment": "Use two trivial estimates to bound the sum",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "$\\displaystyle\\sum_{k=1}^{100}\\bigl(a_k^{4}+2a_k^{2}a_{k+1}^{2}+2a_k^{2}a_{k+2}^{2}\\bigr)\\le\\left(\\sum_{k=1}^{100}a_k^{2}\\right)^{2}=1$"
+      ],
+      "reasons": [
+        "Cauchy–Schwarz / rearrangement"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\displaystyle\\sum_{k=1}^{100}a_{2k-1}^{2}a_{2k}^{2}\\le\\left(\\sum_{k=1}^{50}a_{2k-1}^{2}\\right)\\left(\\sum_{k=1}^{50}a_{2k}^{2}\\right)$"
+      ],
+      "reasons": [
+        "Cauchy–Schwarz"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$(3S)^{2}\\le 1+4\\left(\\sum_{k=1}^{50}a_{2k-1}^{2}\\right)\\left(\\sum_{k=1}^{50}a_{2k}^{2}\\right)\\le1+\\left(\\sum_{k=1}^{100}a_k^{2}\\right)^{2}=2"
+      ],
+      "reasons": [
+        "Previous two bounds",
+        "$x+y\\le(x+y)^{2}$ when $x+y=1$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$S\\le\\dfrac{\\sqrt2}{3}<\\dfrac{12}{25}$"
+      ],
+      "reasons": [
+        "$(3S)^{2}\\le2\\implies S\\le\\sqrt2/3$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$a_1^{2}a_2+a_2^{2}a_3+\\dots +a_{100}^{2}a_1<\\dfrac{12}{25}$"
+      ],
+      "reasons": [
+        "$S<12/25$"
+      ],
+      "type": "Have"
+    }
+  ]
+}

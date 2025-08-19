@@ -1,0 +1,225 @@
+{
+  "ProofStructure": [
+    {
+      "comment": "k is positive integer",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "Let $k$ be a positive integer."
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$(4k^2-1)^2$ has a positive divisor of the form $8kn-1$ iff $k$ is even."
+      ],
+      "type": "Show"
+    },
+    {
+      "comment": "The result is deduced from the following lemma.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "For positive integers $x,y$, $4xy-1$ divides $(4x^2-1)^2$ iff $x=y$."
+      ],
+      "type": "Show"
+    },
+    {
+      "comment": "Assume $x,y$ are positive integers.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "If $x=y$ then $4xy-1$ divides $(4x^2-1)^2$."
+      ],
+      "reasons": [
+        "$x=y$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "If $4xy-1$ divides $(4x^2-1)^2$ then $x=y$"
+      ],
+      "reasons": [
+        "converse direction remains"
+      ],
+      "type": "SufficeToProve"
+    },
+    {
+      "meaning": [
+        "A pair $(x,y)$ is bad if $4xy-1$ divides $(4x^2-1)^2$ but $x\\neq y$."
+      ],
+      "symbol": "bad pair",
+      "type": "Define"
+    },
+    {
+      "comment": "We will show no bad pair exists via infinite descent.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "Property (i): If $(x,y)$ is bad and $x<y$, there exists $z<x$ with $(x,z)$ bad."
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$r=\\frac{(4x^2-1)^2}{4xy-1}$"
+      ],
+      "symbol": "r",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$r\\equiv -1\\pmod{4x}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$r=4xz-1$ for some positive integer $z$"
+      ],
+      "symbol": "z",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$x<y\\;\\Rightarrow\\;4xz-1<4x^2-1$ hence $z<x$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Thus $(x,z)$ is bad."
+      ],
+      "reasons": [
+        "construction"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Property (ii): If $(x,y)$ is bad then $(y,x)$ is bad."
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$(4y^2-1)^2\\equiv0\\pmod{4xy-1}$"
+      ],
+      "reasons": [
+        "$1\\equiv (4xy)^2\\pmod{4xy-1}$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Hence $(y,x)$ is bad."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "There exists a bad pair."
+      ],
+      "type": "Assume"
+    },
+    {
+      "assumption": [
+        "Choose bad $(x,y)$ with minimal $2x+y$. "
+      ],
+      "type": "Assume"
+    },
+    {
+      "assumption": [
+        "Case $x<y$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "Property (i) gives bad $(x,z)$ with $2x+z<2x+y$"
+      ],
+      "reasons": [
+        "Property (i)"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Contradiction to minimality."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "Case $y<x$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "Property (ii) gives bad $(y,x)$ with $2y+x<2x+y$"
+      ],
+      "reasons": [
+        "Property (ii)"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Contradiction to minimality."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Therefore no bad pairs exist."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Hence, if $4xy-1$ divides $(4x^2-1)^2$ then $x=y$."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "comment": "Lemma proved.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "Apply lemma with $x=k$, $y=2n$: $8kn-1$ divides $(4k^2-1)^2$ iff $k=2n$."
+      ],
+      "reasons": [
+        "Lemma"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "If $k$ odd, no such $n$ exists; if $k$ even, $n=k/2$ works."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Thus $(4k^2-1)^2$ has a divisor of the form $8kn-1$ iff $k$ is even."
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "ProofStructure": [
+    {
+      "condition": [
+        "\\lim_{n \\to \\infty} x_n = A",
+        "\\lim_{n \\to \\infty} y_n = B"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "$\\lim_{n \\to \\infty} (x_n\\,y_n)=A\\,B$"
+          ],
+          "scope": [
+            {
+              "meaning": [
+                "$|A-x_n|=\\Delta(x_n)$"
+              ],
+              "symbol": "\\Delta(x_n)",
+              "type": "Define"
+            },
+            {
+              "meaning": [
+                "$|B-y_n|=\\Delta(y_n)$"
+              ],
+              "symbol": "\\Delta(y_n)",
+              "type": "Define"
+            },
+            {
+              "proposition": [
+                "$|A B-x_n y_n|\\le |x_n|\\,\\Delta(y_n)+|y_n|\\,\\Delta(x_n)+\\Delta(x_n)\\,\\Delta(y_n)$"
+              ],
+              "reasons": [],
+              "type": "Have"
+            },
+            {
+              "condition": [
+                "$\\varepsilon>0$"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "\\exists N'\\;\\forall n>N'\\;(\\Delta(x_n)<\\min\\{1,\\tfrac{\\varepsilon}{3(|B|+1)}\\})"
+                  ],
+                  "reasons": [
+                    "$\\lim_{n\\to\\infty}x_n=A$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "\\exists N''\\;\\forall n>N''\\;(\\Delta(y_n)<\\min\\{1,\\tfrac{\\varepsilon}{3(|A|+1)}\\})"
+                  ],
+                  "reasons": [
+                    "$\\lim_{n\\to\\infty}y_n=B$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "meaning": [
+                    "$N=\\max\\{N',N''\\}$"
+                  ],
+                  "symbol": "N",
+                  "type": "Define"
+                },
+                {
+                  "proposition": [
+                    "$\\forall n>N:\\;|x_n|<|A|+1$",
+                    "$\\forall n>N:\\;|y_n|<|B|+1$"
+                  ],
+                  "reasons": [
+                    "$|x_n|\\le |A|+\\Delta(x_n)$",
+                    "$|y_n|\\le |B|+\\Delta(y_n)$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\forall n>N:\\;\\Delta(x_n)\\,\\Delta(y_n)<\\tfrac{\\varepsilon}{3}$"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\forall n>N:\\;|x_n|\\,\\Delta(y_n)<\\tfrac{\\varepsilon}{3}$"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\forall n>N:\\;|y_n|\\,\\Delta(x_n)<\\tfrac{\\varepsilon}{3}$"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\forall n>N:\\;|A B-x_n y_n|<\\varepsilon$"
+                  ],
+                  "reasons": [
+                    "组合前三个不等式"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Fix",
+              "var_list": [
+                "\\varepsilon"
+              ]
+            },
+            {
+              "proposition": [
+                "$\\lim_{n \\to \\infty} (x_n\\,y_n)=A\\,B$"
+              ],
+              "reasons": [
+                "limit definition"
+              ],
+              "type": "Have"
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Fix",
+      "var_list": [
+        "{x_n}",
+        "{y_n}",
+        "A",
+        "B"
+      ]
+    }
+  ]
+}

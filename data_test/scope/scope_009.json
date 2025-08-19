@@ -1,0 +1,110 @@
+{
+  "ProofStructure": [
+    {
+      "comment": "以下先固定自变量",
+      "type": "Hint"
+    },
+    {
+      "condition": [
+        "a>0"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "\\lim_{n \\to \\infty} \\sqrt[n]{a} = 1"
+          ],
+          "scope": [
+            {
+              "assumption": [
+                "a \\geq 1"
+              ],
+              "scope": [
+                {
+                  "condition": [
+                    "\\varepsilon>0"
+                  ],
+                  "scope": [
+                    {
+                      "proposition": [
+                        "\\exists\\,N \\in \\mathbb{N},\\;1 \\le a < (1+\\varepsilon)^n\\;\\text{for all }n>N"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "condition": [
+                        "N\\in\\mathbb{N}",
+                        "1 \\le a < (1+\\varepsilon)^n\\;\\text{for all }n>N"
+                      ],
+                      "scope": [
+                        {
+                          "proposition": [
+                            "1 \\le \\\\sqrt[n]{a} < 1+\\varepsilon\\\\;\\text{for all }n>N"
+                          ],
+                          "reasons": [],
+                          "type": "Have"
+                        }
+                      ],
+                      "type": "Fix",
+                      "var_list": [
+                        "N"
+                      ]
+                    },
+                    {
+                      "proposition": [
+                        "\\\\lim_{n \\\\to \\\\infty} \\\\sqrt[n]{a} = 1"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    }
+                  ],
+                  "type": "Fix",
+                  "var_list": [
+                    "\\\\varepsilon"
+                  ]
+                },
+                {
+                  "assumption": [
+                    "0 < a < 1"
+                  ],
+                  "scope": [
+                    {
+                      "proposition": [
+                        "1 < \\\\dfrac{1}{a}"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "\\\\lim_{n \\\\to \\\\infty} \\\\sqrt[n]{\\\\frac{1}{a}} = 1"
+                      ],
+                      "reasons": [
+                        "由 a^{-1}>1, 可应用前一情形"
+                      ],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "\\\\lim_{n \\\\to \\\\infty} \\\\sqrt[n]{a}=\\\\frac{1}{\\\\lim_{n \\\\to \\\\infty} \\\\sqrt[n]{\\\\frac{1}{a}}}=1"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    }
+                  ],
+                  "type": "Assume"
+                }
+              ],
+              "type": "Assume"
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Fix",
+      "var_list": [
+        "a"
+      ]
+    }
+  ]
+}

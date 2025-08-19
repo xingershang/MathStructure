@@ -1,0 +1,123 @@
+{
+  "ProofStructure": [
+    {
+      "condition": [
+        "q is any real number"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "lim_{n\\to\\infty} \\dfrac{q^{n}}{n!}=0"
+          ],
+          "scope": [
+            {
+              "assumption": [
+                "q=0"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "lim_{n\\to\\infty} \\dfrac{q^{n}}{n!}=0"
+                  ],
+                  "reasons": [
+                    "for n\\ge 1, q^{n}=0"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Assume"
+            },
+            {
+              "proposition": [
+                "\\left|\\dfrac{q^{n}}{n!}\\right|=\\dfrac{|q|^{n}}{n!}"
+              ],
+              "reasons": [],
+              "type": "Have"
+            },
+            {
+              "proposition": [
+                "It suffices to prove the assertion for q>0"
+              ],
+              "reasons": [
+                "previous equality"
+              ],
+              "type": "Have"
+            },
+            {
+              "assumption": [
+                "q>0"
+              ],
+              "scope": [
+                {
+                  "meaning": [
+                    "x_{n}=\\dfrac{q^{n}}{n!}"
+                  ],
+                  "symbol": "x_n",
+                  "type": "Define"
+                },
+                {
+                  "proposition": [
+                    "x_{n+1}=\\dfrac{q}{n+1}\\,x_{n}"
+                  ],
+                  "reasons": [
+                    "algebraic calculation"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "There exists N\\in\\mathbb{N} such that 0<\\dfrac{q}{n+1}<1\\text{ for all }n>N"
+                  ],
+                  "reasons": [
+                    "the natural numbers are unbounded above"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "For n>N,\\;x_{n+1}<x_{n}"
+                  ],
+                  "reasons": [
+                    "0<\\dfrac{q}{n+1}<1"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "The limit \\displaystyle\\lim_{n\\to\\infty}x_{n}=x\\text{ exists}"
+                  ],
+                  "reasons": [
+                    "decreasing sequence bounded below by 0"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "x=\\lim_{n\\to\\infty}x_{n+1}=\\lim_{n\\to\\infty}\\dfrac{q}{n+1}x_{n}=0\\cdot x=0"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "lim_{n\\to\\infty} \\dfrac{q^{n}}{n!}=0"
+                  ],
+                  "reasons": [
+                    "x=0"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Assume"
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Fix",
+      "var_list": [
+        "q"
+      ]
+    }
+  ]
+}

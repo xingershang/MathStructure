@@ -1,0 +1,100 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$a+b+c+d = 6$",
+        "$a^2+b^2+c^2+d^2 = 12$"
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$36 \\le 4(a^3+b^3+c^3+d^3) - (a^4+b^4+c^4+d^4) \\le 48$"
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$4(a^3+b^3+c^3+d^3) - (a^4+b^4+c^4+d^4) = -((a-1)^4+(b-1)^4+(c-1)^4+(d-1)^4) + 6(a^2+b^2+c^2+d^2) - 4(a+b+c+d) + 4$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$4(a^3+b^3+c^3+d^3) - (a^4+b^4+c^4+d^4)= -((a-1)^4+(b-1)^4+(c-1)^4+(d-1)^4) + 52$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "$x=a-1$",
+        "$y=b-1$",
+        "$z=c-1$",
+        "$t=d-1$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y",
+        "z",
+        "t"
+      ]
+    },
+    {
+      "proposition": [
+        "$16 \\ge x^4+y^4+z^4+t^4 \\ge 4$"
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$x^2+y^2+z^2+t^2=(a^2+b^2+c^2+d^2)-2(a+b+c+d)+4=4$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "comment": "we will not use the value of x+y+z+t though it can be found",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "$x^4+y^4+z^4+t^4 \\ge \\frac{(x^2+y^2+z^2+t^2)^2}{4}=4$"
+      ],
+      "reasons": [
+        "power mean inequality"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$(x^2+y^2+z^2+t^2)^2=(x^4+y^4+z^4+t^4)+q$ with $q\\ge0$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$x^4+y^4+z^4+t^4 \\le (x^2+y^2+z^2+t^2)^2=16$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Therefore $16 \\ge x^4+y^4+z^4+t^4 \\ge 4$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Consequently $36 \\le 4(a^3+b^3+c^3+d^3) - (a^4+b^4+c^4+d^4) \\le 48$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

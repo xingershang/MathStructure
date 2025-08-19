@@ -276,7 +276,7 @@ response_format = {
 
 try:
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="o3",
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": input_text}
@@ -294,13 +294,13 @@ try:
         
         pretty_output = format_proof_structure_to_pretty(output_data)
 
-    with open("../display/output_node_type.json", "w", encoding="utf-8") as f:
+    with open("../display/node_type.json", "w", encoding="utf-8") as f:
         f.write(output)
-    print("Generated: output_node_type.json")
+    print("Generated: node_type.json")
         
-    with open("../display/pretty_output_node_type.md", "w", encoding="utf-8") as f:
+    with open("../display/node_type.md", "w", encoding="utf-8") as f:
         f.write(pretty_output)
-    print("Generated: pretty_output_node_type.md")
+    print("Generated: node_type.md")
 
 
 except Exception as e:

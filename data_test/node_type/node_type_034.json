@@ -1,0 +1,68 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "a + b + c + d < \\frac{b}{a} + \\frac{c}{b} + \\frac{d}{c} + \\frac{a}{d}"
+      ],
+      "type": "Show"
+    },
+    {
+      "assumption": [
+        "a + b + c + d > \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a}"
+      ],
+      "type": "Assume"
+    },
+    {
+      "condition": [
+        "a,b,c,d>0",
+        "abcd = 1"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ]
+    },
+    {
+      "comment": "We show that the sum a+b+c+d is bounded above by a weighted mean of two cyclic ratios.",
+      "type": "Hint"
+    },
+    {
+      "comment": "Apply the AM-GM inequality to \\tfrac{a}{b},\\tfrac{b}{c},\\tfrac{c}{d},\\tfrac{d}{a}.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "a \\le \\tfrac14\\left(\\tfrac{a}{b}+\\tfrac{b}{c}+\\tfrac{c}{d}+\\tfrac{d}{a}\\right)",
+        "b \\le \\tfrac14\\left(\\tfrac{b}{c}+\\tfrac{c}{d}+\\tfrac{d}{a}+\\tfrac{a}{b}\\right)",
+        "c \\le \\tfrac14\\left(\\tfrac{c}{d}+\\tfrac{d}{a}+\\tfrac{a}{b}+\\tfrac{b}{c}\\right)",
+        "d \\le \\tfrac14\\left(\\tfrac{d}{a}+\\tfrac{a}{b}+\\tfrac{b}{c}+\\tfrac{c}{d}\\right)"
+      ],
+      "reasons": [
+        "AM-GM"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "a + b + c + d \\le \\tfrac34\\left(\\tfrac{a}{b}+\\tfrac{b}{c}+\\tfrac{c}{d}+\\tfrac{d}{a}\\right)+\\tfrac14\\left(\\tfrac{b}{a}+\\tfrac{c}{b}+\\tfrac{d}{c}+\\tfrac{a}{d}\\right)"
+      ],
+      "reasons": [
+        "Summing previous inequalities"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "a + b + c + d < \\tfrac{b}{a}+\\tfrac{c}{b}+\\tfrac{d}{c}+\\tfrac{a}{d}"
+      ],
+      "reasons": [
+        "Assumption a+b+c+d > a/b + b/c + c/d + d/a",
+        "Weighted-mean inequality obtained above"
+      ],
+      "type": "Have"
+    }
+  ]
+}
