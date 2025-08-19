@@ -1,0 +1,91 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$x_n \\leq y_n \\leq z_n$ for all $n > N \\in \\mathbb{N}$"
+      ],
+      "scope": [],
+      "type": "Show"
+    },
+    {
+      "assumption": [
+        "$\\lim_{n \\to \\infty} x_n = \\lim_{n \\to \\infty} z_n = A$"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "$\\lim_{n \\to \\infty} y_n = A$"
+          ],
+          "scope": [
+            {
+              "condition": [
+                "$\\varepsilon > 0$"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "There exists $N'$ such that $A-\\varepsilon < x_n$ for all $n > N'$"
+                  ],
+                  "reasons": [
+                    "$\\lim_{n \\to \\infty} x_n = A$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "There exists $N''$ such that $z_n < A+\\varepsilon$ for all $n > N''$"
+                  ],
+                  "reasons": [
+                    "$\\lim_{n \\to \\infty} z_n = A$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "meaning": [
+                    "$N=\\max\\{N',N''\\}$"
+                  ],
+                  "symbol": "N",
+                  "type": "Define"
+                },
+                {
+                  "proposition": [
+                    "For all $n > N$, $A-\\varepsilon < x_n \\leq y_n \\leq z_n < A+\\varepsilon$"
+                  ],
+                  "reasons": [
+                    "$x_n \\leq y_n \\leq z_n$",
+                    "previous bounds on $x_n$ and $z_n$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$|y_n - A| < \\varepsilon$"
+                  ],
+                  "reasons": [
+                    "previous inequality"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\lim_{n \\to \\infty} y_n = A$"
+                  ],
+                  "reasons": [
+                    "definition of limit"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Fix",
+              "var_list": [
+                "$\\varepsilon$"
+              ]
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Assume"
+    }
+  ]
+}

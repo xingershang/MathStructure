@@ -1,0 +1,104 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "there exists N in ℕ such that for all n > N, x_n < y_n"
+      ],
+      "scope": [
+        {
+          "condition": [
+            "{x_n} convergent and \\lim_{n\\to\\infty} x_n = A",
+            "{y_n} convergent and \\lim_{n\\to\\infty} y_n = B"
+          ],
+          "scope": [
+            {
+              "assumption": [
+                "A < B"
+              ],
+              "scope": [
+                {
+                  "condition": [
+                    "A < C < B"
+                  ],
+                  "scope": [
+                    {
+                      "condition": [
+                        "∀ n > N', |x_n - A| < C - A"
+                      ],
+                      "scope": [
+                        {
+                          "proposition": [
+                            "for all n > N', x_n < C"
+                          ],
+                          "reasons": [
+                            "|x_n - A| < C - A"
+                          ],
+                          "type": "Have"
+                        },
+                        {
+                          "condition": [
+                            "∀ n > N'', |y_n - B| < B - C"
+                          ],
+                          "scope": [
+                            {
+                              "proposition": [
+                                "for all n > N'', y_n > C"
+                              ],
+                              "reasons": [
+                                "|y_n - B| < B - C"
+                              ],
+                              "type": "Have"
+                            },
+                            {
+                              "meaning": [
+                                "N = \\max\\{N', N''\\}"
+                              ],
+                              "symbol": "N",
+                              "type": "Define"
+                            },
+                            {
+                              "proposition": [
+                                "for all n > N, x_n < y_n"
+                              ],
+                              "reasons": [
+                                "n > N implies n > N' and n > N''",
+                                "x_n < C",
+                                "y_n > C"
+                              ],
+                              "type": "Have"
+                            }
+                          ],
+                          "type": "Fix",
+                          "var_list": [
+                            "N''"
+                          ]
+                        }
+                      ],
+                      "type": "Fix",
+                      "var_list": [
+                        "N'"
+                      ]
+                    }
+                  ],
+                  "type": "Fix",
+                  "var_list": [
+                    "C"
+                  ]
+                }
+              ],
+              "type": "Assume"
+            }
+          ],
+          "type": "Fix",
+          "var_list": [
+            "x",
+            "y",
+            "A",
+            "B"
+          ]
+        }
+      ],
+      "type": "Show"
+    }
+  ]
+}

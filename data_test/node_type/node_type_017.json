@@ -1,0 +1,119 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "f takes on any value between its maximum value M and its minimum value m on [a,b]"
+      ],
+      "type": "Show"
+    },
+    {
+      "condition": [
+        "f(x) is continuous on [a,b]"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "a",
+        "b",
+        "f"
+      ]
+    },
+    {
+      "meaning": [
+        "M = max{ f(x) | x ∈ [a,b] }"
+      ],
+      "symbol": "M",
+      "type": "Define"
+    },
+    {
+      "meaning": [
+        "m = min{ f(x) | x ∈ [a,b] }"
+      ],
+      "symbol": "m",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "there exist ξ,η ∈ [a,b] such that f(ξ)=m, f(η)=M"
+      ],
+      "reasons": [
+        "Extreme Value Theorem"
+      ],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "ξ,η ∈ [a,b]",
+        "f(ξ)=m",
+        "f(η)=M"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "ξ",
+        "η"
+      ]
+    },
+    {
+      "assumption": [
+        "ξ < η"
+      ],
+      "type": "Assume"
+    },
+    {
+      "condition": [
+        "m < C < M"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "C"
+      ]
+    },
+    {
+      "meaning": [
+        "φ(x) = f(x) - C"
+      ],
+      "symbol": "φ",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "φ(x) is continuous on [ξ,η]"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "φ(ξ)=f(ξ)-C<0",
+        "φ(η)=f(η)-C>0"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "there exists ζ ∈ (ξ,η) such that φ(ζ)=0"
+      ],
+      "reasons": [
+        "Intermediate Value Theorem"
+      ],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "ζ ∈ (ξ,η)",
+        "φ(ζ)=0"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "ζ"
+      ]
+    },
+    {
+      "proposition": [
+        "f(ζ)=C"
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

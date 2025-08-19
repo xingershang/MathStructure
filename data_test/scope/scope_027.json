@@ -1,0 +1,302 @@
+{
+  "ProofStructure": [
+    {
+      "comment": "Let k≥2 be an integer.",
+      "type": "Hint"
+    },
+    {
+      "condition": [
+        "k is an integer",
+        "k \\ge 2"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "The smallest integer n\\ge k+1 with the property that “there exists a set of n distinct real numbers such that each element of the set can be written as a sum of k other distinct elements of the set” is n = k+4"
+          ],
+          "scope": [
+            {
+              "comment": "First we prove the lower bound n \\ge k+4.",
+              "type": "Hint"
+            },
+            {
+              "assumption": [
+                "There exists a set \\{a_1,a_2,\\dots ,a_n\\} of n distinct real numbers satisfying the required property",
+                "They are ordered a_1<a_2<\\cdots <a_n"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "a_1 \\ge a_2+\\cdots +a_{k+1}"
+                  ],
+                  "reasons": [
+                    "a_1 must be expressed as a sum of k other distinct elements"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "a_{n-k}+\\cdots +a_{n-1} \\ge a_n"
+                  ],
+                  "reasons": [
+                    "a_n must be expressed as a sum of k other distinct elements"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "n \\ge k+1"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "comment": "Case n = k+1 leads to a contradiction.",
+                  "type": "Hint"
+                },
+                {
+                  "assumption": [
+                    "n = k+1"
+                  ],
+                  "scope": [
+                    {
+                      "proposition": [
+                        "a_1 \\ge a_2+\\cdots +a_{k+1} > a_1+\\cdots +a_k \\ge a_{k+1}"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "Contradiction"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    }
+                  ],
+                  "type": "Assume"
+                },
+                {
+                  "comment": "Case n = k+2 leads to a contradiction.",
+                  "type": "Hint"
+                },
+                {
+                  "assumption": [
+                    "n = k+2"
+                  ],
+                  "scope": [
+                    {
+                      "proposition": [
+                        "a_1 \\ge a_2+\\cdots +a_{k+1} \\ge a_{k+2}"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "Contradiction"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    }
+                  ],
+                  "type": "Assume"
+                },
+                {
+                  "comment": "Case n = k+3 also gives a contradiction.",
+                  "type": "Hint"
+                },
+                {
+                  "assumption": [
+                    "n = k+3"
+                  ],
+                  "scope": [
+                    {
+                      "proposition": [
+                        "a_1 \\ge a_2+\\cdots +a_{k+1}"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "a_3+\\cdots +a_{k+2} \\ge a_{k+3}"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "Adding the two inequalities gives a_1+a_{k+2} \\ge a_2+a_{k+3}"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    },
+                    {
+                      "proposition": [
+                        "Contradiction"
+                      ],
+                      "reasons": [],
+                      "type": "Have"
+                    }
+                  ],
+                  "type": "Assume"
+                },
+                {
+                  "proposition": [
+                    "Therefore n \\ge k+4"
+                  ],
+                  "reasons": [
+                    "All smaller possibilities contradicted"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Assume"
+            },
+            {
+              "comment": "Now we construct a set with k+4 elements that satisfies the property.",
+              "type": "Hint"
+            },
+            {
+              "comment": "Even k = 2l case",
+              "type": "Hint"
+            },
+            {
+              "assumption": [
+                "k = 2l",
+                "l \\ge 1"
+              ],
+              "scope": [
+                {
+                  "meaning": [
+                    "For 1\\le i\\le l+2, A_i = \\{-i,i\\}"
+                  ],
+                  "symbol": "A_i",
+                  "type": "Define"
+                },
+                {
+                  "meaning": [
+                    "S = A_1 \\cup A_2 \\cup \\cdots \\cup A_{l+2}"
+                  ],
+                  "symbol": "S",
+                  "type": "Define"
+                },
+                {
+                  "proposition": [
+                    "S has exactly k+4 = 2l+4 elements"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "comment": "Showing every element of S is a sum of k other distinct elements (even k).",
+                  "type": "Hint"
+                },
+                {
+                  "proposition": [
+                    "If i can be represented, so can -i by negating",
+                    "Consider only 1\\le i\\le l+2"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "For i<l+2 we use the numbers from any l-1 sets A_j (j\\ne1,i+1) together with i+1 and -1 to obtain i"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "For i = l+2 we use the numbers from any l-1 sets A_j (j\\ne 1,l+1) together with l+1 and 1 to obtain l+2"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "Thus every element of S can be written as a sum of k distinct others"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                }
+              ],
+              "type": "Assume"
+            },
+            {
+              "comment": "Odd k = 2l+1 case",
+              "type": "Hint"
+            },
+            {
+              "assumption": [
+                "k = 2l+1",
+                "l \\ge 1"
+              ],
+              "scope": [
+                {
+                  "meaning": [
+                    "Take the previous even–k set S and add 0"
+                  ],
+                  "symbol": "S'",
+                  "type": "Define"
+                },
+                {
+                  "proposition": [
+                    "S' has (k+4) elements"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "Adding 0 preserves all earlier representations"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "0 can be represented as 1+2+(-3) plus the elements of the remaining l-1 sets A_4,\\dots ,A_{l+2}, giving a sum of k distinct elements"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "Hence every element of S' is a sum of k other distinct elements"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                }
+              ],
+              "type": "Assume"
+            },
+            {
+              "proposition": [
+                "There exists a set of k+4 distinct real numbers satisfying the property"
+              ],
+              "reasons": [
+                "Both even and odd k constructions provided"
+              ],
+              "type": "Have"
+            },
+            {
+              "proposition": [
+                "Combining the lower bound n \\ge k+4 with the construction for n = k+4, the smallest such n is k+4"
+              ],
+              "reasons": [],
+              "type": "Have"
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Fix",
+      "var_list": [
+        "k"
+      ]
+    }
+  ]
+}

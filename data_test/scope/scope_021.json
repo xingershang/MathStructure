@@ -1,0 +1,90 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$\\lim\\limits_{n\\to\\infty}\\dfrac{n}{n+3}=1$"
+      ],
+      "scope": [
+        {
+          "meaning": [
+            "\"$x_n=\\dfrac{n}{n+3}$\""
+          ],
+          "symbol": "$x_n$",
+          "type": "Define"
+        },
+        {
+          "condition": [
+            "$\\varepsilon>0$"
+          ],
+          "scope": [
+            {
+              "proposition": [
+                "$\\left|\\dfrac{n}{n+3}-1\\right|=\\left|\\dfrac{n-(n+3)}{n+3}\\right|=\\left|\\dfrac{-3}{n+3}\\right|=\\dfrac{3}{n+3}$"
+              ],
+              "reasons": [],
+              "type": "Have"
+            },
+            {
+              "proposition": [
+                "$\\left|\\dfrac{n}{n+3}-1\\right|<\\varepsilon$"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "$\\dfrac{3}{n+3}<\\varepsilon$"
+                  ],
+                  "reasons": [],
+                  "type": "OnlyNeeds"
+                },
+                {
+                  "proposition": [
+                    "$n>\\dfrac{3}{\\varepsilon}-3$"
+                  ],
+                  "reasons": [
+                    "化不等式得"
+                  ],
+                  "type": "OnlyNeeds"
+                }
+              ],
+              "type": "ToHave"
+            },
+            {
+              "condition": [
+                "$N=\\left\\lceil\\dfrac{3}{\\varepsilon}\\right\\rceil-3$"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "当 $n>N$ 时，$\\left|\\dfrac{n}{n+3}-1\\right|=\\dfrac{3}{n+3}<\\varepsilon$"
+                  ],
+                  "reasons": [
+                    "$n>N\\Rightarrow n>\\dfrac{3}{\\varepsilon}-3$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\lim\\limits_{n\\to\\infty}\\dfrac{n}{n+3}=1$"
+                  ],
+                  "reasons": [
+                    "极限定义"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Find",
+              "var_list": [
+                "$N$"
+              ]
+            }
+          ],
+          "type": "Fix",
+          "var_list": [
+            "$\\varepsilon$"
+          ]
+        }
+      ],
+      "type": "Show"
+    }
+  ]
+}

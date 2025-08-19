@@ -701,7 +701,6 @@ Let’s construct...是一个Hint
 [SufficeToProve: "the $g$ part is a bijection from $D := B \setminus \bigcup_{i=0}^{\infty} D_i$ into $C := A \setminus \bigcup_{i=0}^{\infty} C_i$."]
 [SufficeToProve: {"$\forall d \in D.\, \exists c \in C.\, g(d) = c$; $\forall c \in C.\, \exists d \in D.\, g(d) = c$."}]
 [Show: "$\forall d \in D.\, \exists c \in C.\, g(d) = c$"]
-[Have: "$\forall d \in D. \exists c \in C. g(d) = c$"]
 [Have: "$\exists c \in A, g(d) = c$" by "$g$ is an injection from $B$ into $A$"]
 [Show: "$c \notin C_n$"]
 [Assume: "$c \in C_n$"]
@@ -712,7 +711,6 @@ Let’s construct...是一个Hint
 [Have: "contradiction"]
 [Have: "$c \in C$"]
 [Show: "$\forall c \in C.\, \exists d \in D.\, g(d) = c$"]
-[Have: "$\forall c \in C. \exists d \in D. g(d) = c$"]
 [Have: "$\exists d \in B. g(d) = c$" by "Otherwise, $c \in C_0$, contradiction."]
 [Show: "$d \notin D_n$"]
 [Assume: "$d \notin D_n$"]
@@ -1018,6 +1016,33 @@ $$
 [Have: "$\left| x_n - a \right| < \varepsilon$"]
 [Have: {"$\lim_{n \to \infty} x_n = a$"; "$\left\{x_n\right\}$ 是收敛的"}]
 
+
+### 样例 19
+
+输入：
+
+下面我们证明，如果$H\preceq G,K\preceq G$，那么$HK\preceq G\iff HK=KH$。左推右，因为$HK$是子群，根据等价定义得到$(HK)^{-1}=HK$，而$(HK)^{-1}=K^{-1}H^{-1}$，而$H,K$都是子群，因此等于$KH$；右推左，$(HK)^{-1}=K^{-1}H^{-1}=KH=HK$，同时$(HK)(HK)=H(KH)K$$=H(HK)K=(HH)(KK)=HK$，因此$HK\preceq G$。
+
+注意事项：
+
+在提取该段证明的结构时，需要你把[Show: "左推右"]具体展开为[Show: "$HK\preceq G\implies HK=KH$"]
+
+输出：
+
+[Assume: {"$H\preceq G$"; "$K\preceq G$"}]
+[Show: "$HK\preceq G\iff HK=KH$"]
+[Show: "$HK\preceq G\implies HK=KH$"]
+[Show: "$HK\preceq G$"]
+[Have: "$(HK)^{-1}=HK$" by {"等价定义"; "$HK$是子群"}]
+[Have: "$(HK)^{-1}=K^{-1}H^{-1}$"]
+[Have: "$H,K$都是子群"]
+[Have: "$(HK)^{-1}=K^{-1}H^{-1}=KH$"]
+[Have: "$HK=KH$"]
+[Show: "$HK=KH \implies HK\preceq G$"]
+[Have: "$(HK)^{-1}=K^{-1}H^{-1}=KH=HK$"]
+[Have: "$(HK)(HK)=H(KH)K$$=H(HK)K=(HH)(KK)=HK$"]
+[Have: "$HK\preceq G$"]
+
 ### 样例 19
 
 输入：
@@ -1109,9 +1134,11 @@ $$
 
 输入：
 
+## Goal
+
 Let $\{x_n\}$ and $\{y_n\}$ be numerical sequences. Prove that if $\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$, then $\lim_{n \to \infty} (x_n + y_n) = A + B$.
 
-$Proof.$
+## Proof
 
 Denote $|A - x_n| = \Delta(x_n)$, $|B - y_n| = \Delta(y_n)$. Then we have
 
@@ -1129,9 +1156,13 @@ which, by definition of limit, gives us $\lim_{n \to \infty} (x_n + y_n) = A + B
 
 $Qed.$
 
+注意事项：
+注意，并不是Goal标题下的都要识别为Show。这里，Let $\{x_n\}$ and $\{y_n\}$ be numerical sequences这句话就应该被识别为Fix，if $\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$也应该被识别为fix，then $\lim_{n \to \infty} (x_n + y_n) = A + B$才应该被识别为Show。
+
 结构：
 
-[Fix: {x,y,A,B} such that "$\{x_n\}$ and $\{y_n\}$ be numerical sequences"; " $\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$"]
+[Fix: {x,y} such that "$\{x_n\}$ and $\{y_n\}$ be numerical sequences"; ]
+[Fix: {A,B} such that "$\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$"]
 [Show: "$\lim_{n \to \infty} (x_n + y_n) = A + B$"]
 [Define: "\Delta(x_n)" as " $|A - x_n| = \Delta(x_n)$"]
 [Define: "\Delta(y_n)" as " $|B - y_n| = \Delta(y_n)$"]
@@ -1174,69 +1205,13 @@ $$
 [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{1}{2}\int x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{1}{2}}\mathrm{\;d}\left( {{a}^{2} + {x}^{2}}\right)  = \frac{1}{3}\int x\mathrm{\;d}\left\lbrack  {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\right\rbrack= \frac{1}{3}x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}} - \frac{1}{3}\int {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\mathrm{\;d}x= \frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x - \frac{1}{3}\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x.$"]
 [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{3}{4}\left\lbrack  {\frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x}\right\rbrack= \frac{1}{4}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{4}{\left\lbrack  \frac{x}{2}\sqrt{{a}^{2} + {x}^{2}} + \frac{{a}^{2}}{2}\ln \left( x + \sqrt{{a}^{2} + {x}^{2}}\right) \right\rbrack  } + C= \frac{x\left( {2{x}^{2} + {a}^{2}}\right) }{8}\sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{4}}{8}\ln \left( {x + \sqrt{{x}^{2} + {a}^{2}}}\right)  + C.$"]
 
-### 样例 22
-
-输入：
-
-下面我们证明，如果$H\preceq G,K\preceq G$，那么$HK\preceq G\iff HK=KH$。左推右，因为$HK$是子群，根据等价定义得到$(HK)^{-1}=HK$，而$(HK)^{-1}=K^{-1}H^{-1}$，而$H,K$都是子群，因此等于$KH$；右推左，$(HK)^{-1}=K^{-1}H^{-1}=KH=HK$，同时$(HK)(HK)=H(KH)K$$=H(HK)K=(HH)(KK)=HK$，因此$HK\preceq G$。
-
-注意事项：
-
-在提取该段证明的结构时，需要你把[Show: "左推右"]具体展开为[Show: "$HK\preceq G\implies HK=KH$"]
-
-输出：
-
-[Assume: {"$H\preceq G$"; "$K\preceq G$"}]
-[Show: "$HK\preceq G\iff HK=KH$"]
-[Show: "$HK\preceq G\implies HK=KH$"]
-[Show: "$HK\preceq G$"]
-[Have: "$(HK)^{-1}=HK$" by {"等价定义"; "$HK$是子群"}]
-[Have: "$(HK)^{-1}=K^{-1}H^{-1}$"]
-[Have: "$H,K$都是子群"]
-[Have: "$(HK)^{-1}=K^{-1}H^{-1}=KH$"]
-[Have: "$HK=KH$"]
-[Show: "$HK=KH \implies HK\preceq G$"]
-[Have: "$(HK)^{-1}=K^{-1}H^{-1}=KH=HK$"]
-[Have: "$(HK)(HK)=H(KH)K$$=H(HK)K=(HH)(KK)=HK$"]
-[Have: "$HK\preceq G$"]
-
-### 样例 23
-
-输入：
-
-## Goal
-
-$A = \bigcup \mathcal{P}(A)$
-
-## Proof
-
-  - ($\subseteq$): Let $x \in A$. The singleton set $\{x\}$ is a subset of $A$, so $\{x\} \in \mathcal{P}(A)$. Therefore, $x \in \bigcup \mathcal{P}(A)$ since $x \in \{x\}$ and $\{x\}$ is in $\mathcal{P}(A)$.
-
-  - ($\supseteq$): Let $x \in \bigcup \mathcal{P}(A)$. By definition, there exists some $Y \in \mathcal{P}(A)$ such that $x \in Y$. Since $Y \in \mathcal{P}(A)$, we know $Y \subseteq A$. Therefore, $x \in A$.
-
-Hence, $A = \bigcup \mathcal{P}(A)$.
-
-输出：
-
-[Show: "$A = \bigcup \mathcal{P}(A)$"]
-[Show: "A \subseteq \bigcup \mathcal{P}(A)"]
-[Fix: {x} such that "x \in A"]
-[Have: "\{x\} \subseteq A"]
-[Have: "\{x\} \in \mathcal{P}(A)"]
-[Have: "x \in \bigcup \mathcal{P}(A)" by {"x \in \{x\}"; "\{x\} \in \mathcal{P}(A)"}]
-[Show: "\bigcup \mathcal{P}(A) \subseteq A"]
-[Fix: {x} such that "x \in \bigcup \mathcal{P}(A)"]
-[Have: "\exists Y \in \mathcal{P}(A), x \in Y" by "definition"]
-[Have: "Y \subseteq A" by "Y \in \mathcal{P}(A)"]
-[Have: "Y \subseteq A"]
-[Have: "$x \in A$"]
-[Show: "A = \bigcup \mathcal{P}(A)"]
-
 ## 特别提醒
 
 注意观察上述样例，你会发现提取结构时，从不补充自然语言没有的表达，不自行补充reasons，不自行补充hint。结构提取必须完全以原文为准！（如果文本是英文的，你也用英文；文本是中文的，你也用中文）
 
 注意，hint是指那些没有提出具体断言、假设、定义等等的自然语言句子。例如“我们考虑使用某某方法”，或“于是我们可以得到答案了”这样的表达。对于有具体数学内容的句子，一般不识别为hint！
 
-如果要提取的自然语言文本是一个证明文本，总是先把证明目标用show写出（如果证明中涉及一些定义、假设或量词，则需在show前面使用Define/Assume/Fix）
+请你注意区分，证明的开头有的是前提，要用Assume或Fix；有的是证明目标，要用Show。请仔细区分。
+
+一般而言，你的工作方法是：逐句切分自然语言（不要遗漏任何一句），然后对切分后的每一句识别type
 

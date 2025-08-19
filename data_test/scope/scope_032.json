@@ -1,0 +1,144 @@
+{
+  "ProofStructure": [
+    {
+      "condition": [
+        "b,n>1 整数",
+        "对每个 k>1 , 存在整数 a_k 使得 k | (b-a_k^n)"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "存在整数 A 使 b=A^n"
+          ],
+          "scope": [
+            {
+              "condition": [
+                "b = p_1^{\\alpha_1}\\cdots p_s^{\\alpha_s}",
+                "p_1,\\ldots ,p_s 不同质数"
+              ],
+              "scope": [
+                {
+                  "comment": "我们的目标是证明所有 \\alpha_i 都能被 n 整除, 于是可设 A = p_1^{\\alpha_1/n}\\cdots p_s^{\\alpha_s/n}",
+                  "type": "Hint"
+                },
+                {
+                  "condition": [
+                    "k = b^2"
+                  ],
+                  "scope": [
+                    {
+                      "condition": [
+                        "b-a_k^n 可被 k 整除"
+                      ],
+                      "scope": [
+                        {
+                          "proposition": [
+                            "b-a_k^n 可被 b^2 整除"
+                          ],
+                          "reasons": [
+                            "k=b^2",
+                            "定义 a_k"
+                          ],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "对每个 i, b-a_k^n 可被 p_i^{2\\alpha_i} 整除"
+                          ],
+                          "reasons": [
+                            "b-a_k^n 可被 b^2 整除",
+                            "b = \\prod p_i^{\\alpha_i}"
+                          ],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "a_k^n \\equiv b \\equiv 0 \\pmod{p_i^{\\alpha_i}}"
+                          ],
+                          "reasons": [
+                            "p_i^{\\alpha_i} | b",
+                            "p_i^{2\\alpha_i} | (b-a_k^n)"
+                          ],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "a_k^n \\not\\equiv 0 \\pmod{p_i^{\\alpha_i+1}}"
+                          ],
+                          "reasons": [
+                            "p_i^{\\alpha_i+1} \\nmid b",
+                            "p_i^{2\\alpha_i} > p_i^{\\alpha_i}"
+                          ],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "a_k^n 的 p_i-指数为 \\alpha_i"
+                          ],
+                          "reasons": [
+                            "上两式同模比较"
+                          ],
+                          "type": "Have"
+                        },
+                        {
+                          "proposition": [
+                            "\\alpha_i 能被 n 整除"
+                          ],
+                          "reasons": [
+                            "a_k^n 是 n 次幂"
+                          ],
+                          "type": "Have"
+                        }
+                      ],
+                      "type": "Fix",
+                      "var_list": [
+                        "a_k"
+                      ]
+                    }
+                  ],
+                  "type": "Fix",
+                  "var_list": [
+                    "k"
+                  ]
+                },
+                {
+                  "proposition": [
+                    "所有 \\alpha_i 都能被 n 整除"
+                  ],
+                  "reasons": [
+                    "对每个 i 都成立"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "b=A^n 对某个整数 A 成立"
+                  ],
+                  "reasons": [
+                    "b 的质因数分解中各指数均被 n 整除"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Fix",
+              "var_list": [
+                "p_1",
+                "\\ldots ",
+                "p_s",
+                " \\alpha_1",
+                "\\ldots ",
+                "\\alpha_s"
+              ]
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Fix",
+      "var_list": [
+        "b",
+        "n"
+      ]
+    }
+  ]
+}

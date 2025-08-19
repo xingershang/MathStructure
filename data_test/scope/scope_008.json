@@ -1,0 +1,60 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$\\displaystyle\\lim_{n \\to \\infty} \\sqrt[n]{n}=1$"
+      ],
+      "scope": [
+        {
+          "condition": [
+            "$\\epsilon>0$"
+          ],
+          "scope": [
+            {
+              "proposition": [
+                "$\\exists\\,N\\in\\mathbb{N}\\text{ such that }\\forall n>N,\\;1\\le n<(1+\\epsilon)^n$"
+              ],
+              "reasons": [
+                "By what was just proved"
+              ],
+              "type": "Have"
+            },
+            {
+              "condition": [
+                "$\\forall n>N,\\;1\\le n<(1+\\epsilon)^n$"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "$1\\le \\sqrt[n]{n}<1+\\epsilon$"
+                  ],
+                  "reasons": [
+                    "$n>N$",
+                    "$1\\le n<(1+\\epsilon)^n$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\displaystyle\\lim_{n\\to\\infty}\\sqrt[n]{n}=1$"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                }
+              ],
+              "type": "Fix",
+              "var_list": [
+                "N"
+              ]
+            }
+          ],
+          "type": "Fix",
+          "var_list": [
+            "\\epsilon"
+          ]
+        }
+      ],
+      "type": "Show"
+    }
+  ]
+}

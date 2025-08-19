@@ -1,0 +1,13 @@
+[Show: "$f(x)=\sin x$ is continuous on $(-\infty,+\infty)$"]
+{
+    [Fix: {x_0} st "$x_0 \in (-\infty,+\infty)$"]
+    {
+        [Have: "$|\sin x-\sin x_0| = 2 \left| \cos \frac{x+x_0}{2}\,\sin \frac{x-x_0}{2} \right| \leq |x-x_0|$"]
+        [Fix: {\epsilon} st "$\epsilon>0$"]
+        {
+            [Define: "\delta" as ""$\delta=\epsilon$""]
+            [Have: "When $|x-x_0|<\delta$, we have $|\sin x-\sin x_0|\leq|x-x_0|<\epsilon$"]
+        }
+    }
+    [Have: "$f(x)=\sin x$ is continuous on $(-\infty,+\infty)$"]
+}

@@ -1,0 +1,88 @@
+{
+  "ProofStructure": [
+    {
+      "assumption": [
+        "\\{x_n\\} and \\{y_n\\} are numerical sequences",
+        "\\displaystyle\\lim_{n \\to \\infty} x_n = A",
+        "\\displaystyle\\lim_{n \\to \\infty} y_n = B"
+      ],
+      "scope": [
+        {
+          "proposition": [
+            "\\displaystyle\\lim_{n \\to \\infty} (x_n + y_n) = A + B"
+          ],
+          "scope": [
+            {
+              "meaning": [
+                "$|A - x_n| = \\Delta(x_n)$"
+              ],
+              "symbol": "$\\Delta(x_n)$",
+              "type": "Define"
+            },
+            {
+              "meaning": [
+                "$|B - y_n| = \\Delta(y_n)$"
+              ],
+              "symbol": "$\\Delta(y_n)$",
+              "type": "Define"
+            },
+            {
+              "proposition": [
+                "$|(A + B) - (x_n + y_n)| \\leq \\Delta(x_n) + \\Delta(y_n)$"
+              ],
+              "reasons": [],
+              "type": "Have"
+            },
+            {
+              "condition": [
+                "$\\varepsilon > 0$"
+              ],
+              "scope": [
+                {
+                  "proposition": [
+                    "there exists $N'$ such that \\Delta(x_n) < \\varepsilon / 2 for all $n > N'$"
+                  ],
+                  "reasons": [
+                    "$\\displaystyle\\lim_{n \\to \\infty} x_n = A$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "there exists $N''$ such that \\Delta(y_n) < \\varepsilon / 2 for all $n > N''$"
+                  ],
+                  "reasons": [
+                    "$\\displaystyle\\lim_{n \\to \\infty} y_n = B$"
+                  ],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "for $n > \\max\\{N', N''\\}$, $|(A + B) - (x_n + y_n)| < \\varepsilon$"
+                  ],
+                  "reasons": [],
+                  "type": "Have"
+                },
+                {
+                  "proposition": [
+                    "$\\displaystyle\\lim_{n \\to \\infty} (x_n + y_n) = A + B$"
+                  ],
+                  "reasons": [
+                    "definition of limit"
+                  ],
+                  "type": "Have"
+                }
+              ],
+              "type": "Fix",
+              "var_list": [
+                "\\varepsilon"
+              ]
+            }
+          ],
+          "type": "Show"
+        }
+      ],
+      "type": "Assume"
+    }
+  ]
+}

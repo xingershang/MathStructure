@@ -1,0 +1,89 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$\\lim_{x\\to x_0}f(x)=A$",
+        "$\\lim_{x\\to x_0}g(x)=B$",
+        "$A>B$"
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "存在 $\\delta>0$ ，使得当 $0<|x-x_0|<\\delta$ 时 $f(x)>g(x)$"
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$\\epsilon_0=\\dfrac{A-B}{2}$"
+      ],
+      "symbol": "$\\epsilon_0$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$\\epsilon_0>0$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "存在 $\\delta_1>0$ ，当 $0<|x-x_0|<\\delta_1$ 时有 $|f(x)-A|<\\epsilon_0$"
+      ],
+      "reasons": [
+        "$\\lim_{x\\to x_0}f(x)=A$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "当 $0<|x-x_0|<\\delta_1$ 时 $f(x)>(A+B)/2$"
+      ],
+      "reasons": [
+        "$|f(x)-A|<\\epsilon_0$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "存在 $\\delta_2>0$ ，当 $0<|x-x_0|<\\delta_2$ 时有 $|g(x)-B|<\\epsilon_0$"
+      ],
+      "reasons": [
+        "$\\lim_{x\\to x_0}g(x)=B$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "当 $0<|x-x_0|<\\delta_2$ 时 $g(x)<(A+B)/2$"
+      ],
+      "reasons": [
+        "$|g(x)-B|<\\epsilon_0$"
+      ],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$\\delta=\\min\\{\\delta_1,\\delta_2\\}$"
+      ],
+      "symbol": "$\\delta$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "当 $0<|x-x_0|<\\delta$ 时 $g(x)<(A+B)/2<f(x)$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "当 $0<|x-x_0|<\\delta$ 时 $f(x)>g(x)$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

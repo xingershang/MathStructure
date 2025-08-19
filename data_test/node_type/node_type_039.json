@@ -1,0 +1,141 @@
+{
+  "ProofStructure": [
+    {
+      "comment": "A sequence $x_n$ is defined",
+      "type": "Hint"
+    },
+    {
+      "meaning": [
+        "$x_1 = 1$",
+        "$x_{2k} = -x_k$",
+        "$x_{2k-1} = (-1)^{k+1}x_k$  for all  $k\\ge 1$"
+      ],
+      "symbol": "x_n",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "对所有 $n\\ge 1,\\;x_1+\\cdots +x_n\\ge 0$"
+      ],
+      "type": "Show"
+    },
+    {
+      "comment": "We start with some observations.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "$x_{4k-3}=x_{2k-1}=-x_{4k-2}$",
+        "$x_{4k-1}=x_{4k}=-x_{2k}=x_k$"
+      ],
+      "reasons": [
+        "definition of $x_i$"
+      ],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$S_n=\\sum_{i=1}^{n}x_i$"
+      ],
+      "symbol": "S_n",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$S_{4k}=2S_k$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$S_{4k+2}=S_{4k}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$S_n\\equiv n \\; (\\mathrm{mod}\\,2)$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "comment": "We prove by induction on $k$ that $S_i\\ge 0$ for all $i\\le 4k$.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "$S_1=1,\\;S_2=0,\\;S_3=1,\\;S_4=2\\;(\\text{so }S_i\\ge 0\\text{ for }i\\le 4)$"
+      ],
+      "reasons": [
+        "direct calculation"
+      ],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "$S_i\\ge 0$ for all $i\\le 4k$ (induction hypothesis)"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "$S_{4k+4}=2S_{k+1}\\ge 0$"
+      ],
+      "reasons": [
+        "$S_{4k}=2S_k$ pattern"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$S_{4k+2}=S_{4k}\\ge 0$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$S_{4k+3}=\\dfrac{S_{4k+2}+S_{4k+4}}{2}\\ge 0$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "comment": "It remains to check $S_{4k+1}\\ge 0$.",
+      "type": "Hint"
+    },
+    {
+      "assumption": [
+        "$k$ is odd"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "$S_{4k}=2S_k\\ge 2\\Rightarrow S_{4k+1}=S_{4k}+x_{4k+1}\\ge 1$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "$k$ is even"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "$x_{4k+1}=x_{k+1},\\;S_{4k+1}=S_k+S_{k+1}\\ge 0$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "comment": "Induction complete; thus $S_n\\ge 0$ for all $n$.",
+      "type": "Hint"
+    }
+  ]
+}

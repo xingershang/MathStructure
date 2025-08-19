@@ -1,0 +1,169 @@
+{
+  "ProofStructure": [
+    {
+      "condition": [
+        "$\\{x_n\\},\\{y_n\\}$ are numerical sequences",
+        "$\\lim_{n\\to\\infty} x_n = A$",
+        "$\\lim_{n\\to\\infty} y_n = B$",
+        "$y_n\\neq 0\\;(n=1,2,\\ldots)$",
+        "$B\\neq 0$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y",
+        "A",
+        "B"
+      ]
+    },
+    {
+      "proposition": [
+        "$\\lim_{n \\to \\infty} \\frac{x_n}{y_n} = \\frac{A}{B}$"
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$\\Delta(x_n)=|A - x_n|$"
+      ],
+      "symbol": "\\Delta(x_n)",
+      "type": "Define"
+    },
+    {
+      "meaning": [
+        "$\\Delta(y_n)=|B - y_n|$"
+      ],
+      "symbol": "\\Delta(y_n)",
+      "type": "Define"
+    },
+    {
+      "meaning": [
+        "$\\delta(y_n)=\\frac{\\Delta(y_n)}{|y_n|}$"
+      ],
+      "symbol": "\\delta(y_n)",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$\\left| \\frac{A}{B} - \\frac{x_n}{y_n} \\right| \\leq \\frac{|x_n| \\Delta(y_n) + |y_n| \\Delta(x_n)}{y_n^2} \\cdot \\frac{1}{1 - \\delta(y_n)}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "$\\varepsilon > 0$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "\\varepsilon"
+      ]
+    },
+    {
+      "proposition": [
+        "there exists $N'$ such that $\\Delta(x_n) < \\min\\{1, \\frac{\\varepsilon |B|}{8}\\}$ for all $n > N'$"
+      ],
+      "reasons": [
+        "$\\lim_{n\\to\\infty} x_n=A$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "there exists $N''$ such that $\\Delta(y_n) < \\min\\{\\frac{|B|}{4}, \\frac{\\varepsilon B^2}{16(|A| + 1)}\\}$ for all $n > N''$"
+      ],
+      "reasons": [
+        "$\\lim_{n\\to\\infty} y_n=B$"
+      ],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$N = \\max\\{N', N''\\}$"
+      ],
+      "symbol": "N",
+      "type": "Define"
+    },
+    {
+      "condition": [
+        "$n > N$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "n"
+      ]
+    },
+    {
+      "proposition": [
+        "$|x_n| < |A| + \\Delta(x_n) < |A| + 1$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|y_n| > |B| - \\Delta(y_n) > \\frac{|B|}{2}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\frac{1}{|y_n|} < \\frac{2}{|B|}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$0 < \\delta(y_n) < \\frac{1}{2}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$1 - \\delta(y_n) > \\frac{1}{2}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|x_n| \\cdot \\frac{1}{y_n^2} \\Delta(y_n) < (|A| + 1) \\cdot \\frac{4}{B^2} \\cdot \\frac{\\varepsilon B^2}{16(|A| + 1)} = \\frac{\\varepsilon}{4}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\left| \\frac{1}{y_n} \\right| \\Delta(x_n) < \\frac{2}{|B|} \\cdot \\frac{\\varepsilon |B|}{8} = \\frac{\\varepsilon}{4}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$0 < \\frac{1}{1 - \\delta(y_n)} < 2$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\left| \\frac{A}{B} - \\frac{x_n}{y_n} \\right| < \\varepsilon$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\lim_{n \\to \\infty} \\frac{x_n}{y_n} = \\frac{A}{B}$"
+      ],
+      "reasons": [
+        "definition of limit"
+      ],
+      "type": "Have"
+    }
+  ]
+}
