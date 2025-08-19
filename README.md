@@ -17,7 +17,7 @@ We define 10 node types in total, as follows:
 - **[Define: "A" as "B"]** – Define a "symbol/concept" A, whose meaning is B (A and B cannot be lists).  
 - **[Hint: "string"]** – A natural language annotation.  
 
-For a given natural language mathematical text (stored in `informal_proof.md` in the `display` folder), we input it along with a prompt into a large language model. The model outputs a structured JSON result (located in `output_node_type.json` in the `display` folder). This result is parsed and printed in a pretty-printed format in `pretty_output_node_type.md` in the `display` folder.  
+For a given natural language mathematical text (stored in `display/informal_proof.md`), we input it along with a prompt into a LLM. The model outputs a structured JSON result (located in `output_node_type.json` in the `display` folder). This result is parsed and printed in a pretty-printed format in `pretty_output_node_type.md` in the `display` folder.  
 
 ## Step 2. Scope Identification  
 
@@ -31,8 +31,12 @@ The nodes **Show, Assume, Fix, ToHave, Find** have scopes. In the pretty-printed
 - The scope of **ToHave** includes all subsequent backward reasoning (**OnlyNeeds**).  
 - The scope of **Find** covers the entire solving process.  
 
-During Step 2, the pretty-printed node sequence from Step 1 is input along with another prompt into the large language model, which outputs a structured result. This result is parsed and printed in a pretty-printed format.
+During Step 2, the pretty-printed node sequence from Step 1(node_type.json) is input along with another prompt into the LLM, which outputs a structured result with scope(scope.json). This result is parsed and printed in a pretty-printed format(scope.md).
 
 # Current Version
 
-The current version of this project uses gpt-4.1 as the LLM.
+The current version of this project uses OpenAI-o3 as the LLM.
+
+# Test Log
+
+Test0819: 40 proofs from Analysis and IMO. (see `data_test`)
