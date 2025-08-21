@@ -1,0 +1,101 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "n",
+        "a_1, a_2, \u0003, a_n"
+      ],
+      "condition": [
+        "n is a positive integer",
+        "a_1, a_2, \\ldots, a_n are positive integers"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "\\frac{a_1 + a_2 + \\cdots + a_n}{n} \\geq \\sqrt[n]{a_1 a_2 \\cdots a_n}",
+        "\\sqrt[n]{a_1 a_2 \\cdots a_n} \\geq n \\left( \\frac{1}{a_1} + \\frac{1}{a_2} + \\cdots + \\frac{1}{a_n} \\right)^{-1}",
+        "with equality if and only if $ a_1 = a_2 = \\cdots = a_n $"
+      ]
+    },
+    {
+      "type": "Hint",
+      "comment": "First, we prove the inequality on the left-hand side"
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "\\frac{a_1 + a_2 + \\cdots + a_n}{n} \\geq \\sqrt[n]{a_1 a_2 \\cdots a_n}"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "When $ n = 1, 2 $, the inequality is obviously true."
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "When $ n = 2^k (k \\in \\mathbb{N}^*) $, the inequality holds."
+      ],
+      "reasons": [
+        "$\\frac{a + b}{2} \\geq \\sqrt{ab}$"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "l"
+      ],
+      "condition": [
+        "$l \\in \\mathbb{N}^*$",
+        "$2^{l-1} < n < 2^l$"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "\\bar{a}",
+      "meaning": [
+        "\\bar{a} = \\sqrt[n]{a_1 a_2 \\cdots a_n}"
+      ]
+    },
+    {
+      "type": "Hint",
+      "comment": "Add $(2^l - n)$ $\\bar{a}$'s to $ a_1, a_2, \\ldots, a_n $ to make it $ 2^l $ positive integers. Applying the inequality to these $ 2^l $ positive integers, we get"
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "\\frac{1}{2^l} \\left[ a_1 + a_2 + \\cdots + a_n + (2^l - n) \\bar{a} \\right] \\geq (\\bar{a})^{1/2^l} = \\bar{a}"
+      ],
+      "reasons": [
+        "applying the inequality to these $2^l$ positive integers"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "\\frac{a_1 + a_2 + \\cdots + a_n}{n} \\geq \\sqrt[n]{a_1 a_2 \\cdots a_n}"
+      ],
+      "reasons": [
+        "After rearranging"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "\\sqrt[n]{a_1 a_2 \\cdots a_n} \\geq n \\left( \\frac{1}{a_1} + \\frac{1}{a_2} + \\cdots + \\frac{1}{a_n} \\right)^{-1}"
+      ],
+      "reasons": [
+        "For $ \\frac{1}{a_1}, \\frac{1}{a_2}, \\ldots, \\frac{1}{a_n} $, using the above conclusion"
+      ]
+    },
+    {
+      "type": "Hint",
+      "comment": "Q.E.D."
+    }
+  ]
+}

@@ -276,7 +276,7 @@ response_format = {
 
 try:
     response = client.chat.completions.create(
-        model="o3",
+        model="gpt-5",
         messages=[
             {"role": "system", "content": prompt},
             {"role": "user", "content": input_text}

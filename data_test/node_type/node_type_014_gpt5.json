@@ -1,0 +1,68 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Define",
+      "symbol": "f",
+      "meaning": [
+        "f(x) = \\sin x"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "f(x)=\\sin x is continuous on (-\\infty, +\\infty)",
+        "f(x)=\\sin x is uniformly continuous on (-\\infty, +\\infty)"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "| \\sin x' - \\sin x'' | = 2 \\left| \\cos \\frac{x' + x''}{2} \\sin \\frac{x' - x''}{2} \\right| \\leq | x' - x'' |"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\epsilon"
+      ],
+      "condition": [
+        "\\epsilon > 0"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "\\delta",
+      "meaning": [
+        "\\delta = \\epsilon"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "x'",
+        "x''"
+      ],
+      "condition": [
+        "x', x'' \\in (-\\infty, +\\infty)",
+        "|x' - x''| < \\delta"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "| \\sin x' - \\sin x'' | \\leq | x' - x'' | < \\delta = \\epsilon"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "\\sin x is uniformly continuous on (-\\infty, +\\infty)"
+      ],
+      "reasons": [
+        "By definition"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "q",
+        "n"
+      ],
+      "condition": [
+        "q is any real number",
+        "n \\in \\mathbb{N}"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "n!",
+      "meaning": [
+        "n! := 1 \\cdot 2 \\cdot \\ldots \\cdot n"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "\\lim_{n \\to \\infty} \\frac{q^n}{n!} = 0"
+      ]
+    },
+    {
+      "type": "Assume",
+      "assumption": [
+        "q = 0"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "\\lim_{n \\to \\infty} \\frac{q^n}{n!} = 0"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "SufficeToProve",
+      "proposition": [
+        "\\lim_{n \\to \\infty} \\frac{q^n}{n!} = 0\\text{ for }q>0"
+      ],
+      "reasons": [
+        "\\left|\\frac{q^n}{n!}\\right| = \\frac{|q|^n}{n!}"
+      ]
+    },
+    {
+      "type": "Assume",
+      "assumption": [
+        "q > 0"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "x_n",
+      "meaning": [
+        "x_n = \\frac{q^n}{n!}"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "x_{n+1} = \\frac{q}{n+1} x_n"
+      ],
+      "reasons": [
+        "Reasoning as in Example 11"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "There exists an index N such that 0 < \\frac{q}{n+1} < 1 for all n > N"
+      ],
+      "reasons": [
+        "Since the set of natural numbers is not bounded above"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "For n > N, x_{n+1} < x_n"
+      ],
+      "reasons": [
+        "0 < \\frac{q}{n+1} < 1 for all n > N",
+        "x_{n+1} = \\frac{q}{n+1} x_n"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "The terms of the sequence are positive"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "The limit \\lim_{n \\to \\infty} x_n exists"
+      ],
+      "reasons": [
+        "For n > N, x_{n+1} < x_n",
+        "The terms of the sequence are positive"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "x",
+      "meaning": [
+        "x = \\lim_{n \\to \\infty} x_n"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "x = \\lim_{n \\to \\infty} x_{n+1} = \\lim_{n \\to \\infty} \\frac{q}{n+1} x_n = \\frac{q}{\\lim_{n \\to \\infty} (n + 1)} \\cdot \\lim_{n \\to \\infty} x_n = 0 \\cdot x = 0"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "\\lim_{n \\to \\infty} \\frac{q^n}{n!} = 0"
+      ],
+      "reasons": []
+    }
+  ]
+}

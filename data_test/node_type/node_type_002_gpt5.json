@@ -1,0 +1,116 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$\\lim_{n \\to \\infty} (x_n \\cdot y_n) = A \\cdot B$"
+      ],
+      "type": "Show"
+    },
+    {
+      "condition": [
+        "$\\{x_n\\}$ and $\\{y_n\\}$ be numerical sequences"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "condition": [
+        "$\\lim_{n \\to \\infty} x_n = A$ and $\\lim_{n \\to \\infty} y_n = B$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "proposition": [
+        "$|(A \\cdot B) - (x_n \\cdot y_n)| \\leq |x_n| \\, \\Delta(y_n) + |y_n| \\, \\Delta(x_n) + \\Delta(x_n) \\, \\Delta(y_n)$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "$\\varepsilon > 0$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "\\varepsilon"
+      ]
+    },
+    {
+      "proposition": [
+        "$\\forall n > N' \\; (\\, \\Delta(x_n) < \\min \\{ 1, \\tfrac{\\varepsilon}{3(|B| + 1)} \\} \\,)$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\forall n > N'' \\; (\\, \\Delta(y_n) < \\min \\{ 1, \\tfrac{\\varepsilon}{3(|A| + 1)} \\} \\,)$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$N = \\max\\{N', N''\\}$"
+      ],
+      "symbol": "N",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$|x_n| < |A| + \\Delta(x_n) < |A| + 1$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|y_n| < |B| + \\Delta(y_n) < |B| + 1$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\Delta(x_n) \\, \\Delta(y_n) < \\min \\{ 1, \\tfrac{\\varepsilon}{3} \\} \\cdot \\min \\{ 1, \\tfrac{\\varepsilon}{3} \\} \\leq \\tfrac{\\varepsilon}{3}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|x_n| \\, \\Delta(y_n) < (|A| + 1) \\cdot \\tfrac{\\varepsilon}{3(|A| + 1)} < \\tfrac{\\varepsilon}{3}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|y_n| \\, \\Delta(x_n) < (|B| + 1) \\cdot \\tfrac{\\varepsilon}{3(|B| + 1)} < \\tfrac{\\varepsilon}{3}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\Delta(x_n) \\, \\Delta(y_n) < \\tfrac{\\varepsilon}{3}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|AB - x_n y_n| < \\varepsilon$ for $n > N$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

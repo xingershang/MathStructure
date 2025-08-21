@@ -1,0 +1,65 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "f",
+        "g",
+        "x_0",
+        "u_0"
+      ],
+      "condition": [
+        "u = g(x) is continuous at $x_0$",
+        "$g(x_0) = u_0$",
+        "$y = f(u)$ is continuous at $u_0$"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "the composite function $y = f(g(x))$ is continuous at $x_0$"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\epsilon"
+      ],
+      "condition": [
+        "$\\epsilon > 0$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "there exists $\\eta > 0$ such that when $|u - u_0| < \\eta$, we have $|f(u) - f(u_0)| < \\epsilon$"
+      ],
+      "reasons": [
+        "$\\lim_{u \\to u_0} f(u) = f(u_0)$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "there exists $\\delta > 0$ such that when $|x - x_0| < \\delta$, we have $|g(x) - u_0| < \\eta$"
+      ],
+      "reasons": [
+        "$\\lim_{x \\to x_0} g(x) = g(x_0) = u_0$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "when $|x - x_0| < \\delta$, $|f(g(x)) - f(g(x_0))| = |f(g(x)) - f(u_0)| < \\epsilon$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$\\lim_{x \\to x_0} f(g(x)) = f(g(x_0))$"
+      ],
+      "reasons": []
+    }
+  ]
+}

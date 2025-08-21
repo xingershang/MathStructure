@@ -1,0 +1,150 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "$\\lim_{n \\to \\infty} \\frac{x_n}{y_n} = \\frac{A}{B}$"
+      ],
+      "type": "Show"
+    },
+    {
+      "condition": [
+        "$\\{x_n\\}$ and $\\{y_n\\}$ are numerical sequences"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "condition": [
+        "$\\lim_{n \\to \\infty} x_n = A$",
+        "$\\lim_{n \\to \\infty} y_n = B$",
+        "$y_n \\neq 0\\; (n=1,2,\\ldots)$",
+        "$B \\neq 0$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "A",
+        "B"
+      ]
+    },
+    {
+      "comment": "We use the estimate",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "$\\left| \\frac{A}{B} - \\frac{x_n}{y_n} \\right| \\leq \\frac{|x_n| \\, \\Delta(y_n) + |y_n| \\, \\Delta(x_n)}{y_n^2} \\cdot \\frac{1}{1 - \\delta(y_n)}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$\\delta(y_n) = \\frac{\\Delta(y_n)}{|y_n|}$"
+      ],
+      "symbol": "$\\delta(y_n)$",
+      "type": "Define"
+    },
+    {
+      "condition": [
+        "$\\varepsilon > 0$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "\\varepsilon"
+      ]
+    },
+    {
+      "condition": [
+        "$\\forall n > N' \\left( \\Delta(x_n) < \\min \\left\\{ 1, \\frac{\\varepsilon |B|}{8} \\right\\} \\right)$",
+        "$\\forall n > N'' \\left( \\Delta(y_n) < \\min \\left\\{ \\frac{|B|}{4}, \\frac{\\varepsilon \\cdot B^2}{16(|A| + 1)} \\right\\} \\right)$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "N'",
+        "N''"
+      ]
+    },
+    {
+      "condition": [
+        "$n > \\max\\{N', N''\\}$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "n"
+      ]
+    },
+    {
+      "proposition": [
+        "$|x_n| < |A| + \\Delta(x_n) < |A| + 1$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|y_n| > |B| - \\Delta(y_n) > |B| - \\frac{|B|}{4} > \\frac{|B|}{2}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\frac{1}{|y_n|} < \\frac{2}{|B|}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$0 < \\delta(y_n) = \\frac{\\Delta(y_n)}{|y_n|} < \\frac{|B| / 4}{|B| / 2} = \\frac{1}{2}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$1 - \\delta(y_n) > \\frac{1}{2}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$|x_n| \\cdot \\frac{1}{y_n^2} \\, \\Delta(y_n) < (|A| + 1) \\cdot \\frac{4}{B^2} \\cdot \\frac{\\varepsilon \\cdot B^2}{16(|A| + 1)} = \\frac{\\varepsilon}{4}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\left| \\frac{1}{y_n} \\right| \\Delta(x_n) < \\frac{2}{|B|} \\cdot \\frac{\\varepsilon |B|}{8} = \\frac{\\varepsilon}{4}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$0 < \\frac{1}{1 - \\delta(y_n)} < 2$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "$N = \\max\\{N', N''\\}$"
+      ],
+      "symbol": "$N$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$\\left| \\frac{A}{B} - \\frac{x_n}{y_n} \\right| < \\varepsilon \\text{ when } n > N$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}
