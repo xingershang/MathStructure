@@ -1,0 +1,8 @@
+[Fix: {\alpha} st "\alpha > -1"]
+[Show: "$(1 + \alpha)^n \geq 1 + n\alpha$ for $n \in \mathbb{N}$"]
+[Have: "When $n=1$, $(1+\alpha)^n \geq 1 + n\alpha$ holds"]
+[Fix: {n} st {"$n \in \mathbb{N}$"; "$(1+\alpha)^n \geq 1 + n\alpha$"}]
+[Show: "$(1+\alpha)^{n+1} \geq 1 + (n+1)\alpha"]
+[Have: "$(1 + \alpha)^{n+1} = (1 + \alpha)(1 + \alpha)^n \geq (1 + \alpha)(1 + n\alpha) = 1 + (n + 1)\alpha + n\alpha^2 \geq 1 + (n + 1)\alpha$"]
+[Have: "For all $n \in \mathbb{N}$, $(1 + \alpha)^n \geq 1 + n\alpha$" by "By the principle of induction"]
+[Have: "If $\alpha \neq 0$ and $n>1$, then $(1+\alpha)^n > 1 + n\alpha$" by "the computation shows"]

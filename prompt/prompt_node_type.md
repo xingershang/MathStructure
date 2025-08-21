@@ -1205,6 +1205,25 @@ $$
 [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{1}{2}\int x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{1}{2}}\mathrm{\;d}\left( {{a}^{2} + {x}^{2}}\right)  = \frac{1}{3}\int x\mathrm{\;d}\left\lbrack  {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\right\rbrack= \frac{1}{3}x{\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}} - \frac{1}{3}\int {\left( {a}^{2} + {x}^{2}\right) }^{\frac{3}{2}}\mathrm{\;d}x= \frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x - \frac{1}{3}\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x.$"]
 [Have: "$\int {x}^{2}\sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x = \frac{3}{4}\left\lbrack  {\frac{1}{3}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{3}\int \sqrt{{a}^{2} + {x}^{2}}\mathrm{\;d}x}\right\rbrack= \frac{1}{4}x\left( {{a}^{2} + {x}^{2}}\right) \sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{2}}{4}{\left\lbrack  \frac{x}{2}\sqrt{{a}^{2} + {x}^{2}} + \frac{{a}^{2}}{2}\ln \left( x + \sqrt{{a}^{2} + {x}^{2}}\right) \right\rbrack  } + C= \frac{x\left( {2{x}^{2} + {a}^{2}}\right) }{8}\sqrt{{a}^{2} + {x}^{2}} - \frac{{a}^{4}}{8}\ln \left( {x + \sqrt{{x}^{2} + {a}^{2}}}\right)  + C.$"]
 
+## 证明开始部分的节点类型识别技巧
+
+证明开头时的节点类型的识别是一个难点。下面我为你做这方面的特训：
+
+### 样例 1
+
+自然语言：`A sequence $\{x_n\}$ is called a Cauchy sequence if for any $\epsilon > 0$ there exists an index $N \in \mathbb{N}$ such that $|x_m - x_n| < \epsilon$ whenever $n > N$ and $m > N$. Prove that a numerical sequence converges if and only if it is a Cauchy sequence.`
+
+处理这段语言时，典型的错误是把`A sequence $\{x_n\}$ is called a **fundamental** or **Cauchy sequence** if for any $\epsilon > 0$ there exists an index $N \in \mathbb{N}$ such that $|x_m - x_n| < \epsilon$ whenever $n > N$ and $m > N$`看成“Show”。但是，这其实是在定义什么是Cauchy sequence。真正的证明目标在后面：`Prove that a numerical sequence converges if and only if it is a Cauchy sequence.`。所以正确的节点识别为：
+
+[Define: "Cauchy sequence" as "A sequence $\{x_n\}$ is called a fundamental or Cauchy sequence if for any $\epsilon > 0$ there exists an index $N \in \mathbb{N}$ such that $|x_m - x_n| < \epsilon$ whenever $n > N$ and $m > N$"]
+[Show: "A numerical sequence converges if and only if it is a Cauchy sequence"]
+
+### 样例 2
+
+自然语言：`\lim_{n \to \infty} \sqrt[n]{a} = 1 \text{ for any } a > 0.`
+
+
+
 ## 特别提醒
 
 注意观察上述样例，你会发现提取结构时，从不补充自然语言没有的表达，不自行补充reasons，不自行补充hint。结构提取必须完全以原文为准！（如果文本是英文的，你也用英文；文本是中文的，你也用中文）

@@ -1,0 +1,203 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Define",
+      "symbol": "Cauchy sequence",
+      "meaning": [
+        "A sequence $\\{x_n\\}$ is called a fundamental or Cauchy sequence if for any $\\epsilon > 0$ there exists an index $N \\in \\mathbb{N}$ such that $|x_m - x_n| < \\epsilon$ whenever $n > N$ and $m > N$."
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "A numerical sequence converges if and only if it is a Cauchy sequence"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "A"
+      ],
+      "condition": [
+        "$\\lim_{n \\to \\infty} x_n = A$"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\epsilon"
+      ],
+      "condition": [
+        "$\\epsilon > 0$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "There exists an index $N$ such that $|x_n - A| < \\frac{\\epsilon}{2}$ for $n \\geq N$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "If $m > N$ and $n > N$, then $|x_m - x_n| \\leq |x_m - A| + |x_n - A| < \\frac{\\epsilon}{2} + \\frac{\\epsilon}{2} = \\epsilon$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "the sequence is a Cauchy sequence"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "x"
+      ],
+      "condition": [
+        "$\\{x_k\\}$ is a fundamental sequence"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\epsilon"
+      ],
+      "condition": [
+        "$\\epsilon > 0$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "There exists an index $N$ such that $|x_m - x_k| < \\frac{\\epsilon}{3}$ when $m \\geq N$ and $k \\geq N$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "m"
+      ],
+      "condition": [
+        "$m = N$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "For any $k > N$, $x_N - \\frac{\\epsilon}{3} < x_k < x_N + \\frac{\\epsilon}{3}$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "Only a finite number of terms of the sequence have indices not larger than $N$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "a fundamental sequence is bounded"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Define",
+      "symbol": "$a_n$",
+      "meaning": [
+        "$a_n := \\inf_{k \\geq n} x_k$"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "$b_n$",
+      "meaning": [
+        "$b_n := \\sup_{k \\geq n} x_k$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$a_n \\leq a_{n+1} \\leq b_{n+1} \\leq b_n$"
+      ],
+      "reasons": [
+        "since the greatest lower bound does not decrease and the least upper bound does not increase when we pass to a smaller set"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "There is a point $A$ common to all of the closed intervals $[a_n, b_n]$"
+      ],
+      "reasons": [
+        "By the nested interval principle"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "A"
+      ],
+      "condition": [
+        "$A$ is common to all of the closed intervals $[a_n, b_n]$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$a_n \\leq A \\leq b_n$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$a_n = \\inf_{k \\geq n} x_k \\leq x_k \\leq \\sup_{k \\geq n} x_k = b_k$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$|A - x_k| \\leq b_n - a_n. \\quad (3.2)$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$x_N - \\frac{\\epsilon}{3} \\leq \\inf_{k \\geq n} x_k = a_n \\leq b_n = \\sup_{k \\geq n} x_k \\leq x_N + \\frac{\\epsilon}{3}$ for $n > N$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$b_n - a_n \\leq \\frac{2\\epsilon}{3} < \\epsilon \\quad (3.3)$ for $n > m$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$|A - x_k| < \\epsilon$ for any $k > N$"
+      ],
+      "reasons": [
+        "Comparing Eqs. (3.2) and (3.3)"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$\\lim_{k \\to \\infty} x_k = A$"
+      ],
+      "reasons": []
+    }
+  ]
+}

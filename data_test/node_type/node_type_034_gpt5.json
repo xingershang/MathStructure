@@ -1,0 +1,64 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "condition": [
+        "a,b,c,d>0",
+        "abcd = 1",
+        "a + b + c + d > \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a}"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "a + b + c + d < \\frac{b}{a} + \\frac{c}{b} + \\frac{d}{c} + \\frac{a}{d}"
+      ]
+    },
+    {
+      "type": "Hint",
+      "comment": "We show that if abcd = 1, the sum a + b + c + d cannot exceed a certain weighted mean of the expressions \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a} and \\frac{b}{a} + \\frac{c}{b} + \\frac{d}{c} + \\frac{a}{d}."
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "a = \\sqrt[4]{\\frac{a^4}{abcd}} = \\sqrt[4]{\\frac{a}{b} \\cdot \\frac{b}{c} \\cdot \\frac{c}{d} \\cdot \\frac{d}{a}} \\leq \\frac{1}{4} \\left( \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a} \\right)."
+      ],
+      "reasons": [
+        "By applying the AM-GM inequality to the numbers \\frac{a}{b}, \\frac{b}{c}, \\frac{c}{d}, and \\frac{d}{a}"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "b \\leq \\frac{1}{4} \\left( \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a} + \\frac{a}{b} \\right), \\quad c \\leq \\frac{1}{4} \\left( \\frac{c}{d} + \\frac{d}{a} + \\frac{a}{b} + \\frac{b}{c} \\right), \\quad \\text{and} \\quad d \\leq \\frac{1}{4} \\left( \\frac{d}{a} + \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} \\right)."
+      ],
+      "reasons": [
+        "Analogously"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "a + b + c + d \\leq \\frac{3}{4} \\left( \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a} \\right) + \\frac{1}{4} \\left( \\frac{b}{a} + \\frac{c}{b} + \\frac{d}{c} + \\frac{a}{d} \\right)."
+      ],
+      "reasons": [
+        "Summing up these estimates"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "In particular, if $a + b + c + d > \\frac{a}{b} + \\frac{b}{c} + \\frac{c}{d} + \\frac{d}{a}$, then $a + b + c + d < \\frac{b}{a} + \\frac{c}{b} + \\frac{d}{c} + \\frac{a}{d}$."
+      ],
+      "reasons": [
+        "In particular"
+      ]
+    }
+  ]
+}

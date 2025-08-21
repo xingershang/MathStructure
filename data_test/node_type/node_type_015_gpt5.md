@@ -1,0 +1,7 @@
+[Fix: {f, g, x_0, u_0} st {"u = g(x) is continuous at $x_0$"; "$g(x_0) = u_0$"; "$y = f(u)$ is continuous at $u_0$"}]
+[Show: "the composite function $y = f(g(x))$ is continuous at $x_0$"]
+[Fix: {\epsilon} st "$\epsilon > 0$"]
+[Have: "there exists $\eta > 0$ such that when $|u - u_0| < \eta$, we have $|f(u) - f(u_0)| < \epsilon$" by "$\lim_{u \to u_0} f(u) = f(u_0)$"]
+[Have: "there exists $\delta > 0$ such that when $|x - x_0| < \delta$, we have $|g(x) - u_0| < \eta$" by "$\lim_{x \to x_0} g(x) = g(x_0) = u_0$"]
+[Have: "when $|x - x_0| < \delta$, $|f(g(x)) - f(g(x_0))| = |f(g(x)) - f(u_0)| < \epsilon$"]
+[Have: "$\lim_{x \to x_0} f(g(x)) = f(g(x_0))$"]

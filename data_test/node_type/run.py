@@ -8,7 +8,7 @@ def process_files():
     display_dir = '../../display/'
     api_call_dir = '../../convert/'
     
-    S = 31
+    S = 1
     T = 40
     for i in range(S, T+1):
         # 格式化文件名，确保两位数的编号
@@ -51,7 +51,7 @@ def process_files():
         
         # 3. 拷贝 pretty_output_node_type.md 到 node_type_xxx.md
         pretty_output = os.path.join(display_dir, 'node_type.md')
-        output_file = f'node_type_{num}.md'
+        output_file = f'node_type_{num}_gpt5.md'
         
         if os.path.exists(pretty_output):
             shutil.copy2(pretty_output, output_file)
@@ -60,7 +60,7 @@ def process_files():
             print(f"Warning: {pretty_output} not found, skipping...")
 
         json_output = os.path.join(display_dir, 'node_type.json')
-        output_file = f'node_type_{num}.json'
+        output_file = f'node_type_{num}_gpt5.json'
         
         if os.path.exists(json_output):
             shutil.copy2(json_output, output_file)

@@ -1,0 +1,7 @@
+[Fix: {a, b, c, d} st {"a,b,c,d>0"; "abcd = 1"; "a + b + c + d > \frac{a}{b} + \frac{b}{c} + \frac{c}{d} + \frac{d}{a}"}]
+[Show: "a + b + c + d < \frac{b}{a} + \frac{c}{b} + \frac{d}{c} + \frac{a}{d}"]
+[Hint: "We show that if abcd = 1, the sum a + b + c + d cannot exceed a certain weighted mean of the expressions \frac{a}{b} + \frac{b}{c} + \frac{c}{d} + \frac{d}{a} and \frac{b}{a} + \frac{c}{b} + \frac{d}{c} + \frac{a}{d}."]
+[Have: "a = \sqrt[4]{\frac{a^4}{abcd}} = \sqrt[4]{\frac{a}{b} \cdot \frac{b}{c} \cdot \frac{c}{d} \cdot \frac{d}{a}} \leq \frac{1}{4} \left( \frac{a}{b} + \frac{b}{c} + \frac{c}{d} + \frac{d}{a} \right)." by "By applying the AM-GM inequality to the numbers \frac{a}{b}, \frac{b}{c}, \frac{c}{d}, and \frac{d}{a}"]
+[Have: "b \leq \frac{1}{4} \left( \frac{b}{c} + \frac{c}{d} + \frac{d}{a} + \frac{a}{b} \right), \quad c \leq \frac{1}{4} \left( \frac{c}{d} + \frac{d}{a} + \frac{a}{b} + \frac{b}{c} \right), \quad \text{and} \quad d \leq \frac{1}{4} \left( \frac{d}{a} + \frac{a}{b} + \frac{b}{c} + \frac{c}{d} \right)." by "Analogously"]
+[Have: "a + b + c + d \leq \frac{3}{4} \left( \frac{a}{b} + \frac{b}{c} + \frac{c}{d} + \frac{d}{a} \right) + \frac{1}{4} \left( \frac{b}{a} + \frac{c}{b} + \frac{d}{c} + \frac{a}{d} \right)." by "Summing up these estimates"]
+[Have: "In particular, if $a + b + c + d > \frac{a}{b} + \frac{b}{c} + \frac{c}{d} + \frac{d}{a}$, then $a + b + c + d < \frac{b}{a} + \frac{c}{b} + \frac{d}{c} + \frac{a}{d}$." by "In particular"]

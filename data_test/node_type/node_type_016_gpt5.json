@@ -1,0 +1,95 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "The function $f(x)=x^2$ is not uniformly continuous on $[0,+\\infty)$",
+        "$f(x)=x^2$ is uniformly continuous on $[0,A]$ for any finite positive number $A$"
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$x_n' = \\sqrt{n+1}$",
+        "$x_n'' = \\sqrt{n}\\; (n=1,2,3,\\ldots)$"
+      ],
+      "symbol": "$x_n', x_n''$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$\\lim_{n \\to \\infty} (x_n' - x_n'') = \\lim_{n \\to \\infty} (\\sqrt{n+1} - \\sqrt{n}) = 0$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$\\lim_{n \\to \\infty} (f(x_n') - f(x_n'')) = 1$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$f(x)$ is not uniformly continuous on $[0,+\\infty)$"
+      ],
+      "reasons": [
+        "By Example 3.4.5"
+      ],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "$A$ is a finite positive number"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "A"
+      ]
+    },
+    {
+      "condition": [
+        "$x',x''\\in[0,A]$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x'",
+        "x''"
+      ]
+    },
+    {
+      "proposition": [
+        "$|x'^2 - x''^2| = |(x' + x'')(x' - x'')| \\le 2A\\,|x' - x''|$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "$\\epsilon>0$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "meaning": [
+        "$\\delta = \\frac{\\epsilon}{2A} > 0$"
+      ],
+      "symbol": "$\\delta$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "For any $x',x''\\in[0,A]$, as long as $|x' - x''| < \\delta$, it follows that $|x'^2 - x''^2| < \\epsilon$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$f(x)=x^2$ is uniformly continuous on $[0,A]$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

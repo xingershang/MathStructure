@@ -1,0 +1,124 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "Every bounded sequence of real numbers contains a convergent subsequence"
+      ],
+      "type": "Show"
+    },
+    {
+      "condition": [
+        "$\\{x_n\\}$ is a bounded sequence of real numbers"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x"
+      ]
+    },
+    {
+      "proposition": [
+        "$\\{x_n\\}$ contains a convergent subsequence"
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$E$ is the set of values of the bounded sequence $\\{x_n\\}$"
+      ],
+      "symbol": "E",
+      "type": "Define"
+    },
+    {
+      "assumption": [
+        "$E$ is finite"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "there exists a point $x \\in E$ and a sequence $n_1 < n_2 < \\cdots$ of indices such that $x_{n_1} = x_{n_2} = \\cdots = x$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "the subsequence of $\\{x_n\\}$ with indices $n_k$"
+      ],
+      "symbol": "$\\{x_{n_k}\\}$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "The subsequence $\\{x_{n_k}\\}$ is constant and hence converges."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "$E$ is infinite"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "$E$ has a limit point $x$"
+      ],
+      "reasons": [
+        "Bolzano–Weierstrass principle"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "there exists $n_1 \\in \\mathbb{N}$ such that $|x_{n_1} - x| < 1$"
+      ],
+      "reasons": [
+        "$x$ is a limit point of $E$"
+      ],
+      "type": "Have"
+    },
+    {
+      "condition": [
+        "$n_1 \\in \\mathbb{N}$",
+        "$|x_{n_1} - x| < 1$"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "n_1"
+      ]
+    },
+    {
+      "assumption": [
+        "$n_k \\in \\mathbb{N}$ have been chosen so that $|x_{n_k} - x| < \\frac{1}{k}$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "there exists $n_{k+1} \\in \\mathbb{N}$ such that $n_k < n_{k+1}$ and $|x_{n_{k+1}} - x| < \\frac{1}{k+1}$"
+      ],
+      "reasons": [
+        "$x$ is a limit point of $E$"
+      ],
+      "type": "Have"
+    },
+    {
+      "meaning": [
+        "the sequence $x_{n_1}, x_{n_2}, \\ldots$ so constructed"
+      ],
+      "symbol": "$\\{x_{n_k}\\}$",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "the sequence $x_{n_1}, x_{n_2}, \\ldots, x_{n_k}, \\ldots$ converges to $x$"
+      ],
+      "reasons": [
+        "$\\lim_{k \\to \\infty} \\frac{1}{k} = 0$"
+      ],
+      "type": "Have"
+    }
+  ]
+}

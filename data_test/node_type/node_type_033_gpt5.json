@@ -1,0 +1,221 @@
+{
+  "ProofStructure": [
+    {
+      "proposition": [
+        "Let $k$ be a positive integer"
+      ],
+      "type": "Show"
+    },
+    {
+      "condition": [
+        "$k$ is a positive integer"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "k"
+      ]
+    },
+    {
+      "proposition": [
+        "$(4k^2 - 1)^2$ has a positive divisor of the form $8kn - 1$ if and only if $k$ is even"
+      ],
+      "type": "Show"
+    },
+    {
+      "comment": "The statement follows from the following fact.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "For arbitrary positive integers $x$ and $y$, the number $4xy - 1$ divides $(4x^2 - 1)^2$ if and only if $x = y$"
+      ],
+      "type": "Show"
+    },
+    {
+      "condition": [
+        "$x$ and $y$ are positive integers"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "proposition": [
+        "If $x = y$ then $4xy - 1$ divides $(4x^2 - 1)^2$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "If $4xy - 1$ divides $(4x^2 - 1)^2$ then $x = y$"
+      ],
+      "reasons": [
+        "If $x = y$ then $4xy - 1$ divides $(4x^2 - 1)^2$"
+      ],
+      "type": "SufficeToProve"
+    },
+    {
+      "meaning": [
+        "a pair $(x, y)$ of positive integers such that $4xy - 1$ divides $(4x^2 - 1)^2$ but $x \\neq y$"
+      ],
+      "symbol": "bad pair",
+      "type": "Define"
+    },
+    {
+      "comment": "In order to prove that bad pairs do not exist, we present two properties of them which provide an infinite descent.",
+      "type": "Hint"
+    },
+    {
+      "proposition": [
+        "Property (i). If $(x, y)$ is a bad pair and $x < y$ then there exists a positive integer $z < x$ such that $(x, z)$ is also bad."
+      ],
+      "type": "Show"
+    },
+    {
+      "meaning": [
+        "$r = \\dfrac{(4x^2 - 1)^2}{4xy - 1}$"
+      ],
+      "symbol": "r",
+      "type": "Define"
+    },
+    {
+      "proposition": [
+        "$r = -r \\cdot (-1) \\equiv -r(4xy - 1) = -(4x^2 - 1)^2 \\equiv -1 \\pmod{4x}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$r = 4xz - 1$ with some positive integer $z$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$4xz - 1 = \\dfrac{(4x^2 - 1)^2}{4xy - 1} < 4x^2 - 1$"
+      ],
+      "reasons": [
+        "$x < y$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$z < x$"
+      ],
+      "reasons": [
+        "$4xz - 1 < 4x^2 - 1$"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "By the construction, the number $4xz - 1$ is a divisor of $(4x^2 - 1)^2$ so $(x, z)$ is a bad pair."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Property (ii). If $(x, y)$ is a bad pair then $(y, x)$ is also bad."
+      ],
+      "type": "Show"
+    },
+    {
+      "proposition": [
+        "$1 = 1^2 \\equiv (4xy)^2 \\pmod{4xy - 1}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "$(4y^2 - 1)^2 \\equiv (4y^2 - (4xy)^2)^2 = 16y^4(4x^2 - 1)^2 \\equiv 0 \\pmod{4xy - 1}$"
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Hence, the number $4xy - 1$ divides $(4y^2 - 1)^2$ as well."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "there exists at least one bad pair"
+      ],
+      "type": "Assume"
+    },
+    {
+      "condition": [
+        "$(x, y)$ is a bad pair",
+        "$2x + y$ attains its smallest possible value"
+      ],
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y"
+      ]
+    },
+    {
+      "assumption": [
+        "$x < y$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "Property (i) provides a bad pair $(x, z)$ with $z < y$ and thus $2x + z < 2x + y$"
+      ],
+      "reasons": [
+        "Property (i)"
+      ],
+      "type": "Have"
+    },
+    {
+      "assumption": [
+        "$y < x$"
+      ],
+      "type": "Assume"
+    },
+    {
+      "proposition": [
+        "Property (ii) yields that pair $(y, x)$ is also bad while $2y + x < 2x + y$"
+      ],
+      "reasons": [
+        "Property (ii)"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Both cases contradict the assumption that $2x + y$ is minimal; the Lemma is proved."
+      ],
+      "reasons": [],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "To prove the problem statement, apply the Lemma for $x = k$ and $y = 2n$; the number $8kn - 1$ divides $(4k^2 - 1)^2$ if and only if $k = 2n$."
+      ],
+      "reasons": [
+        "Lemma"
+      ],
+      "type": "Have"
+    },
+    {
+      "proposition": [
+        "Hence, there is no such $n$ if $k$ is odd and $n = k/2$ is the only solution if $k$ is even."
+      ],
+      "reasons": [],
+      "type": "Have"
+    }
+  ]
+}

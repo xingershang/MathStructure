@@ -1,0 +1,75 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "a"
+      ],
+      "condition": [
+        "a > 0"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "$\\lim_{n \\to \\infty} \\sqrt[n]{a} = 1$"
+      ]
+    },
+    {
+      "type": "Assume",
+      "assumption": [
+        "$a \\geq 1$"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\epsilon"
+      ],
+      "condition": [
+        "$\\epsilon > 0$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "There exists $N \\in \\mathbb{N}$ such that $1 \\leq a < (1+\\epsilon)^n$ for all $n > N$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "For all $n > N$, $1 \\leq \\sqrt[n]{a} < 1 + \\epsilon$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$\\lim_{n \\to \\infty} \\sqrt[n]{a} = 1$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Assume",
+      "assumption": [
+        "$0 < a < 1$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$1 < \\frac{1}{a}$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$\\lim_{n \\to \\infty} \\sqrt[n]{a} = \\lim_{n \\to \\infty} \\frac{1}{\\sqrt[n]{\\frac{1}{a}}} = \\frac{1}{\\lim_{n \\to \\infty} \\sqrt[n]{\\frac{1}{a}}} = 1$"
+      ],
+      "reasons": []
+    }
+  ]
+}

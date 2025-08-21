@@ -1,0 +1,70 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y"
+      ],
+      "condition": [
+        "$\\{x_n\\}$ and $\\{y_n\\}$ are convergent sequences"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "A",
+        "B"
+      ],
+      "condition": [
+        "$\\lim_{n \\to \\infty} x_n = A$ and $\\lim_{n \\to \\infty} y_n = B$"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "If $A < B$, then there exists an index $N \\in \\mathbb{N}$ such that $x_n < y_n$ for all $n > N$"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "C"
+      ],
+      "condition": [
+        "$A < C < B$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "there exists $N'$ such that $|x_n - A| < C - A$ for all $n > N'$",
+        "there exists $N''$ such that $|y_n - B| < B - C$ for all $n > N''$"
+      ],
+      "reasons": [
+        "definition of limit"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "N",
+      "meaning": [
+        "$N = \\max\\{N', N''\\}$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "for $n > N$, $x_n < A + C - A = C = B - (B - C) < y_n$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "there exists an index $N \\in \\mathbb{N}$ such that $x_n < y_n$ for all $n > N$"
+      ],
+      "reasons": []
+    }
+  ]
+}

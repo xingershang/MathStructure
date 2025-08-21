@@ -1,0 +1,81 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y",
+        "z",
+        "N"
+      ],
+      "condition": [
+        "x_n \\le y_n \\le z_n \\text{ for all } n > N",
+        "N \\in \\mathbb{N}"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "If the sequences $\\{x_n\\}$ and $\\{z_n\\}$ both converge to the same limit, then the sequence $\\{y_n\\}$ also converges to that limit."
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "A"
+      ],
+      "condition": [
+        "\\lim_{n \\to \\infty} x_n = A",
+        "\\lim_{n \\to \\infty} z_n = A"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\varepsilon"
+      ],
+      "condition": [
+        "\\varepsilon > 0"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "N'",
+        "N''"
+      ],
+      "condition": [
+        "A - \\varepsilon < x_n \\text{ for all } n > N'",
+        "z_n < A + \\varepsilon \\text{ for all } n > N''"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "N",
+      "meaning": [
+        "N = \\max\\{N', N''\\}"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "For all $n > N$, $A - \\varepsilon < x_n \\le y_n \\le z_n < A + \\varepsilon$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "|y_n - A| < \\varepsilon"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "A = \\lim_{n \\to \\infty} y_n"
+      ],
+      "reasons": []
+    }
+  ]
+}

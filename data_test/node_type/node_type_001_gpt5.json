@@ -1,0 +1,96 @@
+{
+  "ProofStructure": [
+    {
+      "type": "Fix",
+      "var_list": [
+        "x",
+        "y"
+      ],
+      "condition": [
+        "$\\{x_n\\}$ and $\\{y_n\\}$ be numerical sequences"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "A",
+        "B"
+      ],
+      "condition": [
+        "$\\lim_{n \\to \\infty} x_n = A$ and $\\lim_{n \\to \\infty} y_n = B$"
+      ]
+    },
+    {
+      "type": "Show",
+      "proposition": [
+        "$\\lim_{n \\to \\infty} (x_n + y_n) = A + B$"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "\\Delta(x_n)",
+      "meaning": [
+        "$|A - x_n| = \\Delta(x_n)$"
+      ]
+    },
+    {
+      "type": "Define",
+      "symbol": "\\Delta(y_n)",
+      "meaning": [
+        "$|B - y_n| = \\Delta(y_n)$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$|(A + B) - (x_n + y_n)| \\leq \\Delta(x_n) + \\Delta(y_n)$"
+      ],
+      "reasons": [
+        "for case a)"
+      ]
+    },
+    {
+      "type": "Fix",
+      "var_list": [
+        "\\varepsilon"
+      ],
+      "condition": [
+        "$\\varepsilon > 0$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "there exists $N'$ such that $\\Delta(x_n) < \\varepsilon / 2$ for all $n > N'$"
+      ],
+      "reasons": [
+        "$\\lim_{n \\to \\infty} x_n = A$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "there exists $N''$ such that $\\Delta(y_n) < \\varepsilon / 2$ for all $n > N''$"
+      ],
+      "reasons": [
+        "Similarly, $\\lim_{n \\to \\infty} y_n = B$"
+      ]
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "for $n > \\max\\{N', N''\\}$, $|(A + B) - (x_n + y_n)| < \\varepsilon$"
+      ],
+      "reasons": []
+    },
+    {
+      "type": "Have",
+      "proposition": [
+        "$\\lim_{n \\to \\infty} (x_n + y_n) = A + B$"
+      ],
+      "reasons": [
+        "by definition of limit"
+      ]
+    }
+  ]
+}
