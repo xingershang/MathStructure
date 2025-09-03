@@ -1,55 +1,21 @@
-## Goal
+假设 $f(x)$ 在 $[0,1]$ 上连续，证明: $\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$
 
-Let the real numbers $a, b, c, d$ satisfy the relations $a + b + c + d = 6$ and $a^2 + b^2 + c^2 + d^2 = 12$. Prove that
+Pf:
 
-$$
-36 \leq 4(a^3 + b^3 + c^3 + d^3) - (a^4 + b^4 + c^4 + d^4) \leq 48.
-$$
+$\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
 
-> Workload : 2
+令$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$, $I_2 = \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
 
-## Proof
+其中
 
-Observe that
+$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx \quad (0 \leq \xi \leq h^{1/4})$
 
-$$
-4(a^3 + b^3 + c^3 + d^3) - (a^4 + b^4 + c^4 + d^4) = -((a - 1)^4 + (b - 1)^4 + (c - 1)^4 + (d - 1)^4) + 6(a^2 + b^2 + c^2 + d^2) - 4(a + b + c + d) + 4
-$$
+$= f(\xi) \arctan \frac{x}{h} \Big|_0^{h^{1/4}} = f(\xi) \arctan \frac{1}{h^{3/4}} \to f(0)\dfrac{\pi}{2} \quad (h \to 0^+)$
 
-$$
-= -((a - 1)^4 + (b - 1)^4 + (c - 1)^4 + (d - 1)^4) + 52.
-$$
+$|I_2| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx(\quad |f(x)|\leq M\quad)$
 
-Now, introducing $x = a - 1, y = b - 1, z = c - 1, t = d - 1$, we need to prove the inequalities
+$= M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) \to 0 \quad (h \to 0^+)$
 
-$$
-16 \geq x^4 + y^4 + z^4 + t^4 \geq 4,
-$$
+因此$h\to 0^+$时$I_1+I_2\to f(0)\dfrac{\pi}{2}$
 
-under the constraint
-
-$$
-x^2 + y^2 + z^2 + t^2 = (a^2 + b^2 + c^2 + d^2) - 2(a + b + c + d) + 4 = 4
-$$
-
-(we will not use the value of $x + y + z + t$ though it can be found).
-
-Now the rightmost inequality in (1) follows from the power mean inequality:
-
-$$
-x^4 + y^4 + z^4 + t^4 \geq \frac{(x^2 + y^2 + z^2 + t^2)^2}{4} = 4.
-$$
-
-For the other one, expanding the brackets we note that
-
-$$
-(x^2 + y^2 + z^2 + t^2)^2 = (x^4 + y^4 + z^4 + t^4) + q,
-$$
-
-where $q$ is a nonnegative number, so
-
-$$
-x^4 + y^4 + z^4 + t^4 \leq (x^2 + y^2 + z^2 + t^2)^2 = 16,
-$$
-
-and we are done.
+Qed.
