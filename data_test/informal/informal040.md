@@ -6,8 +6,6 @@ $$
 36 \leq 4(a^3 + b^3 + c^3 + d^3) - (a^4 + b^4 + c^4 + d^4) \leq 48.
 $$
 
-> Workload : 2
-
 ## Proof
 
 Observe that

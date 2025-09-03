@@ -1,425 +1,92 @@
-from openai import OpenAI
-import json
-from collections import OrderedDict
+# step 2. scope each sentence
 
-def get_proof_structure_schema():
-    return {
-        "$schema": "http://json-schema.org/draft-07/schema#",
-        "type": "object",
-        "properties": {
-            "ProofStructure": {
-                "type": "array",
-                "items": {
-                    "anyOf": [
-                        {"$ref": "#/$defs/Show"},
-                        {"$ref": "#/$defs/Assume"},
-                        {"$ref": "#/$defs/Have"},
-                        {"$ref": "#/$defs/Fix"},
-                        {"$ref": "#/$defs/SufficeToProve"},
-                        {"$ref": "#/$defs/ToHave"},
-                        {"$ref": "#/$defs/OnlyNeeds"},
-                        {"$ref": "#/$defs/Find"},
-                        {"$ref": "#/$defs/Define"},
-                        {"$ref": "#/$defs/Hint"}
-                    ]
-                }
-            }
-        },
-        "required": ["ProofStructure"],
-        "additionalProperties": False,
-        "$defs": {
-            "Show": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Show"}),
-                    ("proposition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("scope", {
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {"$ref": "#/$defs/Show"},
-                                {"$ref": "#/$defs/Assume"},
-                                {"$ref": "#/$defs/Have"},
-                                {"$ref": "#/$defs/Fix"},
-                                {"$ref": "#/$defs/SufficeToProve"},
-                                {"$ref": "#/$defs/ToHave"},
-                                {"$ref": "#/$defs/OnlyNeeds"},
-                                {"$ref": "#/$defs/Find"},
-                                {"$ref": "#/$defs/Define"},
-                                {"$ref": "#/$defs/Hint"}
-                            ]
-                        },
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "proposition", "scope"],
-                "additionalProperties": False
-            },
-            "Assume": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Assume"}),
-                    ("assumption", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("scope", {
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {"$ref": "#/$defs/Show"},
-                                {"$ref": "#/$defs/Assume"},
-                                {"$ref": "#/$defs/Have"},
-                                {"$ref": "#/$defs/Fix"},
-                                {"$ref": "#/$defs/SufficeToProve"},
-                                {"$ref": "#/$defs/ToHave"},
-                                {"$ref": "#/$defs/OnlyNeeds"},
-                                {"$ref": "#/$defs/Find"},
-                                {"$ref": "#/$defs/Define"},
-                                {"$ref": "#/$defs/Hint"}
-                            ]
-                        },
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "assumption", "scope"],
-                "additionalProperties": False
-            },
-            "Have": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Have"}),
-                    ("proposition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("reasons", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "proposition", "reasons"],
-                "additionalProperties": False
-            },
-            "Fix": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Fix"}),
-                    ("var_list", {"type": "array", "items": {"type": "string"}}),
-                    ("condition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("scope", {
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {"$ref": "#/$defs/Show"},
-                                {"$ref": "#/$defs/Assume"},
-                                {"$ref": "#/$defs/Have"},
-                                {"$ref": "#/$defs/Fix"},
-                                {"$ref": "#/$defs/SufficeToProve"},
-                                {"$ref": "#/$defs/ToHave"},
-                                {"$ref": "#/$defs/OnlyNeeds"},
-                                {"$ref": "#/$defs/Find"},
-                                {"$ref": "#/$defs/Define"},
-                                {"$ref": "#/$defs/Hint"}
-                            ]
-                        },
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "var_list", "condition", "scope"],
-                "additionalProperties": False
-            },
-            "SufficeToProve": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "SufficeToProve"}),
-                    ("proposition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("reasons", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "proposition", "reasons"],
-                "additionalProperties": False
-            },
-            "ToHave": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "ToHave"}),
-                    ("proposition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("scope", {
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {"$ref": "#/$defs/Show"},
-                                {"$ref": "#/$defs/Assume"},
-                                {"$ref": "#/$defs/Have"},
-                                {"$ref": "#/$defs/Fix"},
-                                {"$ref": "#/$defs/SufficeToProve"},
-                                {"$ref": "#/$defs/ToHave"},
-                                {"$ref": "#/$defs/OnlyNeeds"},
-                                {"$ref": "#/$defs/Find"},
-                                {"$ref": "#/$defs/Define"},
-                                {"$ref": "#/$defs/Hint"}
-                            ]
-                        },
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "proposition", "scope"],
-                "additionalProperties": False
-            },
-            "OnlyNeeds": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "OnlyNeeds"}),
-                    ("proposition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("reasons", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "proposition", "reasons"],
-                "additionalProperties": False
-            },
-            "Find": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Find"}),
-                    ("var_list", {"type": "array", "items": {"type": "string"}}),
-                    ("condition", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    }),
-                    ("scope", {
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {"$ref": "#/$defs/Show"},
-                                {"$ref": "#/$defs/Assume"},
-                                {"$ref": "#/$defs/Have"},
-                                {"$ref": "#/$defs/Fix"},
-                                {"$ref": "#/$defs/SufficeToProve"},
-                                {"$ref": "#/$defs/ToHave"},
-                                {"$ref": "#/$defs/OnlyNeeds"},
-                                {"$ref": "#/$defs/Find"},
-                                {"$ref": "#/$defs/Define"},
-                                {"$ref": "#/$defs/Hint"}
-                            ]
-                        },
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "var_list", "condition", "scope"],
-                "additionalProperties": False
-            },
-            "Define": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Define"}),
-                    ("symbol", {"type": "string"}),
-                    ("meaning", {
-                        "type": "array",
-                        "items": {"type": "string"},
-                        "default": []
-                    })
-                ]),
-                "required": ["type", "symbol", "meaning"],
-                "additionalProperties": False
-            },
-            "Hint": {
-                "type": "object",
-                "properties": OrderedDict([
-                    ("type", {"type": "string", "const": "Hint"}),
-                    ("comment", {"type": "string"})
-                ]),
-                "required": ["type", "comment"],
-                "additionalProperties": False
-            }
-        }
-    }
-
-
-def format_proof_structure_to_pretty(data, indent_level=0):
-    indent = "    " * indent_level
-    result = []
-    
-    if isinstance(data, dict):
-        if "ProofStructure" in data:
-            return format_proof_structure_to_pretty(data["ProofStructure"], indent_level)
-        
-        proof_type = data.get("type", "")
-        
-        def format_list(items):
-            if not items:
-                return ""
-            if len(items) == 1:
-                return f"\"{items[0]}\""
-            return "{" + "; ".join(f"\"{item}\"" for item in items) + "}"
-        
-        if proof_type == "Show":
-            prop = format_list(data.get("proposition", []))
-            scope = data.get("scope", [])
-            result.append(f"{indent}[Show: {prop}]")
-            if scope:
-                result.append(f"{indent}{{")
-                result.append(format_proof_structure_to_pretty({"ProofStructure": scope}, indent_level + 1))
-                result.append(f"{indent}}}")
-                
-        elif proof_type == "Assume":
-            assumption = format_list(data.get("assumption", []))
-            scope = data.get("scope", [])
-            result.append(f"{indent}[Assume: {assumption}]")
-            if scope:
-                result.append(f"{indent}{{")
-                result.append(format_proof_structure_to_pretty({"ProofStructure": scope}, indent_level + 1))
-                result.append(f"{indent}}}")
-                
-        elif proof_type == "Have":
-            prop = format_list(data.get("proposition", []))
-            reasons = data.get("reasons", [])
-            reason_str = " by " + format_list(reasons) if reasons else ""
-            result.append(f"{indent}[Have: {prop}{reason_str}]")
-            
-        elif proof_type == "Fix":
-            var_list = data.get("var_list", [])
-            condition = format_list(data.get("condition", []))
-            scope = data.get("scope", [])
-            vars_str = ", ".join(var_list)
-            result.append(f"{indent}[Fix: {{{vars_str}}} st {condition}]")
-            if scope:
-                result.append(f"{indent}{{")
-                result.append(format_proof_structure_to_pretty({"ProofStructure": scope}, indent_level + 1))
-                result.append(f"{indent}}}")
-                
-        elif proof_type == "SufficeToProve":
-            prop = format_list(data.get("proposition", []))
-            reasons = data.get("reasons", [])
-            reason_str = " by " + format_list(reasons) if reasons else ""
-            result.append(f"{indent}[SufficeToProve: {prop}{reason_str}]")
-            
-        elif proof_type == "ToHave":
-            prop = format_list(data.get("proposition", []))
-            scope = data.get("scope", [])
-            result.append(f"{indent}[ToHave: {prop}]")
-            if scope:
-                result.append(f"{indent}{{")
-                result.append(format_proof_structure_to_pretty({"ProofStructure": scope}, indent_level + 1))
-                result.append(f"{indent}}}")
-            
-        elif proof_type == "OnlyNeeds":
-            prop = format_list(data.get("proposition", []))
-            reasons = data.get("reasons", [])
-            reason_str = " by " + format_list(reasons) if reasons else ""
-            result.append(f"{indent}[OnlyNeeds: {prop}{reason_str}]")
-            
-        elif proof_type == "Find":
-            var_list = data.get("var_list", [])
-            condition = format_list(data.get("condition", []))
-            scope = data.get("scope", [])
-            vars_str = ", ".join(var_list)
-            result.append(f"{indent}[Find: {{{vars_str}}} st {condition}]")
-            if scope:
-                result.append(f"{indent}{{")
-                result.append(format_proof_structure_to_pretty({"ProofStructure": scope}, indent_level + 1))
-                result.append(f"{indent}}}")
-            
-        elif proof_type == "Define":
-            symbol = data.get("symbol", "")
-            meaning = format_list(data.get("meaning", []))
-            result.append(f"{indent}[Define: \"{symbol}\" as \"{meaning}\"]")
-            
-        elif proof_type == "Hint":
-            comment = data.get("comment", "")
-            result.append(f"{indent}[Hint: \"{comment}\"]")
-            
-    elif isinstance(data, list):
-        for item in data:
-            formatted = format_proof_structure_to_pretty(item, indent_level)
-            if formatted:
-                result.append(formatted)
-    
-    return "\n".join(result)
-
-
-with open("../prompt/prompt_scope.md", "r", encoding="utf-8") as f:
-    prompt = f.read()
-
-with open("../display/node_type.md", "r", encoding="utf-8") as f:
-    input_text = f.read()
+from openai import OpenAI # type: ignore
+import os
+import re
+from utils import extract_thinking_and_result
 
 client = OpenAI(
     api_key="sk-roTlKyXXDUcOI3EsnNuniF41aoCF0czrHzHDfXUdsyT6tmLH",
     base_url="https://gpt.api.zhangyichi.cn/v1"
 )
 
-schema = get_proof_structure_schema()
+# model_name = "gemini-2.5-pro"
+model_name = "deepseek-chat"
 
-response_format = {
-    "type": "json_schema",
-    "json_schema": {
-        "name": "proof_structure",
-        "schema": schema,
-        "strict": True
-    }
-}
+with open("../prompt/prompt_scope.md", "r", encoding="utf-8") as f:
+    scope_prompt = f.read().strip()
 
-try:
-    response = client.chat.completions.create(
-        model="o3",
-        messages=[
-            {"role": "system", "content": prompt},
-            {"role": "user", "content": input_text}
-        ],
-        response_format=response_format,
-    )
+file_input_content = "../display/node_type_result_whole.md"
+file_scope_context_whole = "../display/scope_context_whole.md"
+file_scope_result_whole = "../display/scope_result_whole.md"
+file_scope_llm_response = "../display/scope_llm_response.md"
+file_scope_current = "../display/scope_current.md"
 
-    msg = response.choices[0].message
+# clear files
+with open(file_scope_context_whole, "w", encoding="utf-8") as f:
+    f.write("")
+    print(f"Cleared {file_scope_context_whole}")
+with open(file_scope_result_whole, "w", encoding="utf-8") as f:
+    f.write("")
+    print(f"Cleared {file_scope_result_whole}")
+
+iteration = 0
+max_iterations = 100
+
+while iteration < max_iterations:
+    iteration += 1
+    print(f"iteration {iteration}:")
     
-    if hasattr(msg, "refusal") and msg.refusal:
-        output = f"Refusal: {msg.refusal}"
-    else:
-        output_data = json.loads(msg.content)
-        output = json.dumps(output_data, indent=2, ensure_ascii=False)
+    with open(file_input_content, "r", encoding="utf-8") as f:
+        input_content = f.read().strip()
+    with open(file_scope_context_whole, "r", encoding="utf-8") as f:
+        scope_context_whole = f.read().strip()
+    with open(file_scope_result_whole, "r", encoding="utf-8") as f:
+        scope_result_whole = f.read().strip()
+    
+    messages = [{"role": "system", "content": scope_prompt}]
+    messages.append({"role": "user", "content": f"节点序列: \n{input_content}\n"})
+    messages.append({"role": "user", "content": f"历史Round: \n{scope_context_whole}\n"})
+    messages.append({"role": "user", "content": f"本轮之前的tag标记汇总: \n{scope_result_whole}\n"})
+    
+    try:
+        completion = client.chat.completions.create(
+            model=model_name,
+            messages=messages,
+        )
+        response_content = completion.choices[0].message.content
+
+        with open(file_scope_llm_response, "w", encoding="utf-8") as f:
+            f.write(response_content)
+
+        thinking, result = extract_thinking_and_result(response_content)
         
-        pretty_output = format_proof_structure_to_pretty(output_data)
+        if thinking or result:
+            with open(file_scope_context_whole, "a", encoding="utf-8") as f:
+                f.write(f"\n\nRound {iteration}:\n")
+                f.write(f"<thinking>\n{thinking}\n</thinking>\n")
+                f.write(f"<result>\n{result}\n</result>")
+            
+            with open(file_scope_result_whole, "a", encoding="utf-8") as f:
+                f.write(result)
+                f.write("\n")
+            
+            with open(file_scope_current, "w", encoding="utf-8") as f:
+                f.write(result)
+            
+            print(f"Result: {result}\n---")
+            
+            if result.strip() == 'End.':
+                break
+        else:
+            print("Error: Could not extract thinking and result from response")
+            print(f"Response content: {response_content}")
+            break
+            
+    except Exception as e:
+        print(f"Error during API call or file processing: {e}")
+        import traceback
+        traceback.print_exc()
+        break
 
-    with open("../display/scope.json", "w", encoding="utf-8") as f:
-        f.write(output)
-    print("Generated: scope.json")
-        
-    with open("../display/scope.md", "w", encoding="utf-8") as f:
-        f.write(pretty_output)
-    print("Generated: scope.md")
-
-
-except Exception as e:
-    print(f"\nError occurred: {str(e)}")
-    import traceback
-    traceback.print_exc()
+print(f"\n\nProcess completed after {iteration} rounds.")
