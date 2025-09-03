@@ -1,17 +1,10 @@
-[Assume: {$\forall f:\R \to \R$，$f$在$[0,1]$上连续}]
+[Show: {对$x^3-4x^2+2x+1$做因式分解}]
 {
-    [Show: {$\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$}]
+    [Fix: {a,b} such that {$x^3-4x^2+2x+1=(x-1)(x^2+ax+b)$}] by {观察到$\exists x=1$使得$x^3-4x^2+2x+1=0$}]
     {
-        [Have: {∀h ∈ (0,1/2)，$\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$}]
-        [Define: {$I_1$} as {$\int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$}]
-        [Define: {$I_2$} as {$\int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$}]
-        [Hint: {其中 $I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$}]
-        [Have: {$\exists \xi \in [0, h^{1/4}]$，$\int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx$}]
-        [Have: {$f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx = f(\xi) \arctan \frac{x}{h} \Big|_0^{h^{1/4}} = f(\xi) \arctan \frac{1}{h^{3/4}}$}]
-        [Have: {$\lim\limits_{h \to 0^+} f(\xi) \arctan \frac{1}{h^{3/4}} = f(0)\dfrac{\pi}{2}$}]
-        [Have: {∃M ∈ ℝ, ∀x ∈ [0,1], |f(x)| ≤ M，并且∀h ∈ (0,1/2)，$|I_2| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx$}]
-        [Have: {$M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx = M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right)$}]
-        [Have: {$\lim\limits_{h \to 0^+} M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) = 0$}]
-        [Have: {因此，$\lim\limits_{h \to 0^+} (I_1 + I_2) = f(0)\dfrac{\pi}{2}$}]
+        [Have: {$\forall x \in \R$，$(x-1)(x^2+ax+b)=x^3+(a-1)x^2+(b-a)x-b$}]
+        [Have: {$\forall x \in \R$，$a-1=-4 \land b-a=2 \land -b=1$} by {对比系数}]
+        [Have: {$\forall x \in \R$，$a=-3 \land b=-1$} by {解得}]
+        [Have: {$\forall x \in \R$，$x^3-4x^2+2x+1=(x-1)(x^2-3x-1)$} by {于是}]
     }
 }

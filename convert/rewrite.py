@@ -63,9 +63,9 @@ while iteration < max_iterations:
         
         if thinking or result:
             with open(file_rewrite_context_whole, "a", encoding="utf-8") as f:
-                f.write(f"\n\nRound {iteration}:\n")
-                f.write(f"<thinking>\n{thinking}\n</thinking>\n")
-                f.write(f"<result>\n{result}\n</result>")
+                # f.write(f"\n\nRound {iteration}:\n")
+                f.write(f"\n<thinking>\n{thinking}\n</thinking>\n")
+                f.write(f"<result>\n{result}\n</result>\n")
             
             with open(file_rewrite_result_whole, "a", encoding="utf-8") as f:
                 f.write(result)

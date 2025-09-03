@@ -16,7 +16,7 @@ model_name = "deepseek-chat"
 with open("../prompt/prompt_node_type.md", "r", encoding="utf-8") as f:
     node_type_prompt = f.read().strip()
 
-file_input_content = "../display/cut_result.md"
+file_input_content = "../display/rewrite_result_whole.md"
 file_node_type_context_whole = "../display/node_type_context_whole.md"
 file_node_type_result_whole = "../display/node_type_result_whole.md"
 file_node_type_llm_response = "../display/node_type_llm_response.md"
@@ -63,9 +63,8 @@ while iteration < max_iterations:
         
         if thinking or result:
             with open(file_node_type_context_whole, "a", encoding="utf-8") as f:
-                f.write(f"\n\nRound {iteration}:\n")
                 f.write(f"<thinking>\n{thinking}\n</thinking>\n")
-                f.write(f"<result>\n{result}\n</result>")
+                f.write(f"<result>\n{result}\n</result>\n\n")
             
             with open(file_node_type_result_whole, "a", encoding="utf-8") as f:
                 f.write(result)

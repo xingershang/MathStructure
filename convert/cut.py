@@ -12,10 +12,10 @@ client = OpenAI(
     base_url="https://gpt.api.zhangyichi.cn/v1"
 )
 
-# model_name = "gemini-2.5-pro"
-model_name = "deepseek-chat"
+model_name = "gemini-2.5-pro"
+# model_name = "deepseek-chat"
 
-with open("../prompt/prompt_cut_sentences.md", "r", encoding="utf-8") as f:
+with open("../prompt/prompt_cut.md", "r", encoding="utf-8") as f:
     cut_prompt = f.read().strip()
 
 file_informal_proof = "../display/informal_proof.md"
