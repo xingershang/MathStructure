@@ -63,9 +63,8 @@ while iteration < max_iterations:
         
         if thinking or result:
             with open(file_scope_context_whole, "a", encoding="utf-8") as f:
-                f.write(f"\n\nRound {iteration}:\n")
                 f.write(f"<thinking>\n{thinking}\n</thinking>\n")
-                f.write(f"<result>\n{result}\n</result>")
+                f.write(f"<result>\n{result}\n</result>\n\n")
             
             with open(file_scope_result_whole, "a", encoding="utf-8") as f:
                 f.write(result)

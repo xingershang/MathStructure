@@ -2,7 +2,7 @@
 
 ## 数学结构的定义
 
-数学自然语言的结构是带有类型的节点序列。节点共有八种类型。下面会依次给出其格式的定义。
+数学自然语言的结构是带有类型的节点序列。节点共有10种类型。下面会依次给出其格式的定义。
 
 其中，有的节点是有作用域(scope)的。作用域的定义也已经在下面写出，如下：
 
@@ -72,14 +72,14 @@
 
 输入：
 
-[Fix: {A,B} such that {$A \subseteq B$}]
-[Show: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}]
-[Fix: {X} such that {$X \in \mathcal{P}(A)$}]
-[Have: {$X \subseteq A$} by {definition of power set}]
-[Have: {$X \subseteq B$} by {$A \subseteq B$}]
-[Have: {$X \in \mathcal{P}(B)$}]
-[Have: {every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$}]
-[Have: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}]
+[Sentence 1] [Fix: {A,B} such that "$A \subseteq B$"]
+[Sentence 2] [Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+[Sentence 3] [Fix: {X} such that "$X \in \mathcal{P}(A)$"]
+[Sentence 4] [Have: "$X \subseteq A$" by "definition of power set"]
+[Sentence 5] [Have: "$X \subseteq B$" by "$A \subseteq B$"]
+[Sentence 6] [Have: "$X \in \mathcal{P}(B)$"]
+[Sentence 7] [Have: "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$"]
+[Sentence 8] [Have: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
 End.
 
 输出（示意）：
@@ -129,84 +129,75 @@ End.
 
 输入：
 
-[Fix: {A,B} such that "$A \subseteq B$"]
-[Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
-[Fix: {X} such that "$X \in \mathcal{P}(A)$"]
-[Have: "$X \subseteq A$" by "definition of power set"]
-[Have: "$X \subseteq B$" by "$A \subseteq B$"]
-[Have: "$X \in \mathcal{P}(B)$"]
-[Have: "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$"]
-[Have: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+[Sentence 1] [Fix: {A,B} such that "$A \subseteq B$"]
+[Sentence 2] [Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
+[Sentence 3] [Fix: {X} such that "$X \in \mathcal{P}(A)$"]
+[Sentence 4] [Have: "$X \subseteq A$" by "definition of power set"]
+[Sentence 5] [Have: "$X \subseteq B$" by "$A \subseteq B$"]
+[Sentence 6] [Have: "$X \in \mathcal{P}(B)$"]
+[Sentence 7] [Have: "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$"]
+[Sentence 8] [Have: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
 
 <thinking>
-[Fix: {A,B} such that {$A \subseteq B$}]
+[Sentence 1] [Fix: {A,B} such that {$A \subseteq B$}]
 这是第一句话，tag为1。
 </thinking>
-
 <result>
 [Fix: {A,B} such that {$A \subseteq B$}] [@tag: 1]
 </result>
 
 <thinking>
-[Show: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}]
+[Sentence 2] [Show: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}]
 整个证明都是在固定变量A,B的假设下做出的。因此接下来的证明内容都需要涵盖在上一句话[Fix: {A,B} such that {$A \subseteq B$}]的scope当中。因此本轮节点需要做缩进，tag为2。
 </thinking>
-
 <result>
 [Show: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}] [@tag: 2]
 </result>
 
 <thinking>
-[Fix: {X} such that {$X \in \mathcal{P}(A)$}]
+[Sentence 3] [Fix: {X} such that {$X \in \mathcal{P}(A)$}]
 通过上一轮的节点Show，我们已经进入证明主体。进入证明主体后要做缩进！！！此处，tag为3。
 </thinking>
-
 <result>
 [Fix: {X} such that {$X \in \mathcal{P}(A)$}] [@tag: 3]
 </result>
 
 <thinking>
-[Have: {$X \subseteq A$" by "definition of power set}]
+[Sentence 4] [Have: {$X \subseteq A$" by "definition of power set}]
 通过上一轮的节点Fix，我们进入了引入变量X的scope。注意到当前这一轮的节点使用了X这一变量，承认$X \in \mathcal{P}(A)$的假设，因此当前节点仍在Fix X的scope中。因此自然要做一次缩进，tag为4。
 </thinking>
-
 <result>
 [Have: {$X \subseteq A$" by "definition of power set}] [@tag: 4]
 </result>
 
 <thinking>
-[Have: {$X \subseteq B$" by "$A \subseteq B$}]
+[Sentence 5] [Have: {$X \subseteq B$" by "$A \subseteq B$}]
 本轮节点依然用到了变量X，我们仍在Fix X的scope当中。上一轮的节点是Have，Have是没有scope的，因此我们本轮不需要进一步缩进，保持上一轮的tag即可。 
 </thinking>
-
 <result>
 [Have: {$X \subseteq B$" by "$A \subseteq B$}] [@tag: 4]
 </result>
 
-
 <thinking>
-[Have: {$X \in \mathcal{P}(B)$}]
+[Sentence 6] [Have: {$X \in \mathcal{P}(B)$}]
 本轮节点依然用到了变量X，我们仍在Fix X的scope当中。上一轮的节点是Have，Have是没有scope的，因此我们本轮不需要进一步缩进，保持上一轮的tag即可。 
 </thinking>
-
 <result>
 [Have: {$X \in \mathcal{P}(B)$}] [@tag: 4]
 </result>
 
 <thinking>
-[Have: {every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$}]
+[Sentence 7] [Have: {every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$}]
 本轮节点没有提到变量X，并且通过上下文可知我们已经推出了“固定某个X”的语境，这意味着已经退出了Fix X的scope。但是我们依然在证明主体的scope内，因为证明还没有结束。所以缩进应当相比于上一轮-1，当前缩进为3
 </thinking>
-
 <result>
 [Have: {every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$}] [@tag: 3]
 </result>
 
 <thinking>
-[Have: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}]
+[Sentence 8] [Have: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}]
 上一轮的Have节点是没有scope的，并且我们依然在证明的主体内，因此缩进不变，依然为3.
 </thinking>
-
 <result>
 [Have: {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}] [@tag: 3]
 </result>
@@ -214,7 +205,6 @@ End.
 <thinking>
 证明已结束。输出"End."。
 </thinking>
-
 <result>
 End.
 </result>
