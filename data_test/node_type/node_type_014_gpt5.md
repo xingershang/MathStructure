@@ -1,8 +1,0 @@
-[Define: "f" as ""f(x) = \sin x""]
-[Show: {"f(x)=\sin x is continuous on (-\infty, +\infty)"; "f(x)=\sin x is uniformly continuous on (-\infty, +\infty)"}]
-[Have: "| \sin x' - \sin x'' | = 2 \left| \cos \frac{x' + x''}{2} \sin \frac{x' - x''}{2} \right| \leq | x' - x'' |"]
-[Fix: {\epsilon} st "\epsilon > 0"]
-[Define: "\delta" as ""\delta = \epsilon""]
-[Fix: {x', x''} st {"x', x'' \in (-\infty, +\infty)"; "|x' - x''| < \delta"}]
-[Have: "| \sin x' - \sin x'' | \leq | x' - x'' | < \delta = \epsilon"]
-[Have: "\sin x is uniformly continuous on (-\infty, +\infty)" by "By definition"]

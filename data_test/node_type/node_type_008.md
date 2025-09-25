@@ -1,6 +1,0 @@
-[Show: "$\displaystyle\lim_{n \to \infty} \sqrt[n]{n}=1$"]
-[Fix: {\epsilon} st "$\epsilon>0$"]
-[Have: "$\exists\,N\in\mathbb{N}\text{ such that }\forall n>N,\;1\le n<(1+\epsilon)^n$" by "By what was just proved"]
-[Fix: {N} st "$\forall n>N,\;1\le n<(1+\epsilon)^n$"]
-[Have: "$1\le \sqrt[n]{n}<1+\epsilon$" by {"$n>N$"; "$1\le n<(1+\epsilon)^n$"}]
-[Have: "$\displaystyle\lim_{n\to\infty}\sqrt[n]{n}=1$"]

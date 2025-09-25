@@ -1,0 +1,7 @@
+# Natural Language
+
+**Proposition 2.8.** Let $X$ be a random variable, and let $A \in \mathcal{B}$. Then $\{X \in A\}$ is an event, i.e., it is in $\mathcal{F}$.
+
+**Proof.** We will use a trick here: we define the class $\mathcal{G}$ of all $A \subset \mathbb{R}$ for which $\{X \in A\} \in \mathcal{F}$. Then we show that $\mathcal{G}$ is a $\sigma$-field which contains the open intervals. This means that it contains the Borel sets since $\mathcal{B}$ is the minimal such $\sigma$-field; this implies the result. The tricky part is that we deal simultaneously with $\mathcal{F}$, a class of subsets of $\Omega$, and $\mathcal{G}$, a class of subsets of $\mathbb{R}$. We know that $\mathcal{F}$ is a $\sigma$-field. The problem is to show that $\mathcal{G}$ is too. Let's get to it.
+
+Since $\{a < X < b\}$ is an event, $\mathcal{G}$ contains open intervals. It clearly contains the empty set. If $A \in \mathcal{G}$, then $\{X \in A\} \in \mathcal{F}$ so $\{X \in A^c\} = \{X \in A\}^c \in \mathcal{F}$, since $\mathcal{F}$ is closed under complementation. Therefore, $A^c \in \mathcal{G}$. Finally, if $A_1, A_2, \cdots \in \mathcal{G}$, then $\{X \in \bigcup_n A_n\} = \bigcup_n \{X \in A_n\} \in \mathcal{F}$ since $\mathcal{F}$ is also closed under countable unions. Therefore, $\bigcup_n A_n \in \mathcal{G}$. This verifies that $\mathcal{G}$ is a $\sigma$-field containing the open intervals, as claimed.  □

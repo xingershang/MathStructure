@@ -1,8 +1,0 @@
-[Fix: {x, y} st "$\{x_n\}$ and $\{y_n\}$ are convergent sequences"]
-[Fix: {A, B} st "$\lim_{n \to \infty} x_n = A$ and $\lim_{n \to \infty} y_n = B$"]
-[Show: "If $A < B$, then there exists an index $N \in \mathbb{N}$ such that $x_n < y_n$ for all $n > N$"]
-[Fix: {C} st "$A < C < B$"]
-[Have: {"there exists $N'$ such that $|x_n - A| < C - A$ for all $n > N'$"; "there exists $N''$ such that $|y_n - B| < B - C$ for all $n > N''$"} by "definition of limit"]
-[Define: "N" as ""$N = \max\{N', N''\}$""]
-[Have: "for $n > N$, $x_n < A + C - A = C = B - (B - C) < y_n$"]
-[Have: "there exists an index $N \in \mathbb{N}$ such that $x_n < y_n$ for all $n > N$"]

@@ -1,0 +1,34 @@
+{
+    "thinking": "首先分析题目要求，这是一个关于实数平方和的问题，需要证明某个不等式。我将采用逐步推理的方式构建证明结构。",
+    "structure": [
+      {
+        "type": "show",
+        "content": "对于任意实数a,b,c，有a²+b²+c²≥ab+bc+ca",
+        "using": "通过代数变换和完全平方公式",
+        "scope": [
+          {
+            "type": "have",
+            "content": "2a²+2b²+2c²≥2ab+2bc+2ca",
+            "by": "将原不等式两边乘以2"
+          },
+          {
+            "type": "logic_chain",
+            "initial_proposition": "a²+b²+c²-ab-bc-ca",
+            "steps": [
+              {
+                "symbol": "=",
+                "content": "½[(a-b)²+(b-c)²+(c-a)²]",
+                "reason": "代数恒等变换"
+              }
+            ]
+          },
+          {
+            "type": "have",
+            "content": "(a-b)²≥0, (b-c)²≥0, (c-a)²≥0",
+            "by": "平方的非负性"
+          }
+        ]
+      }
+    ]
+  }
+  

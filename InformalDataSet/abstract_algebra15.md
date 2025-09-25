@@ -1,0 +1,5 @@
+# Natural Language
+
+**3.5.5 Theorem** The finite extension $E/F$ is normal if and only if every $F$-monomorphism of $E$ into an algebraic closure $C$ is actually an $F$-automorphism of $E$.
+
+*Proof.* If $E/F$ is normal, then as in (3.5.1), an $F$-monomorphism $\tau$ of $E$ into $C$ must map each element of $E$ to one of its conjugates. Thus by hypothesis, $\tau(E) \subseteq E$. But $\tau(E)$ is an isomorphic copy of $E$, so it must have the same degree as $E$ over $F$. Since the degree is assumed finite, we have $\tau(E) = E$. (All we are saying here is that an $m$-dimensional subspace of an $m$-dimensional vector space is the entire space.) Conversely, let $\alpha \in E$, and let $\beta$ be any conjugate of $\alpha$ over $F$. As in the proof of (3.5.2), there is an $F$-monomorphism of $E$ into $C$ that carries $\alpha$ to $\beta$. If all such embeddings are $F$-automorphisms of $E$, we must have $\beta \in E$, and we conclude that $E$ is normal over $F$. ♣
