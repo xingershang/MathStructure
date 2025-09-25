@@ -1,0 +1,7 @@
+# Natural Language
+
+**2.2.6 Proposition** If $f : R \to S$ is a ring homomorphism and the only ideals of $R$ are $\{0\}$ and $R$, then $f$ is injective. (In particular, if $R$ is a division ring, then $R$ satisfies this hypothesis.)
+
+*Proof.* Let $I = \ker f$, an ideal of $R$ (see (2.2.3)). If $I = R$ then $f$ is identically zero, and is therefore not a legal ring homomorphism since $f(1_R) = 1_S \neq 0_S$. Thus $I = \{0\}$, so that $f$ is injective.
+
+If $R$ is a division ring, then in fact $R$ has no nontrivial left or right ideals. For suppose that $I$ is a left ideal of $R$ and $a \in I, a \neq 0$. Since $R$ is a division ring, there is an element $b \in R$ such that $ba = 1$, and since $I$ is a left ideal, we have $1 \in I$, which implies that $I = R$. If $I$ is a right ideal, we choose the element $b$ such that $ab = 1$. ♣

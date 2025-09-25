@@ -1,7 +1,0 @@
-[Show: "$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$"]
-[Hint: "我们用数学归纳法证明"]
-[Have: "当$n=1$时$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$成立"]
-[Assume: "$n=k$时$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$成立"]
-[Have: "$1 + 2 + \cdots  + k + \left( {k + 1}\right)  = \frac{k\left( {k + 1}\right) }{2} + k + 1 = \frac{\left( {k + 1}\right) \left\lbrack  {\left( {k + 1}\right)  + 1}\right\rbrack  }{2}$"]
-[Have: "$n=k+1$时$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$成立"]
-[Have: "对于任何正整数$n$,有$1 + 2 + \cdots + n = \frac{n(n+1)}{2}$"]

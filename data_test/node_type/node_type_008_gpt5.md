@@ -1,5 +1,0 @@
-[Show: "\lim_{n \to \infty} \sqrt[n]{n} = 1"]
-[Fix: {\epsilon} st "\epsilon > 0"]
-[Have: "there exists N \in \mathbb{N} such that 1 \le n < (1+\epsilon)^n for all n > N" by "By what was just proved"]
-[Have: "for n > N, 1 \le \sqrt[n]{n} < 1 + \epsilon"]
-[Have: "\lim_{n \to \infty} \sqrt[n]{n} = 1"]

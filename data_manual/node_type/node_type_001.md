@@ -1,8 +1,0 @@
-[Fix: {A,B} such that "$A \subseteq B$"]
-[Show: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]
-[Fix: {X} such that "$X \in \mathcal{P}(A)$"]
-[Have: "$X \subseteq A$" by "definition of power set"]
-[Have: "$X \subseteq B$" by "$A \subseteq B$"]
-[Have: "$X \in \mathcal{P}(B)$"]
-[Have: "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$"]
-[Have: "$\mathcal{P}(A) \subseteq \mathcal{P}(B)$"]

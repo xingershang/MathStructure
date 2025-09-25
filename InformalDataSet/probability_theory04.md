@@ -1,0 +1,5 @@
+# Natural Language
+
+**Proposition 4.5.** Suppose $X_n$ converges to $X$ a.e. Then $X_n$ converges to $X$ in probability.
+
+**Proof.** There is a set $\Lambda$ of probability zero such that if $\omega \notin \Lambda$, $X_n(\omega)$ converges to $X(\omega)$. Consider $Z_n \overset{\text{def}}{=} \sup \{|X_k - X| : k \geq n\}$. Note that $X_n(\omega) \longrightarrow X(\omega) \iff Z_n(\omega) \longrightarrow 0$. Let $\epsilon > 0$ and let $\Gamma_n^\epsilon = \{Z_n \geq \epsilon\}$. Notice that if $\omega \in \bigcap_n \Gamma_n^\epsilon$, then $Z_n(\omega)$ does not converge to zero, so that $\bigcap_n \Gamma_n^\epsilon \subset \Lambda$. Now $\Gamma_n^\epsilon \supset \Gamma_{n+1}^\epsilon \supset \ldots$, so $P\{\Gamma_n^\epsilon\} \longrightarrow P\{\bigcap_n \Gamma_n^\epsilon\} \leq P\{\Lambda\} = 0$. Thus, as $|X_n - X| \leq Z_n$, $P\{|X_n - X| \geq \epsilon\} \leq P\{\Gamma_n^\epsilon\} \longrightarrow 0$. This holds for all $\epsilon > 0$, so $X_n \longrightarrow 0$ in probability.  □

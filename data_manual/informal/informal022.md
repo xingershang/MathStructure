@@ -1,1 +1,0 @@
-下面我们证明，如果$H\preceq G,K\preceq G$，那么$HK\preceq G\iff HK=KH$。左推右，因为$HK$是子群，根据等价定义得到$(HK)^{-1}=HK$，而$(HK)^{-1}=K^{-1}H^{-1}$，而$H,K$都是子群，因此等于$KH$；右推左，$(HK)^{-1}=K^{-1}H^{-1}=KH=HK$，同时$(HK)(HK)=H(KH)K$$=H(HK)K=(HH)(KK)=HK$，因此$HK\preceq G$。
