@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from agent.top_structure_extractor import TopStructureExtractor
+from agent.structure_extractor import TopStructureExtractor
 
 current_dir = Path(__file__).parent
 

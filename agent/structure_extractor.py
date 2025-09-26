@@ -5,7 +5,7 @@ from openai import OpenAI
 from structure_def.node_def import Structure
 from checker.json_structure_checker import JsonStructureChecker
 
-class TopStructureExtractor:
+class StructureExtractor:
     def __init__(self, api_key: str, base_url: str, model: str):
         self.client = OpenAI(api_key=api_key, base_url=base_url)
         self.model = model
