@@ -14,11 +14,11 @@ def create_initial_structure(natural_language_text: str) -> str:
     )
     
     structure = Structure(
-        thinking="",
+        thinking=None,
         structure=[placeholder_node] 
     )
     
-    return structure.model_dump_json(indent=2)
+    return structure.model_dump_json(indent=2, exclude_none=True)
 
 if __name__ == "__main__":
     test_text = "this is a test. this is a test. this is a test."

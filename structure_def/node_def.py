@@ -93,5 +93,5 @@ class PlaceHolderNode(BaseModel):
     content: str = Field(..., description="the corresponding natural-language text")
 
 class Structure(BaseModel):
-    thinking: str = Field(..., description="The Chain-of-Thought process")
+    thinking: Optional[str] = Field(None, description="The Chain-of-Thought process")
     structure: List[AnyNode] = Field(..., description="The Structure.")
