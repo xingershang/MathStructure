@@ -3,13 +3,13 @@ import json
 from typing import Optional
 from openai import OpenAI
 from structure_def.node_def import Structure
-from checker.json_structure_checker import StructureValidator
+from checker.json_structure_checker import JsonStructureChecker
 
 class TopStructureExtractor:
     def __init__(self, api_key: str, base_url: str, model: str):
         self.client = OpenAI(api_key=api_key, base_url=base_url)
         self.model = model
-        self.validator = StructureValidator()
+        self.validator = JsonStructureChecker()
 
     def load_prompt_template(self, filepath: str) -> str:
         with open(filepath, 'r', encoding='utf-8') as f:
@@ -33,6 +33,7 @@ class TopStructureExtractor:
             )
             response_text = completion.choices[0].message.content
             print("[Agent: StructurePlanner-structure_extractor] LLM responded")
+            print(f"reponse_text: \n {response_text}\n\n")
             
             return self.validator.validate_json(response_text)
 
