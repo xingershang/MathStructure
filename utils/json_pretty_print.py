@@ -1,28 +1,12 @@
-# /utils/json_pretty_print.py
+# this file is to define the function pretty_print_structure that with the input of a json string, output a human-readable structure pretty-print
 
 import json
 from typing import Any, Dict, List, Union
-from structure_def.node_def import (
-    ShowNode, AssumeNode, FixNode, FindNode, HaveNode, ObtainNode,
-    SufficeToProveNode, LogicChainNode, CalculationChainNode, DefineNode,
-    HintNode, PlaceHolderNode, Structure, LogicChainStep, CalculationChainStep
-)
 
 def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]], int], indent_level: int = 0) -> str:
-    """
-    将JSON结构转换为可读格式的pretty print
-    
-    Args:
-        json_data: 包含结构信息的JSON数据
-        indent_level: 当前缩进级别
-    
-    Returns:
-        格式化的字符串
-    """
-    indent = "    " * indent_level  # 4个空格作为缩进
+    indent = "    " * indent_level
     
     if isinstance(json_data, list):
-        # 处理节点列表
         result = []
         for item in json_data:
             result.append(pretty_print_structure(item, indent_level))
@@ -34,7 +18,6 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
     node_type = json_data.get("type", "")
     result_lines = []
     
-    # 根据节点类型进行格式化
     if node_type == "show":
         content = _format_content(json_data.get("content", ""))
         using = json_data.get("using")
@@ -162,36 +145,25 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
         result_lines.append(f"{indent}[Hint] {{{content}}}")
     
     elif node_type == "place_holder":
-        result_lines.append(f"{indent}[PlaceHolder]")
+        content = json_data.get("content", "")
+        result_lines.append(f"{indent}[PlaceHolder] {{{content}}}")
     
     else:
-        # 未知类型，直接输出原始JSON
         result_lines.append(f"{indent}{json.dumps(json_data, indent=2, ensure_ascii=False)}")
     
     return "\n".join(result_lines)
 
 def _format_content(content: Any) -> str:
-    """格式化内容，处理字符串或列表"""
     if isinstance(content, list):
         return "; ".join(str(item) for item in content)
     return str(content)
 
 def pretty_print_json_structure(json_input: str) -> str:
-    """
-    主函数：将JSON字符串转换为可读格式
-    
-    Args:
-        json_input: JSON格式的字符串
-    
-    Returns:
-        格式化的字符串
-    """
     try:
         data = json.loads(json_input)
     except json.JSONDecodeError:
-        return "无效的JSON格式"
+        return "Invalid json format"
     
-    # 检查是否有thinking字段和structure字段
     if "thinking" in data and "structure" in data:
         result = ["Chain-of-Thought:"]
         result.append(data["thinking"])
@@ -199,5 +171,4 @@ def pretty_print_json_structure(json_input: str) -> str:
         result.append(pretty_print_structure(data["structure"]))
         return "\n".join(result)
     else:
-        # 直接处理结构
         return pretty_print_structure(data)

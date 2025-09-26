@@ -90,6 +90,7 @@ class HintNode(BaseModel):
 
 class PlaceHolderNode(BaseModel):
     type: Literal["place_holder"] = "place_holder"
+    content: str = Field(..., description="the corresponding natural-language text")
 
 class Structure(BaseModel):
     thinking: str = Field(..., description="The Chain-of-Thought process")
