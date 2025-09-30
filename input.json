@@ -1,31 +1,88 @@
 {
-    "thinking": "首先分析题目要求，这是一个关于实数平方和的问题，需要证明某个不等式。我将采用逐步推理的方式构建证明结构。",
     "structure": [
       {
-        "type": "show",
-        "content": "对于任意实数a,b,c，有a²+b²+c²≥ab+bc+ca",
-        "using": "通过代数变换和完全平方公式",
+        "type": "Hint",
+        "text": "Theorem"
+      },
+      {
+        "type": "Fix",
+        "variable": ["$G$", "$X$"],
+        "condition": ["$G$ is a group", "$X$ is a finite set", "$G$ acts on $X$"],
         "scope": [
           {
-            "type": "have",
-            "content": "2a²+2b²+2c²≥2ab+2bc+2ca",
-            "by": "将原不等式两边乘以2"
-          },
-          {
-            "type": "logic_chain",
-            "initial_proposition": "a²+b²+c²-ab-bc-ca",
-            "steps": [
+            "type": "Fix",
+            "variable": ["$x$"],
+            "condition": ["$x \\in X$"],
+            "scope": [
               {
-                "symbol": "=",
-                "content": "½[(a-b)²+(b-c)²+(c-a)²]",
-                "reason": "代数恒等变换"
+                "type": "Define",
+                "term": "$\\text{Orb}(x)$",
+                "definition": "the orbit of $x$"
+              },
+              {
+                "type": "Define",
+                "term": "$\\text{Stab}(x)$",
+                "definition": "the stabilizer of $x$ by $G$"
+              },
+              {
+                "type": "Define",
+                "term": "$[G : \\text{Stab}(x)]$",
+                "definition": "the index of $\\text{Stab}(x)$ in $G$"
+              },
+              {
+                "type": "Show",
+                "proposition": ["$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$"],
+                "method": null,
+                "scope": [
+                  {
+                    "type": "Define",
+                    "term": "$a$",
+                    "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $\\forall g\\in G,a(g) = g * x$, where $*$ denotes the group action"
+                  },
+                  {
+                    "type": "Have",
+                    "claim": ["$a$ is surjective"],
+                    "reason": ["the definition x was acted on by all the elements of $G$"]
+                  },
+                  {
+                    "type": "Fix",
+                    "variable": ["$g$", "$h$"],
+                    "condition": ["$g, h \\in G$"],
+                    "scope": [
+                      {
+                        "type": "Have",
+                        "claim": ["$a(g) = a(h) \\iff g^{-1}h \\in \\text{Stab}(x)$"],
+                        "reason": ["Stabilizer is Subgroup: Corollary"]
+                      },
+                      {
+                        "type": "Have",
+                        "claim": ["$g^{-1}h \\in \\text{Stab}(x) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"],
+                        "reason": null
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Have",
+                    "claim": ["there is a well-defined bijection from $G / \\text{Stab}(x)$ to $\\text{Orb}(x)$ given by $g \\text{Stab}(x) \\mapsto g * x$"],
+                    "reason": null
+                  },
+                  {
+                    "type": "Have",
+                    "claim": ["$\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$"],
+                    "reason": null
+                  },
+                  {
+                    "type": "Have",
+                    "claim": ["$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$"],
+                    "reason": null
+                  },
+                  {
+                    "type": "Hint",
+                    "text": "The result follows."
+                  }
+                ]
               }
             ]
-          },
-          {
-            "type": "have",
-            "content": "(a-b)²≥0, (b-c)²≥0, (c-a)²≥0",
-            "by": "平方的非负性"
           }
         ]
       }

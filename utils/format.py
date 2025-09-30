@@ -9,8 +9,8 @@ from structure_def.node_def import Structure, PlaceHolderNode
 
 def create_initial_structure(natural_language_text: str) -> str:
     placeholder_node = PlaceHolderNode(
-        type="place_holder",
-        content=natural_language_text
+        type="PlaceHolder",
+        text=natural_language_text
     )
     
     structure = Structure(

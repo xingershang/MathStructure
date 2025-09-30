@@ -1,97 +1,102 @@
-# this file is to define the nodes of the structure using pydantic
+# file: structure_nodes.py
+# Description: Defines the Pydantic models for a structured mathematical text.
 
-from typing import List, Union, Literal, Optional, Dict, Any
-from pydantic import BaseModel, Field, ValidationError
+from typing import List, Union, Literal, Optional
+from pydantic import BaseModel, Field
 
+# Forward references are necessary because the types are not yet fully defined.
+# We use strings here, and Pydantic will resolve them later.
 AnyNode = Union[
     'ShowNode', 'AssumeNode', 'FixNode', 'FindNode',
-    'HaveNode', 'ObtainNode', 'SufficeToProveNode', 'LogicChainNode',
+    'HaveNode', 'ObtainNode', 'SufficesToProveNode', 'LogicChainNode',
     'CalculationChainNode', 'DefineNode', 'HintNode', 'PlaceHolderNode'
 ]
 
-# [Show] {P} using {Q} { ...scope... }
 class ShowNode(BaseModel):
-    type: Literal["show"] = "show"
-    content: Union[str, List[str]] = Field(..., description="the statement to show")
-    using: Optional[str] = Field(None, description="the hint for the method of showing")
-    scope: List[AnyNode] = Field(..., description="the Structure for the statement")
+    type: Literal["Show"] = "Show"
+    proposition: List[str] = Field(..., description="A list of propositions to be proven.")
+    method: Optional[List[str]] = Field(None, description="A list of methods, theorems, or hints for the proof (e.g., ['induction', 'theorem 3.1']).")
+    scope: List['AnyNode'] = Field(..., description="The sequence of steps that constitutes the proof for these propositions.")
 
-# [Assume] {P} { ...scope... }
 class AssumeNode(BaseModel):
-    type: Literal["assume"] = "assume"
-    content: Union[str, List[str]] = Field(..., description="the statement that has been assumed")
-    scope: List[AnyNode] = Field(..., description="the part of Structure in the scope of that assumed statement")
+    type: Literal["Assume"] = "Assume"
+    assumption: List[str] = Field(..., description="A list of statements that are assumed to be true.")
+    scope: List['AnyNode'] = Field(..., description="The part of the proof that falls under the scope of these assumptions.")
 
-# [Fix] {var_list} such that {P} { ...scope... }
 class FixNode(BaseModel):
-    type: Literal["fix"] = "fix"
-    var_list: List[str] = Field(..., description="the list of variables that have been fixed")
-    such_that: Optional[Union[str, List[str]]] = Field(None, description="the condition that the fixed variables must satisfy")
-    scope: List[AnyNode] = Field(..., description="the part of Structure in the scope of that fixed list of variables")
+    type: Literal["Fix"] = "Fix"
+    variable: List[str] = Field(..., description="A list of variables that are being fixed (e.g., ['x', 'y in R']).")
+    condition: Optional[List[str]] = Field(None, description="A list of conditions or properties that the fixed variables must satisfy.")
+    scope: List['AnyNode'] = Field(..., description="The part of the proof that falls under the scope of these fixed variables.")
 
-# [Find] {P} such that {Q} { ...scope... }
-class FindNode(BaseModel):
-    type: Literal["find"] = "find"
-    content: str = Field(..., description="the list of variables to find")
-    such_that: Optional[str] = Field(None, description="the condition that must meet")
-    scope: List[AnyNode] = Field(..., description="the finding process")
-
-# [Have] {P} by {Q}
 class HaveNode(BaseModel):
-    type: Literal["have"] = "have"
-    content: Union[str, List[str]] = Field(..., description="claim")
-    by: Optional[Union[str, List[str]]] = Field(None, description="the reason for the claim(optional)")
+    type: Literal["Have"] = "Have"
+    claim: List[str] = Field(..., description="A list of asserted claims or intermediate results.")
+    reason: Optional[List[str]] = Field(None, description="The reasoning, theorem, or calculation that supports the claims.")
 
-# [Obtain] {var_list} such that {P} by {Q}
+class SufficesToProveNode(BaseModel):
+    type: Literal["SufficesToProve"] = "SufficesToProve"
+    sufficient_proposition: List[str] = Field(..., description="A list of propositions that, if proven, would suffice to prove the main goal.")
+    reason: Optional[List[str]] = Field(None, description="The reasoning for why proving these propositions is sufficient.")
+
 class ObtainNode(BaseModel):
-    type: Literal["obtain"] = "obtain"
-    var_list: List[str] = Field(..., description="the list of variables obtained")
-    such_that: Union[str, List[str]] = Field(..., description="the condition that the obtained variables must satisfy")
-    by: Optional[Union[str, List[str]]] = Field(None, description="the reason for the claim(optional)")
+    type: Literal["Obtain"] = "Obtain"
+    obtained_variable: List[str] = Field(..., description="A list of variables that have been obtained or constructed.")
+    condition: List[str] = Field(..., description="The properties or conditions that these variables satisfy.")
+    reason: Optional[List[str]] = Field(None, description="The reasoning or theorem used to obtain these variables.")
 
-# [SufficeToProve] {P} by {Q}
-class SufficeToProveNode(BaseModel):
-    type: Literal["suffice_to_prove"] = "suffice_to_prove"
-    content: Union[str, List[str]] = Field(..., description="the statement that suffices to prove")
-    by: Optional[Union[str, List[str]]] = Field(None, description="the reason for the claim(optional)")
+class FindNode(BaseModel):
+    type: Literal["Find"] = "Find"
+    target: List[str] = Field(..., description="A list of variables or objects to find.")
+    condition: Optional[List[str]] = Field(None, description="The list of conditions the targets must satisfy.")
+    scope: List['AnyNode'] = Field(..., description="The process or steps for finding the targets.")
 
 class LogicChainStep(BaseModel):
-    symbol: str = Field(..., description="logic symbol, e.g., <=>")
-    content: str = Field(..., description="the statement after this step")
-    reason: Optional[str] = Field(None, description="the reason for this step(optional)")
+    operator: str = Field(..., description="The logical operator connecting to the next step (e.g., '<=>', '=>').")
+    proposition: List[str] = Field(..., description="The resulting proposition of this step.")
+    reason: Optional[List[str]] = Field(None, description="The reasons for this specific logical step.")
 
-# [LogicChain] {P1} {symbol1} {reason1} {P2} {symbol2} {reason2} {P3} ... {Pn}
 class LogicChainNode(BaseModel):
-    type: Literal["logic_chain"] = "logic_chain"
-    initial_proposition: str = Field(..., description="the given proposition")
-    steps: List[LogicChainStep] = Field(..., description="the list of steps")
+    type: Literal["LogicChain"] = "LogicChain"
+    initial_proposition: List[str] = Field(..., description="The starting proposition of the chain.")
+    step: List[LogicChainStep] = Field(..., description="The sequence of logical steps.")
 
 class CalculationChainStep(BaseModel):
-    symbol: str = Field(..., description="calculation symbol, e.g., =")
-    expression: str = Field(..., description="the statement after this step")
-    reason: Optional[str] = Field(None, description="the reason for this step(optional)")
+    operator: str = Field(..., description="The mathematical operator connecting to the next step (e.g., '=', '<=', '>').")
+    expression: List[str] = Field(..., description="The resulting expression of this step.")
+    reason: Optional[List[str]] = Field(None, description="The reasons for this specific calculation step.")
 
-# [CalculationChain] {E1} {symbol1} {reason1} ... {En}
 class CalculationChainNode(BaseModel):
-    type: Literal["calculation_chain"] = "calculation_chain"
-    initial_expression: str = Field(..., description="the given expression")
-    steps: List[CalculationChainStep] = Field(..., description="the list of steps")
+    type: Literal["CalculationChain"] = "CalculationChain"
+    initial_expression: List[str] = Field(..., description="The starting expression of the chain.")
+    step: List[CalculationChainStep] = Field(..., description="The sequence of calculation steps.")
 
-# [Define] {A} as {B}
 class DefineNode(BaseModel):
-    type: Literal["define"] = "define"
-    name: str = Field(..., description="the variable/symbol/concept to be defined")
-    as_content: str = Field(..., description="the definition of that variable/symbol/concept")
+    type: Literal["Define"] = "Define"
+    term: str = Field(..., description="The variable, symbol, or concept to be defined.")
+    definition: str = Field(..., description="The definition of the term.")
 
-# [Hint] {P}
 class HintNode(BaseModel):
-    type: Literal["hint"] = "hint"
-    content: str = Field(..., description="a natural-language-hint")
+    type: Literal["Hint"] = "Hint"
+    text: str = Field(..., description="A natural-language hint or explanatory comment.")
 
 class PlaceHolderNode(BaseModel):
-    type: Literal["place_holder"] = "place_holder"
-    content: str = Field(..., description="the corresponding natural-language text")
+    type: Literal["PlaceHolder"] = "PlaceHolder"
+    text: str = Field(..., description="The corresponding natural-language text that could not be formally structured.")
+
+
+# --- Root Model ---
 
 class Structure(BaseModel):
-    thinking: Optional[str] = Field(None, description="The Chain-of-Thought process")
-    structure: List[AnyNode] = Field(..., description="The Structure.")
+    thinking: Optional[str] = Field(None, description="think before outputting the structure")
+    structure: List[AnyNode] = Field(..., description="the structure")
+
+# This is crucial for Pydantic to handle the forward references in the Union type.
+# We are updating the forward reference to the actual model class.
+for model in [
+    ShowNode, AssumeNode, FixNode, FindNode, HaveNode, ObtainNode,
+    SufficesToProveNode, LogicChainNode, CalculationChainNode, DefineNode,
+    HintNode, PlaceHolderNode
+]:
+    model.update_forward_refs()
+
