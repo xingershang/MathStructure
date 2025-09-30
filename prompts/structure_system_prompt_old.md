@@ -4,677 +4,146 @@
 
 ### Node Types
 
-The basic units of the structure of mathematical natural language are 11 different types of nodes:
+The basic units of the structure of mathematical natural language are 11 different types of nodes. They are introduced sequentially below:
 
-#### 'Show' Node
+#### Show Node: `[Show] {P} using {Q}`
 
-- Semantics: "We will now prove proposition P, with hint Q".
-- JSON:
-```json
-{
-	"type": "Show",
-	"proposition": [...],
-	"method": [...]
-}
-```
-- Explanation: The Show node corresponds to the overall proof goal, or subgoals in a proof text or in a problem solving text. Here, the hint Q is an indication for the proof method, for example 'induction'.
+- Meaning: We will now prove proposition P, with the hint for the proof method being Q. P can be a list.
+- Explanation: The Show node corresponds to the overall proof goal, subgoals in a proof text, sub-proof goals in general text, etc.
+- Example 1: "Below we prove that the set $S$ is not empty" - `[Show] {The set $S$ is not empty} using {}`
+- Example 2: "We use induction to prove $\forall n\in \N,f(n)\geq g(n)$" - `[Show] {$\forall n\in \N,f(n)\geq g(n)$} using {induction}`
+- Example 3: "We prove $k\neq 0$. By contradiction, ..." - `[Show] {$k \neq 0$} using {contradiction}`
 
-Example 1:
-"Below we prove that the set $S$ is not empty and the set $T$ is not empty"
+#### Assume Node: `[Assume] {P}`
 
-```json
-{
-	"type": "Show",
-	"proposition": ["the set $S$ is not empty", "the set $T$ is not empty"],
-	"method": null
-}
-```
+-   Meaning: Assume proposition P holds. P can be a list.
+-   Explanation: The premises of the overall proof goal, temporary assumptions introduced during the proof, or the conditions for each case in a "case analysis" all correspond to Assume nodes. (For situations introducing a new variable, although natural language might use the word "let", it generally needs to be identified as a Fix node, see Example 3. Care must be taken to distinguish between Assume and Fix nodes.)
+-   Example 1: "Assume $a>0$" ($a$ has already been introduced above) - `[Assume] {$a>0$}`
+-   Example 2: "Case 1: $n$ is even" - `[Assume] {$n$ is even}`
+-   Example 3: "Let $\varepsilon > 0$" ($\varepsilon$ is a newly introduced variable) - `[Fix] {$\varepsilon$} such that {$\varepsilon > 0$}`
 
-Example 2:
-"We use induction to prove $\forall n\in \N,f(n)\geq g(n)$ using theorem 3.1"
+#### Have Node: `[Have] {P} by {Q}`
 
-```json
-{
-	"type": "Show",
-	"proposition": ["$\\forall n \\in \\N,f(n) \\geq g(n)$"],
-	"method": ["induction", "theorem 3.1"]
-}
-```
+-   Meaning: Derive assertion P, where the basis for deriving this assertion is Q. Both P and Q can be lists. Q can be empty.
+-   Explanation: Q can be a theorem name, a previously proven conclusion, or a natural language hint. If the natural language text does not state a reason, then Q is empty.
+-   Example 1: "Therefore, $x>0$" - `[Have] {$x>0$} by {}`
+-   Example 2: "By Lemma 1.2, $A$ is a closed set" - `[Have] {$A$ is a closed set} by {Lemma 1.2}`
+-   Example 3: "Combining equations (1) and (2), we get $a=c$" - `[Have] {$a=c$} by {equation (1)}; {equation (2)}`
 
-Example 3:
-"We show that $k\neq 0$. We prove by contradiction, ..."
+#### Fix Node: `[Fix] {var_list} such that {P}`
 
-```json
-{
-	"type": "Show",
-	"proposition": ["$k \neq 0$"],
-	"method": ["contradiction"]
-}
-```
+-   Meaning: Fix the variable list `var_list`, these variables satisfy proposition P. var_list is a list of variables; P can be a single proposition or a list of propositions.
+-   Explanation: The Fix node introduces one or a list of new variables satisfying specific conditions. It corresponds to expressions in natural language like "for any ...", "for all ...", "given ...", "let ...", etc. Logically, it is equivalent to the universal quantifier (`∀`). Note the distinction between Fix and Assume nodes.
+-   Example 1: "For any $\varepsilon > 0$" - `[Fix] {$\varepsilon$} such that {$\varepsilon > 0$}`
+-   Example 2: "Let $x, y$ be arbitrary real numbers" - `[Fix] {$x$, $y$} such that {$x, y$ are real numbers}`
 
-#### 'Assume' Node
+#### Obtain Node: `[Obtain] {var_list} such that {P} by {Q}`
 
-- Semantics: "Assume proposition P holds."
-- JSON:
-  ```json
-  {
-      "type": "Assume",
-      "assumption": [...]
-  }
-  ```
-- Explanation: 'Assume' nodes are used in the premises of the overall proof goal, or temporary assumptions introduced in the middle of the text, e.g. the conditions for each case in a "case analysis". (For situations that introduces new variables, although natural language might use the words "assume" or "let" or "suppose", it generally needs to be identified as a 'Fix' node, which will be introduced later(see Example 3). 'Assume' nodes only applies to situations that a assumption has been made, but NO NEW VARIABLES HAVE BEEN INTRODUCED in the text environment. Care must be taken to distinguish between Assume and Fix nodes!!!)
+-   Meaning: Derive the existence of the variable list `var_list`, these variables satisfy proposition P, and the basis for the existence is Q. var_list is a list of variables; P and Q can both be lists. Q can be empty.
+-   Explanation: Logically, the Obtain node corresponds to the existential quantifier (`∃`); it asserts that variables satisfying specific properties exist. The `by` part indicates the source of existence, similar to the Have node; Q can be a theorem name, some already obtained assertion, or a natural language hint.
+-   Example 1: "By the Mean Value Theorem, there exists $\xi \in (a,b)$ such that $f'(\xi)=0$" - `[Obtain] {$\xi$} such that {$\xi \in (a,b)$};{$f'(\xi)=0$} by {Mean Value Theorem}`
+-   Example 2: "So there exists an integer $k$ such that $n=2k$" - `[Obtain] {$k$} such that {$k$ is an integer};{$n=2k$} by {}`
 
-Example 1:
-"Assume $a > 0$ and $a \in \mathbb{Q}$" (when $a$ has already been introduced above)
+#### SufficeToProve Node: `[SufficeToProve] {P} by {Q}`
 
-```json
-{
-    "type": "Assume",
-    "assumption": ["$a > 0$", "$a \\in \\mathbb{Q}$"]
-}
-```
+-   Meaning: To prove the current proof goal, it suffices to prove P, with the reason being Q. Both P and Q can be lists. Q can be empty.
+-   Explanation: SufficeToProve is a transformation of the current proof goal during the proof process. The current proof goal could be the overall goal of the proof text or some subgoal, depending on the specific meaning of the original text. It corresponds to expressions like "it suffices to prove", "we only need to prove".
+-   Example 1: "It suffices to prove $\forall x \in A, x \in B$" - `[SufficeToProve] {$\forall x \in A, x \in B$} by {}`
+-   Example 2: "Since $A\subseteq B$, it suffices to prove $\forall x \in B, f(x)=0$" - `[SufficeToProve] {$\forall x \in B, f(x)=0$} by {$A \subseteq B$}`
 
-Example 2:
-"Case 1: $n$ is even"
+#### LogicChain Node: `[LogicChain] {P1} {symbol1} {reason1} {P2} {symbol2} {reason2} {P3} ... {Pn}`
 
-```json
-{
-    "type": "Assume",
-    "assumption": ["$n$ is even"]
-}
-```
+-   Meaning: Represents a logical derivation chain. The chain consists of propositions {Pk}, logical symbols {symbolk}, and reasoning reasons {reasonk} alternating. If the natural language does not state a reason, the reason is empty.
+-   Explanation: Used to represent long strings of logical derivations in natural language. If all symbols are forward implications (left implies right), then LogicChain is equivalent to a series of Have nodes. However, if the derivation involves backward implications, or a mix of forward, backward, and bidirectional implications, it is generally represented by a LogicChain node.
+-   Example 1: "$\begin{aligned}P_1&\iff P_2&(reason1) \\ &\implies P_3&(reason2)\\&\implies P_4\end{aligned}$" - `[LogicChain] {P_1} {<=>} {reason1} {P2} {=>} {reason2} {P3} {=>} {} {P4}`
+-   Example 2: "to have $|{x}_{n} - 1| < \varepsilon$, it suffices to have $\frac{1}{n + 1} < \varepsilon$, i.e., $n > \frac{1}{\varepsilon} - 1$. " - `[LogicChain] {$|{x}_{n} - 1| < \varepsilon$} {⇐} {} {$\frac{1}{n + 1} < \varepsilon$} {⇔} {} {$n > \frac{1}{\varepsilon} - 1$}`
 
-Example 3:
-"Let $\varepsilon > 0$" ($\varepsilon$ is a newly introduced variable - This should be a Fix node.)
+#### CalculationChain Node: `[CalculationChain] {E1} {symbol1} {reason1} ... {En}`
 
-```json
-{
-    "type": "Fix",
-    "variable": ["$\\varepsilon$"],
-    "condition": ["$\\varepsilon > 0$"]
-}
-```
+- Meaning: Represents a calculation chain. Similar to LogicChain, the chain consists of expressions, relation symbols, and derivation reasons alternating. Reasons can be empty.
 
-#### 'Fix' Node
-
-- Semantics: "Fix a variable list `variables`, these variables satisfy proposition P."
-- JSON:
-  ```json
-  {
-      "type": "Fix",
-      "variable": [...],
-      "condition": [...]
-  }
-  ```
-- Explanation: The Fix node introduces one or a list of new variables satisfying specific conditions. It corresponds to expressions in natural language like "for any ...", "for all ...", "given ...", "let ...", etc. Logically, it is equivalent to the universal quantifier (`∀`). Again, note the distinction between Fix and Assume nodes!
-
-Example 1:
-"For any $\varepsilon > 0$" ($\varepsilon$ is a newly introduced variable)
-
-```json
-{
-    "type": "Fix",
-    "variable": ["$\\varepsilon$"],
-    "condition": ["$\\varepsilon > 0$"]
-}
-```
-
-Example 2:
-"Let $x, y$ be arbitrary real numbers"
-
-```json
-{
-    "type": "Fix",
-    "variable": ["$x$", "$y$"],
-    "condition": ["$x, y$ are real numbers"]
-}
-```
-
-Example 3:
-"Let $x_1, ..., x_n$, $y_1, ..., y_n$ be arbitrary real numbers"
-
-```json
-{
-    "type": "Fix",
-    "variable": ["$x_1, ..., x_n$","$y_1, ..., y_n$"],
-    "condition": ["$x_1, ..., x_n$, $y_1, ..., y_n$ are real numbers"]
-}
-```
-(remark: when variables are written with '...', we put them in one string)
-
-#### 'Have' Node
-
-- Semantics: "claim P, the reasons for this assertion is Q."
-- JSON:
-  ```json
-  {
-      "type": "Have",
-      "claim": [...],
-      "reason": [...]
-  }
-  ```
-- Explanation: A reason can be a theorem name, a previously proven conclusion(in natural language), or a natural language hint. If the original claim in the given text did not state a reason, then the "reason" should be empty.
-
-Example 1:
-"Therefore, $x>0$"
-
-```json
-{
-    "type": "Have",
-    "claim": ["$x>0$"],
-    "reason": null
-}
-```
-
-Example 2:
-"By Lemma 1.2 and Lemma 1.3, $A$ is a closed set"
-
-```json
-{
-    "type": "Have",
-    "claims": ["$A$ is a closed set"],
-    "reasons": ["Lemma 1.2", "Lemma 1.3"]
-}
-```
-
-#### 'Obtain' Node
-
-- Semantics: "Claim the existence of the variable list `obtained_variable`, these variables satisfy the "condition", by "reason"."
-- JSON:
-  ```json
-  {
-      "type": "Obtain",
-      "obtained_variable": [...],
-      "condition": [...],
-      "reason": [...]
-  }
-  ```
-- Explanation: Logically, the Obtain node corresponds to the existential quantifier (`∃`); it asserts that variables satisfying specific properties exist. The `reason` part indicates the reason for the claim, similar to the 'Have' node.
-
-Example 1:
-"By the Mean Value Theorem, there exists $\xi \in (a,b)$ such that $f'(\xi)=0$"
-
-```json
-{
-    "type": "Obtain",
-    "obtained_variable": ["$\\xi$"],
-    "condition": ["$\\xi \\in (a,b)$", "$f'(\\xi)=0$"],
-    "reason": ["the Mean Value Theorem"]
-}
-```
-
-Example 2:
-"So there exists an integer $k$ such that $n=2k$"
-
-```json
-{
-    "type": "Obtain",
-    "obtained_variable": ["$k$"],
-    "condition": ["$k$ is an integer", "$n=2k$"],
-    "reason": null
-}
-```
-
-#### 'SufficesToProve' Node
-
-- Semantics: "claim that to prove the current proof goal, it suffices to prove "sufficient_proposition", with the reason being "reason"."
-- JSON:
-  ```json
-  {
-      "type": "SufficesToProve",
-      "sufficient_proposition": [...],
-      "reason": [...]
-  }
-  ```
-- Explanation: SufficesToProve is a transformation of the current proof goal during the proof process. The current proof goal could be the overall goal of the proof text or some subgoal, depending on the current context. It corresponds to natural language expressions like "it suffices to prove", "we only need to prove"...
-
-Example 1:
-"It suffices to prove $x \in A$ and $x \in B$"
-
-```json
-{
-    "type": "SufficesToProve",
-    "sufficient_proposition": ["$x \\in A$", "$x \\in B$"],
-    "reason": null
-}
-```
-
-Example 2:
-"Since $A\subseteq B$, it suffices to prove $\forall x \in B, f(x)=0$"
-
-```json
-{
-    "type": "SufficesToProve",
-    "sufficient_proposition": ["$\\forall x \\in B, f(x)=0$"],
-    "reason": ["$A \\subseteq B$"]
-}
-```
-
-#### 'LogicChain' Node
-
-- Semantics: "A logical derivation chain. The chain consists of an initial proposition and a sequence of steps, each with an operator, a resulting proposition, and an optional reason."
-- JSON:
-  ```json
-  {
-      "type": "LogicChain",
-      "initial_proposition": [...],
-      "step": [
-          {
-              "operator": "...",
-              "proposition": [...],
-              "reason": [...]
-          },
-          ...
-      ]
-  }
-  ```
-- Explanation: Used to represent long strings of logical derivations in natural language. If all symbols are forward implications (left implies right), then LogicChain is equivalent to a series of Have nodes. However, if the derivation involves backward implications, or a mix of forward, backward, and bidirectional implications, it is generally represented by a LogicChain node.
-
-Example 1:
-"$\begin{aligned}P_1&\iff P_2&(reason1) \\ &\implies P_3&(reason2)\\&\implies P_4\end{aligned}$"
-
-```json
-{
-    "type": "LogicChain",
-    "initial_proposition": ["$P_1$"],
-    "step": [
-        {
-            "operator": "<=>",
-            "proposition": ["$P_2$"],
-            "reason": ["reason1"]
-        },
-        {
-            "operator": "=>",
-            "proposition": ["$P_3$"],
-            "reason": ["reason2"]
-        },
-        {
-            "operator": "=>",
-            "proposition": ["$P_4$"],
-            "reason": null
-        }
-    ]
-}
-```
-
-Example 2:
-"to have $|{x}_{n} - 1| < \varepsilon$, it suffices to have $\frac{1}{n + 1} < \varepsilon$, i.e., $n > \frac{1}{\varepsilon} - 1$."
-
-```json
-{
-    "type": "LogicChain",
-    "initial_proposition": ["$|{x}_{n} - 1| < \\varepsilon$"],
-    "step": [
-        {
-            "operator": "⇐",
-            "proposition": ["$\\frac{1}{n + 1} < \\varepsilon$"],
-            "reason": null
-        },
-        {
-            "operator": "⇔",
-            "proposition": ["$n > \\frac{1}{\\varepsilon} - 1$"],
-            "reason": null
-        }
-    ]
-}
-```
-
-#### 'CalculationChain' Node
-
-- Semantics: "Represents a calculation chain. The chain consists of an initial expression and a sequence of steps, each with an operator, a resulting expression, and an optional reason."
-- JSON:
-  ```json
-  {
-      "type": "CalculationChain",
-      "initial_expression": [...],
-      "step": [
-          {
-              "operator": "...",
-              "expression": [...],
-              "reason": [...]
-          },
-          ...
-      ]
-  }
-  ```
 - Explanation: Similar to LogicChain, CalculationChain is used to represent consecutive calculation steps, such as long chains of equalities or estimation processes.
 
-Example 1:
-"
-$|a_n b_n + \cdots + a_{n+k} b_{n+k}| = |B_n a_n + B_{n+1} (a_{n+1} - a_n) + \cdots + B_{n+k} (a_{n+k} - a_{n+k-1}) + B_{n+k+1} a_{n+k}|$ (Lemma)
-$\leq |B_n a_n| + |B_{n+1} (a_{n+1} - a_n)| + \cdots + |B_{n+k} (a_{n+k} - a_{n+k-1})| + |B_{n+k+1} a_{n+k}|$ (Triangle Inequality for Complex Numbers)
-$\leq M \epsilon + M \epsilon$
-$= 3M \epsilon$
-"
+- Example 1: "
 
-```json
-{
-    "type": "CalculationChain",
-    "initial_expression": ["$|a_n b_n + \\cdots + a_{n+k} b_{n+k}|$"],
-    "step": [
-        {
-            "operator": "=",
-            "expression": ["$|B_n a_n + B_{n+1} (a_{n+1} - a_n) + \\cdots + B_{n+k} (a_{n+k} - a_{n+k-1}) + B_{n+k+1} a_{n+k}|$"],
-            "reason": ["Lemma"]
-        },
-        {
-            "operator": "<=",
-            "expression": ["$|B_n a_n| + |B_{n+1} (a_{n+1} - a_n)| + \\cdots + |B_{n+k} (a_{n+k} - a_{n+k-1})| + |B_{n+k+1} a_{n+k}|$"],
-            "reason": ["Triangle Inequality for Complex Numbers"]
-        },
-        {
-            "operator": "<=",
-            "expression": ["$M \\epsilon + M \\epsilon$"],
-            "reason": null
-        },
-        {
-            "operator": "=",
-            "expression": ["$3M \\epsilon$"],
-            "reason": null
-        }
-    ]
-}
-```
+  $|a_n b_n + \cdots + a_{n+k} b_{n+k}| = |B_n a_n + B_{n+1} (a_{n+1} - a_n) + \cdots + B_{n+k} (a_{n+k} - a_{n+k-1}) + B_{n+k+1} a_{n+k}|$ (Lemma)
 
-#### 'Find' Node
+  $\leq |B_n a_n| + |B_{n+1} (a_{n+1} - a_n)| + \cdots + |B_{n+k} (a_{n+k} - a_{n+k-1})| + |B_{n+k+1} a_{n+k}|$ (Triangle Inequality for Complex Numbers)
 
-- Semantics: "To find out(solve) the target, which satisfies certain condition(optional)"
-- JSON:
-  ```json
-  {
-      "type": "Find",
-      "target": [...],
-      "condition": [...]
-  }
-  ```
-- Explanation: The Find node is used to represent a "problem-solving" task. For example, tasks like "compute the value of ...", "simplify the expression", "solve the equation ...", or "find all sets satisfying ...". Its purpose is not to "prove" a proposition, but to "find" an object satisfying specific conditions. The target can be variables or expressions. For tasks like simplification or evaluating an expression, "condition" should be empty. 
+  $\leq M \epsilon + M \epsilon$
 
-Example 1:
-"Find the solutions to the equation $x^2 -3x+ 4 = 0$"
+  $= 3M \epsilon$"
 
-```json
-{
-    "type": "Find",
-    "target": ["$x$"],
-    "condition": ["$x^2 - 3x + 4 = 0$"]
-}
-```
+  `[CalculationChain] {$|a_n b_n + \cdots + a_{n+k} b_{n+k}|$} {$=$} {Lemma} {$|B_n a_n + B_{n+1} (a_{n+1} - a_n) + \cdots + B_{n+k} (a_{n+k} - a_{n+k-1}) + B_{n+k+1} a_{n+k}|$} {$\leq$} {Triangle Inequality for Complex Numbers} {$|B_n a_n| + |B_{n+1} (a_{n+1} - a_n)| + \cdots + |B_{n+k} (a_{n+k} - a_{n+k-1})| + |B_{n+k+1} a_{n+k}|$} {$\leq$} {} {$M \epsilon + M \epsilon$} {$=$} {} {$3M \epsilon$}`
 
-Example 2:
-"Now we compute the integral $\int_0^1 x dx$"
+#### Find Node: `[Find] {P} such that {Q}`
 
-```json
-{
-    "type": "Find",
-    "target": ["$\\int_0^1 x dx$"],
-    "condition": null
-}
-```
+-   Meaning: Solve for P that satisfies Q, where P is a variable or expression.
+-   Explanation: The Find node is used to represent a "problem-solving" task. For example, tasks like "compute the value of ...", "simplify the expression", "solve the equation ...", or "find all sets satisfying ...". Its purpose is not to "prove" a proposition, but to "find" an object satisfying specific conditions. For tasks like simplification or evaluating an expression, Q is empty.
+-   Example 1: "Find the solutions to the equation $x^2 -3x+ 4 = 0$" - `[Find] {$x$} such that {$x^2 - 3x + 4 = 0$}`
+-   Example 2: "Below we compute the integral $\int_0^1 x dx$" - `[Find] {$\int_0^1 x dx$} such that {}`
 
-#### 'Define' Node
+#### Define Node: `[Define] {A} as {B}`
 
-- Semantics: "Define a 'variable/symbol/concept' "term", whose meaning is "definition"."
-- JSON:
-  ```json
-  {
-      "type": "Define",
-      "term": "...",
-      "definition": "..."
-  }
-  ```
-- Explanation: Used to define new variables, symbols, or concepts.
+-   Meaning: Define a "variable/symbol/concept" A, whose meaning is B. Neither A nor B can be lists.
+-   Explanation: Used to introduce new variables, symbols, or concepts.
+-   Example 1: "Let $M = \sup_{x \in S} f(x)$" - `[Define] {$M$} as {$\sup_{x \in S} f(x)$}`
+-   Example 2: "We call $G$ an Abelian group if $G$ is a group and its operation is commutative" - `[Define] {$G$ is an Abelian group} as {$G$ is a group and its operation is commutative}`
 
-Example 1:
-"Let $M = \sup_{x \in S} f(x)$"
+#### Hint Node: `[Hint] {P}`
 
-```json
-{
-    "type": "Define",
-    "term": "$M$",
-    "definition": "$M = \\sup_{x \\in S} f(x)$"
-}
-```
-
-Example 2:
-"We call $G$ an Abelian group if $G$ is a group and its operation is commutative"
-
-```json
-{
-    "type": "Define",
-    "term": "Abelian group",
-    "definition": "$G$ is an Abelian group if $G$ is a group and its operation is commutative"
-}
-```
-
-#### 'Hint' Node
-
-- Semantics: "a natural language annotation."
-- JSON:
-  ```json
-  {
-      "type": "Hint",
-      "text": "..."
-  }
-  ```
-- Explanation: Natural language texts often contain explanatory, annotative text that does not have specific mathematical meaning. For example, transitional text, author's comments, emphasis on the importance of a conclusion, or an intuitive overview of the upcoming proof steps or calculation steps.
-
-Example 1:
-"Thus we can obtain the answer"
-
-```json
-{
-    "type": "Hint",
-    "text": "Thus we can obtain the answer"
-}
-```
-
-Example 2:
-"The idea of this proof is very clever"
-
-```json
-{
-    "type": "Hint",
-    "text": "The idea of this proof is very clever"
-}
-```
-
-Example 3:
-"Next we use a skillful technique to prove this conclusion; a more natural proof method will be introduced in Chapter 4"
-
-```json
-{
-    "type": "Hint",
-    "text": "Next we use a skillful technique to prove this conclusion; a more natural proof method will be introduced in Chapter 4"
-}
-```
+-   Meaning: Represents a natural language annotation. P can be any natural language text.
+-   Explanation: Natural language texts often contain explanatory, annotative text that does not have specific mathematical meaning. For example, transitional text, author's comments, emphasis on the importance of a conclusion, or an intuitive overview of the upcoming proof steps or calculation steps.
+-   Example 1: "Thus we can obtain the answer" - `[Hint] {Thus we can obtain the answer}`
+-   Example 2: "The idea of this proof is very clever" - `[Hint] {The idea of this proof is very clever}`
+-   Example 3: "Next we use a skillful technique to prove this conclusion; a more natural proof method will be introduced in Chapter 4" - `[Hint] {Next we use a skillful technique to prove this conclusion; a more natural proof method will be introduced in Chapter 4}`
 
 ### Scope
 
-Now we define the scope of a node.
-
-Only four types of node have a scope: 'Show', 'Assume', 'Fix', and 'Find'. Other types of nodes do not.
-
-In the scope of a node is another structure defined exactly the same as the outer structure. Hnece, a structure is a nested multi-level node sequences.
+The four node types Show, Assume, Fix, and Find have a scope, while the other nodes do not have a scope. For nodes with a scope, their scope contains a substructure (defined identically to the outer structure, and scopes can be nested multiple levels).
 
 The content within the scope of these four nodes is generally:
 
-- Show: The scope of a Show node contains the proof for that proof goal;
-- Assume: The scope of an Assume node corresponds to the text content that acknowledges the assumption holds;
-- Fix: The scope of a Fix node contains text content about the newly introduced variables;
-- Find: The scope of a Find node is the specific process of finding or solving;
+- The scope of a Show node contains the proof for that proof goal;
+- The scope of an Assume node corresponds to the text content that acknowledges the assumption holds;
+- The scope of a Fix node contains text content about the newly introduced variables;
+- The scope of a Find node is the specific process of solving;
 
-### JSON SCHEMA
+# JSON SCHEMA
 
-We now present the full definition of the json schema.
+In your task, you will need to represent the structure in a pre-defined json format. The definition of the format is as following:
 
 {fill_in_json_schema}
 
-## A Simple Example
+# Schematics
 
-We now present a simple example to show you how a correct structure of a natural language text looks like:
+As a schematic, we use the node followed by braces to represent the scope. For example:
 
 Natural language text:
-"""
+
 If $A \subseteq B$, then $\mathcal{P}(A) \subseteq \mathcal{P}(B)$:
 
 Pf: Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. Since $A \subseteq B$, it follows that $X \subseteq B$. Therefore, $X \in \mathcal{P}(B)$. Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$. Qed.
-"""
 
-Structure:
-```json
+Structure schematic:
+
+[Fix] {A,B} such that {$A \subseteq B$}
 {
-  "structure": [
-    {
-      "type": "Fix",
-      "variable": ["$A$", "$B$"],
-      "condition": ["$A \\subseteq B$"],
-      "scope": [
-        {
-          "type": "Show",
-          "proposition": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
-          "method": null,
-          "scope": [
-            {
-              "type": "Fix",
-              "variable": ["$X$"],
-              "condition": ["$X \\in \\mathcal{P}(A)$"],
-              "scope": [
-                {
-                  "type": "Have",
-                  "claim": ["$X \\subseteq A$"],
-                  "reason": ["definition of power set"]
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$X \\subseteq B$"],
-                  "reason": ["$A \\subseteq B$"]
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$X \\in \\mathcal{P}(B)$"],
-                  "reason": null
-                }
-              ]
-            },
-            {
-              "type": "Have",
-              "claim": ["every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$"],
-              "reason": null
-            },
-            {
-              "type": "Have",
-              "claim": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
-              "reason": null
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	[Show] {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}
+	{
+		[Fix] {X} such that {$X \in \mathcal{P}(A)$}
+		{
+			[Have] {$X \subseteq A$} by {definition of power set}
+			[Have] {$X \subseteq B$} by {$A \subseteq B$}
+			[Have] {$X \in \mathcal{P}(B)$}
+		}
+		[Have] {every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$}
+		[Have] {$\mathcal{P}(A) \subseteq \mathcal{P}(B)$}
+	}
 }
-```
-
-## How to Extract Structure
-
-Given a piece of natural language text, due to the ambiguity of natural language, we cannot use a precise algorithm to extract the corresponding structure. We cannot precisely define whether a structure is the correct corresponding structure or not, either. However, we can summarize some key characteristics of a "good corresponding structure" as follows:
-
-- Information Equivalency
-- No Free Variables
-
-### Information Equivalency
-
-The structure should exactly preserve the information of the natural language text. It should not omit given information, nor should it arbitrarily add redundant information.
-
-There are two basic principles:
-
-- DO NOT add or omit "reasoning steps" or "reasons for the claim"
-- DO add "type/domain" for the variables
-- DO NOT try to correct a wrong proof
-
-#### Example 1
-
-Natural language text: 
-"Since $(x-1)(x-3)=0$, we have $x=1$ or $x=3$."
-
-Structure with information equivalency:
-```json
-{
-    "type": "Have",
-    "claim": ["$x=1$ or $x=3$"],
-    "reason": ["$(x-1)(x-3)=0$"]
-}
-```
-
-Structure with redundant information:
-```json
-{
-    "type": "Have",
-    "claim": ["$x-1=0$ or $x-3=0$"],
-    "reason": ["$(x-1)(x-3)=0$"]
-},
-{
-    "type": "Have",
-    "claim": ["$x=1$ or $x=3$"],
-    "reason": null
-}
-```
-
-In this example, even though the middle reasoning step "$x-1=0$ or $x-3=0$" is correct, but this information was imagined by the reader and was not presented in the original text, it should not be arbitrarily added during structure extraction.
-
-#### Example 2
-
-Natural language text: 
-"Therefore, $X \in \mathcal{P}(B)$."
-
-Structure with information equivalency:
-```json
-{
-    "type": "Have",
-    "claim": ["$X \\in \\mathcal{P}(B)$"],
-    "reason": null
-}
-```
-
-Structure with redundant information:
-```json
-{
-    "type": "Have",
-    "claim": ["$X \\in \\mathcal{P}(B)$"],
-    "reason": ["definition of power set"]
-}
-```
-
-In this example, even though "by the definition of power set" is indeed the reason for deriving $X \\in \\mathcal{P}(B)$, since this information is inferred by the reader and is not present in the original text, it should not be arbitrarily added during structure extraction.
-
-#### Example 3
-
-Natural language text: 
-"By definition of power set, $X \subseteq A$."
-
-Structure with information equivalency:
-```json
-{
-    "type": "Have",
-    "claim": ["$X \\subseteq A$"],
-    "reason": ["definition of power set"]
-}
-```
-
-Structure with omitted information:
-```json
-{
-    "type": "Have",
-    "claim": ["$X \\subseteq A$"],
-    "reason": null
-}
-```
-
-In this example, since the original text has given the hint information "definition of power set", we should preserve this piece of information.
-
-#### Example 4
 
 Natural language text:
-"""
+
 $A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$
 
 ($\subseteq$): Let $(a, x) \in A \times \bigcup B$. By definition, $x \in \bigcup B$, so there exists $X \in B$ such that $x \in X$. Therefore, $(a, x) \in A \times X$. Since $A \times X$ is part of the union $\bigcup \{A \times X \mid X \in B\}$, we conclude $(a, x) \in \bigcup \{A \times X \mid X \in B\}$.
@@ -682,169 +151,50 @@ $A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$
 ($\supseteq$): Let $(a, x) \in \bigcup \{A \times X \mid X \in B\}$. Then there exists $X \in B$ such that $(a, x) \in A \times X$. By definition of Cartesian product, $a \in A$ and $x \in X$. Since $X \in B$, we have $x \in \bigcup B$. Thus, $(a, x) \in A \times \bigcup B$.
 
 Hence, $A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$.
-"""
 
-Structure with information equivalency:
-```json
+Structure:
+
+[Fix] {$A,B$} such that {$A,B$ are sets}
 {
-  "structure": [
-    {
-      "type": "Fix",
-      "variable": ["$A$","$B$"],
-      "condition": ["$A$,$B$ are sets"],
-      "scope": [
-        {
-          "type": "Show",
-          "proposition": ["$A \\times \\bigcup B = \\bigcup \\{A \\times X \\mid X \\in B\\}$"],
-          "method": null,
-          "scope": [
-            {
-              "type": "Show",
-              "proposition": ["$A \\times \\bigcup B \\subseteq \\bigcup \\{A \\times X \\mid X \\in B\\}$"],
-              "method": null,
-              "scope": [
-                {
-                  "type": "Fix",
-                  "variable": ["$a$","$x$"],
-                  "condition": ["$(a, x) \\in A \\times \\bigcup B$"],
-                  "scope": [
-                    {
-                      "type": "Have",
-                      "claim": ["$x \\in \\bigcup B$"],
-                      "reason": ["definition"]
-                    },
-                    {
-                      "type": "Obtain",
-                      "obtained_variable": ["$X$"],
-                      "condition": ["$X \\in B$", "$x \\in X$"],
-                      "reason": null
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$(a, x) \\in A \\times X$"],
-                      "reason": null
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$(a, x) \\in \\bigcup \\{A \\times X \\mid X \\in B\\}$"],
-                      "reason": ["$A \\times X$ is part of the union $\\bigcup \\{A \\times X \\mid X \\in B\\}$"]
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Show",
-              "proposition": ["$\\bigcup \\{A \\times X \\mid X \\in B\\} \\subseteq A \\times \\bigcup B$"],
-              "method": null,
-              "scope": [
-                {
-                  "type": "Fix",
-                  "variable": ["$a$", "$x$"],
-                  "condition": ["$(a, x) \\in \\bigcup \\{A \\times X \\mid X \\in B\\}$"],
-                  "scope": [
-                    {
-                      "type": "Obtain",
-                      "obtained_variable": ["$X$"],
-                      "condition": ["$X \\in B$", "$(a, x) \\in A \\times X$"],
-                      "reason": null
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$a \\in A$", "$x \\in X$"],
-                      "reason": ["definition of Cartesian product"]
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$x \\in \\bigcup B$"],
-                      "reason": ["$X \\in B$"]
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$(a, x) \\in A \\times \\bigcup B$"],
-                      "reason": null
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Have",
-              "claim": ["$A \\times \\bigcup B = \\bigcup \\{A \\times X \\mid X \\in B\\}$"],
-              "reason": null
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	[Show] {$A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$}
+	{
+		[Show] {$A \times \bigcup B \subseteq \bigcup \{A \times X \mid X \in B\}$}
+		{
+			[Fix] {$a,x$} such that {$(a, x) \in A \times \bigcup B$}
+			{
+				[Have] {$x \in \bigcup B$} by {definition}
+				[Obtain] {$X$} such that {$X \in B$}; {$x \in X$}
+				[Have] {$(a, x) \in A \times X$}
+				[Have] {$(a, x) \in \bigcup \{A \times X \mid X \in B\}$} by {$A \times X$ is part of the union $\bigcup \{A \times X \mid X \in B\}$}
+			}
+		}
+		[Show] {$\bigcup \{A \times X \mid X \in B\} \subseteq A \times \bigcup B$}
+		{
+			[Fix] {$a, x$} such that {$(a, x) \in \bigcup \{A \times X \mid X \in B\}$}
+			{
+				[Obtain] {$X$} such that {$X \in B$}; {$(a, x) \in A \times X$}
+				[Have] {$a \in A$}; {$x \in X$} by {definition of Cartesian product}
+				[Have] {$x \in \bigcup B$} by {$X \in B$}
+				[Have] {$(a, x) \in A \times \bigcup B$}
+			}
+		}
+		[Have] {$A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$}
+	}
 }
-```
 
-In this example, despite that in the original text, there's no written out information about "$A$,$B$ are sets", but the correct structure extraction should clarify this condition. We should always clarify the type/domain of the newly introduced variables (when we can).
+## How to Extract Structure
 
-We should keep in mind that "do not add redundant information" does not mean "only copy the original text"! The type/domain of a variable is not redundant information, it is a piece of information that the natural language "attempts to convey", but did not "write out".
+Given a piece of natural language text, a good structure extraction should satisfy: exactly preserving all the information of the natural language, while being logically clear and semantically unambiguous. However, due to the "ambiguity of natural language", we cannot use a precise algorithm to determine whether a structure perfectly corresponds to the natural language text. Usually, the structure corresponding to a natural language text is not unique; there may be multiple "good structures". Below we establish a series of criteria for "good structures".
 
-#### Example 5
+### Information Equivalence
 
-Natural language text:
-"""
-A, B are sets. Proof that if $A \subseteq B$, $\mathcal{P}(A) \subseteq \mathcal{P}(B)$.
-Let $n,m$ be integers. Let $A = \{a_1, a_2, \dots, a_n\}$, $B = \{b_1, b_2, \dots, b_m\}$. Since $A \subseteq B$, we have $n \leq m$. $\forall i \in [n], \exists j \in [m] s.t. a_i=b_j$. Hence $\mathcal{P}(A) \subseteq \mathcal{P}(B)$.
-"""
+The structure should exactly preserve the information of the natural language text; it should not omit information, nor should it arbitrarily add information.
 
-Structure with information equivalency:
-```json
-{
-  "structure": [
-    {
-      "type": "Fix",
-      "variable": ["$A$","$B$"],
-      "condition": ["$A, B$ are sets","$A \\subseteq B$"],
-      "scope": [
-        {
-          "type": "Show",
-          "proposition": ["$A \\subseteq B \\implies \\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
-          "method": null,
-          "scope": [
-            {
-              "type": "Fix",
-              "variable": ["$n$","$m$"],
-              "condition": ["$n,m$ are integers"],
-              "scope": [
-                {
-                  "type": "Fix",
-                  "variable": ["$a_1, ..., a_n$","$b_1, ..., b_m$"],
-                  "condition": ["$A = \\{a_1, a_2, \\dots, a_n\\}$","$B = \\{b_1, b_2, \\dots, b_m\\}$"],
-                  "scope": [
-                    {
-                      "type": "Have",
-                      "claim": ["$n \\leq m$"],
-                      "reason": ["$A \\subseteq B$"]
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$\\forall i \\in [n], \\exists j \\in [m] s.t. a_i=b_j$"],
-                      "reason": null
-                    }
-                  ]
-                }
-              ]
-            },
-            {
-              "type": "Have",
-              "claim": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
-              "reason": null
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
+For example, the correct node extraction for the natural language text "We have $f(1)>0$." is [Have] {$f(1)>0$}. For this proposition, it should not be extracted as [Have] {$f(1)>0$} by {the definition of $f$}, even though "by definition of $f$" is indeed the reason for deriving $f(1)>0$ in this text. However, since this information is inferred by the reader and is not present in the original text, it should not be arbitrarily added during structure extraction.
 
-While this proof is complete wrong(because $A,B$ are not necessarily finite sets), we should still extract the structure in the way of the original text, instead of modifying it into a correct proof.
+Similarly, the correct node extraction for "By definition of power set, $X \subseteq A$" is [Have] {$X \subseteq A$} by {definition of power set}. If written as [Have] {$X \subseteq A$}, it omits the hint information "definition of power set" that was originally present in the text.
+
+In short, structure extraction should not omit information, and generally does not need to supplement information on its own. However, "not allowing to supplement information on its own" does not mean "can only copy the original text verbatim". When the expression of the natural language itself is logically less strict or semantically less clear (for example, quantifier handling, variability of variables, etc., which we will detail in the following sections), we need to make "clarifications" during structure extraction. This is a clarification of the information the natural language "attempts to convey", not "adding extra information".
 
 ### Variable Introduction
 
@@ -1595,96 +945,27 @@ Here's another comprehensive example in Group Theory:
 >
 > The result follows.
 
-```json
+[Hint] {Theorem}
+[Fix] {$G$, $X$} such that {$G$ is a group}; {$X$ is a finite set}; {$G$ acts on $X$}
 {
-  "structure": [
-    {
-      "type": "Hint",
-      "text": "Theorem"
-    },
-    {
-      "type": "Fix",
-      "variable": ["$G$", "$X$"],
-      "condition": ["$G$ is a group", "$X$ is a finite set", "$G$ acts on $X$"],
-      "scope": [
-        {
-          "type": "Fix",
-          "variable": ["$x$"],
-          "condition": ["$x \\in X$"],
-          "scope": [
-            {
-              "type": "Define",
-              "term": "$\\text{Orb}(x)$",
-              "definition": "the orbit of $x$"
-            },
-            {
-              "type": "Define",
-              "term": "$\\text{Stab}(x)$",
-              "definition": "the stabilizer of $x$ by $G$"
-            },
-            {
-              "type": "Define",
-              "term": "$[G : \\text{Stab}(x)]$",
-              "definition": "the index of $\\text{Stab}(x)$ in $G$"
-            },
-            {
-              "type": "Show",
-              "proposition": ["$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$"],
-              "method": null,
-              "scope": [
-                {
-                  "type": "Define",
-                  "term": "$a$",
-                  "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $\\forall g\\in G,a(g) = g * x$, where $*$ denotes the group action"
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$a$ is surjective"],
-                  "reason": ["the definition x was acted on by all the elements of $G$"]
-                },
-                {
-                  "type": "Fix",
-                  "variable": ["$g$", "$h$"],
-                  "condition": ["$g, h \\in G$"],
-                  "scope": [
-                    {
-                      "type": "Have",
-                      "claim": ["$a(g) = a(h) \\iff g^{-1}h \\in \\text{Stab}(x)$"],
-                      "reason": ["Stabilizer is Subgroup: Corollary"]
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$g^{-1}h \\in \\text{Stab}(x) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"],
-                      "reason": null
-                    }
-                  ]
-                },
-                {
-                  "type": "Have",
-                  "claim": ["there is a well-defined bijection from $G / \\text{Stab}(x)$ to $\\text{Orb}(x)$ given by $g \\text{Stab}(x) \\mapsto g * x$"],
-                  "reason": null
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$"],
-                  "reason": null
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$"],
-                  "reason": null
-                },
-                {
-                  "type": "Hint",
-                  "text": "The result follows."
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    }
-  ]
+	[Fix] {$x$} such that {$x \in X$}
+	{
+		[Define] {$\text{Orb}(x)$} as {the orbit of $x$}
+		[Define] {$\text{Stab}(x)$} as {the stabilizer of $x$ by $G$}
+		[Define] {$[G : \text{Stab}(x)]$} as {the index of $\text{Stab}(x)$ in $G$}
+		[Show] {$|\text{Orb}(x)| = [G : \text{Stab}(x)] = \frac{|G|}{|\text{Stab}(x)|}$}
+		{
+			[Define] {$a$} as {the mapping $a: G \to \text{Orb}(x)$ such that $\forall g\in G,a(g) = g * x$, where $*$ denotes the group action}
+			[Have] {$a$ is surjective} by {the definition x was acted on by all the elements of $G$}
+			[Fix] {g,h} such that {$g, h \in G$}
+			{
+				[Have] {$a(g) = a(h) \iff g^{-1}h \in \text{Stab}(x)$} by {Stabilizer is Subgroup: Corollary}
+				[Have] {$g^{-1}h \in \text{Stab}(x) \iff g \equiv h \pmod{\text{Stab}(x)}$}
+			}
+			[Have] {there is a well-defined bijection from $G / \text{Stab}(x)$ to $\text{Orb}(x)$ given by $g \text{Stab}(x) \mapsto g * x$}
+			[Have] {$\text{Orb}(x)$ has the same number of elements as $G / \text{Stab}(x)$}
+			[Have] {$|\text{Orb}(x)| = [G : \text{Stab}(x)]$}
+			[Hint] {The result follows.}
+		}
+	}
 }
-```
-

@@ -18,14 +18,15 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
     node_type = json_data.get("type", "")
     result_lines = []
     
-    if node_type == "show":
-        content = _format_content(json_data.get("content", ""))
-        using = json_data.get("using")
+    if node_type == "Show":
+        proposition = json_data.get("proposition", [])
+        method = json_data.get("method")
         scope = json_data.get("scope", [])
         
+        content = _format_content(proposition)
         line = f"{indent}[Show] {{{content}}}"
-        if using:
-            line += f" using {{{using}}}"
+        if method:
+            line += f" using {{{_format_content(method)}}}"
         result_lines.append(line)
         
         if scope:
@@ -33,10 +34,11 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
             result_lines.append(pretty_print_structure(scope, indent_level + 1))
             result_lines.append(f"{indent}}}")
     
-    elif node_type == "assume":
-        content = _format_content(json_data.get("content", ""))
+    elif node_type == "Assume":
+        assumption = json_data.get("assumption", [])
         scope = json_data.get("scope", [])
         
+        content = _format_content(assumption)
         result_lines.append(f"{indent}[Assume] {{{content}}}")
         
         if scope:
@@ -44,15 +46,15 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
             result_lines.append(pretty_print_structure(scope, indent_level + 1))
             result_lines.append(f"{indent}}}")
     
-    elif node_type == "fix":
-        var_list = json_data.get("var_list", [])
-        such_that = _format_content(json_data.get("such_that", ""))
+    elif node_type == "Fix":
+        variable = json_data.get("variable", [])
+        condition = json_data.get("condition")
         scope = json_data.get("scope", [])
         
-        vars_str = ", ".join(var_list)
+        vars_str = _format_content(variable)
         line = f"{indent}[Fix] {{{vars_str}}}"
-        if such_that:
-            line += f" such that {{{such_that}}}"
+        if condition:
+            line += f" such that {{{_format_content(condition)}}}"
         result_lines.append(line)
         
         if scope:
@@ -60,14 +62,15 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
             result_lines.append(pretty_print_structure(scope, indent_level + 1))
             result_lines.append(f"{indent}}}")
     
-    elif node_type == "find":
-        content = json_data.get("content", "")
-        such_that = json_data.get("such_that", "")
+    elif node_type == "Find":
+        target = json_data.get("target", [])
+        condition = json_data.get("condition")
         scope = json_data.get("scope", [])
         
+        content = _format_content(target)
         line = f"{indent}[Find] {{{content}}}"
-        if such_that:
-            line += f" such that {{{such_that}}}"
+        if condition:
+            line += f" such that {{{_format_content(condition)}}}"
         result_lines.append(line)
         
         if scope:
@@ -75,78 +78,80 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
             result_lines.append(pretty_print_structure(scope, indent_level + 1))
             result_lines.append(f"{indent}}}")
     
-    elif node_type == "have":
-        content = _format_content(json_data.get("content", ""))
-        by_content = _format_content(json_data.get("by", ""))
+    elif node_type == "Have":
+        claim = json_data.get("claim", [])
+        reason = json_data.get("reason")
         
+        content = _format_content(claim)
         line = f"{indent}[Have] {{{content}}}"
-        if by_content:
-            line += f" by {{{by_content}}}"
+        if reason:
+            line += f" by {{{_format_content(reason)}}}"
         result_lines.append(line)
     
-    elif node_type == "obtain":
-        var_list = json_data.get("var_list", [])
-        such_that = _format_content(json_data.get("such_that", ""))
-        by_content = _format_content(json_data.get("by", ""))
+    elif node_type == "Obtain":
+        obtained_variable = json_data.get("obtained_variable", [])
+        condition = json_data.get("condition", [])
+        reason = json_data.get("reason")
         
-        vars_str = ", ".join(var_list)
-        line = f"{indent}[Obtain] {{{vars_str}}} such that {{{such_that}}}"
-        if by_content:
-            line += f" by {{{by_content}}}"
+        vars_str = _format_content(obtained_variable)
+        line = f"{indent}[Obtain] {{{vars_str}}} such that {{{_format_content(condition)}}}"
+        if reason:
+            line += f" by {{{_format_content(reason)}}}"
         result_lines.append(line)
     
-    elif node_type == "suffice_to_prove":
-        content = _format_content(json_data.get("content", ""))
-        by_content = _format_content(json_data.get("by", ""))
+    elif node_type == "SufficesToProve":
+        sufficient_proposition = json_data.get("sufficient_proposition", [])
+        reason = json_data.get("reason")
         
-        line = f"{indent}[SufficeToProve] {{{content}}}"
-        if by_content:
-            line += f" by {{{by_content}}}"
+        content = _format_content(sufficient_proposition)
+        line = f"{indent}[SufficesToProve] {{{content}}}"
+        if reason:
+            line += f" by {{{_format_content(reason)}}}"
         result_lines.append(line)
     
-    elif node_type == "logic_chain":
-        initial_prop = json_data.get("initial_proposition", "")
-        steps = json_data.get("steps", [])
+    elif node_type == "LogicChain":
+        initial_proposition = json_data.get("initial_proposition", "")
+        step = json_data.get("step", [])
         
-        result_lines.append(f"{indent}[LogicChain] {{{initial_prop}}}")
-        for step in steps:
-            symbol = step.get("symbol", "")
-            content = step.get("content", "")
-            reason = step.get("reason", "")
+        result_lines.append(f"{indent}[LogicChain] {{{initial_proposition}}}")
+        for s in step:
+            operator = s.get("operator", "")
+            proposition = s.get("proposition", "")
+            reason = s.get("reason", "")
             
-            step_line = f"{indent}    {symbol} {{{content}}}"
+            step_line = f"{indent}    {operator} {{{proposition}}}"
             if reason:
                 step_line += f" by {{{reason}}}"
             result_lines.append(step_line)
     
-    elif node_type == "calculation_chain":
-        initial_expr = json_data.get("initial_expression", "")
-        steps = json_data.get("steps", [])
+    elif node_type == "CalculationChain":
+        initial_expression = json_data.get("initial_expression", "")
+        step = json_data.get("step", [])
         
-        result_lines.append(f"{indent}[CalculationChain] {{{initial_expr}}}")
-        for step in steps:
-            symbol = step.get("symbol", "")
-            expression = step.get("expression", "")
-            reason = step.get("reason", "")
+        result_lines.append(f"{indent}[CalculationChain] {{{initial_expression}}}")
+        for s in step:
+            operator = s.get("operator", "")
+            expression = s.get("expression", "")
+            reason = s.get("reason", "")
             
-            step_line = f"{indent}    {symbol} {{{expression}}}"
+            step_line = f"{indent}    {operator} {{{expression}}}"
             if reason:
                 step_line += f" by {{{reason}}}"
             result_lines.append(step_line)
     
-    elif node_type == "define":
-        name = json_data.get("name", "")
-        as_content = json_data.get("as_content", "")
+    elif node_type == "Define":
+        term = json_data.get("term", "")
+        definition = json_data.get("definition", "")
         
-        result_lines.append(f"{indent}[Define] {{{name}}} as {{{as_content}}}")
+        result_lines.append(f"{indent}[Define] {{{term}}} as {{{definition}}}")
     
-    elif node_type == "hint":
-        content = json_data.get("content", "")
-        result_lines.append(f"{indent}[Hint] {{{content}}}")
+    elif node_type == "Hint":
+        text = json_data.get("text", "")
+        result_lines.append(f"{indent}[Hint] {{{text}}}")
     
-    elif node_type == "place_holder":
-        content = json_data.get("content", "")
-        result_lines.append(f"{indent}[PlaceHolder] {{{content}}}")
+    elif node_type == "PlaceHolder":
+        text = json_data.get("text", "")
+        result_lines.append(f"{indent}[PlaceHolder] {{{text}}}")
     
     else:
         result_lines.append(f"{indent}{json.dumps(json_data, indent=2, ensure_ascii=False)}")
@@ -164,11 +169,8 @@ def pretty_print_json_structure(json_input: str) -> str:
     except json.JSONDecodeError:
         return "Invalid json format"
     
-    if "thinking" in data and "structure" in data:
-        result = ["Chain-of-Thought:"]
-        result.append(data["thinking"])
-        result.append("\nStructure:")
-        result.append(pretty_print_structure(data["structure"]))
-        return "\n".join(result)
+    if "structure" in data:
+        result = pretty_print_structure(data["structure"])
+        return result
     else:
         return pretty_print_structure(data)
