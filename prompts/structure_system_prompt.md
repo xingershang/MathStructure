@@ -129,6 +129,7 @@ Example 2:
     "condition": ["$x, y$ are real numbers"]
 }
 ```
+(always use LaTeX expression to write variables)
 
 Example 3:
 "Let $x_1, ..., x_n$, $y_1, ..., y_n$ be arbitrary real numbers"
@@ -172,8 +173,8 @@ Example 2:
 ```json
 {
     "type": "Have",
-    "claims": ["$A$ is a closed set"],
-    "reasons": ["Lemma 1.2", "Lemma 1.3"]
+    "claim": ["$A$ is a closed set"],
+    "reason": ["Lemma 1.2", "Lemma 1.3"]
 }
 ```
 
@@ -214,6 +215,19 @@ Example 2:
     "reason": null
 }
 ```
+
+Example 3:
+"By the Bolzano-Weierstrass theorem, there exists a convergent subsequence in $\{x_n\}$: $\lim_{k \to \infty} x_{n_k} = \xi$."
+
+```json
+{
+    "type": "Obtain",
+    "obtained_variable": ["$\\{x_{n_k}\\}$", "$\\xi$"],
+    "condition": ["$\\{x_{n_k}\\}$ is a subsequence of $\\{x_n\\}$", "$\\lim_{k \to \\infty} x_{n_k} = \\xi$"],
+    "reason": ["Bolzano-Weierstrass theorem"]
+}
+```
+In fact, "obtaining a subsequence" essentially means "obtaining a mapping $n:\mathbb{N}$ to $\mathbb{N}$". But sometimes it is difficult to extract the exact new variable we have newly obtained. Instead, we allow putting the full expression in "obtained_variable", and the introduction of this expression implicitly entails the introduction of a certain variable.
 
 #### 'SufficesToProve' Node
 
@@ -387,7 +401,7 @@ $= 3M \epsilon$
       "condition": [...]
   }
   ```
-- Explanation: The Find node is used to represent a "problem-solving" task. For example, tasks like "compute the value of ...", "simplify the expression", "solve the equation ...", or "find all sets satisfying ...". Its purpose is not to "prove" a proposition, but to "find" an object satisfying specific conditions. The target can be variables or expressions. For tasks like simplification or evaluating an expression, "condition" should be empty. 
+- Explanation: The Find node is used to represent a "problem-solving" task. For example, tasks like "compute the value of ...", "simplify the expression", "solve the equation ...", or "find all sets satisfying ...". Its purpose is not to "prove" a proposition, but to "find" an object satisfying specific conditions. **The target can be variables or expressions. For tasks like simplification or evaluating an expression, "condition" should be empty.** 
 
 Example 1:
 "Find the solutions to the equation $x^2 -3x+ 4 = 0$"
@@ -456,7 +470,7 @@ Example 2:
       "text": "..."
   }
   ```
-- Explanation: Natural language texts often contain explanatory, annotative text that does not have specific mathematical meaning. For example, transitional text, author's comments, emphasis on the importance of a conclusion, or an intuitive overview of the upcoming proof steps or calculation steps.
+- Explanation: Natural language texts often contain explanatory, annotative text that **does not have specific mathematical meaning**. For example, transitional text, author's comments, emphasis on the importance of a conclusion, or an intuitive overview of the upcoming proof steps or calculation steps.
 
 Example 1:
 "Thus we can obtain the answer"
@@ -503,31 +517,25 @@ The content within the scope of these four nodes is generally:
 - Fix: The scope of a Fix node contains text content about the newly introduced variables;
 - Find: The scope of a Find node is the specific process of finding or solving;
 
-### JSON SCHEMA
-
-We now present the full definition of the json schema.
-
-{fill_in_json_schema}
-
 ## A Simple Example
 
 We now present a simple example to show you how a correct structure of a natural language text looks like:
 
-Natural language text:
+**Natural language text**
 """
 If $A \subseteq B$, then $\mathcal{P}(A) \subseteq \mathcal{P}(B)$:
 
 Pf: Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. Since $A \subseteq B$, it follows that $X \subseteq B$. Therefore, $X \in \mathcal{P}(B)$. Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$. Qed.
 """
 
-Structure:
+**Structure**
 ```json
 {
   "structure": [
     {
       "type": "Fix",
       "variable": ["$A$", "$B$"],
-      "condition": ["$A \\subseteq B$"],
+      "condition": ["$A, B$ are sets", "$A \\subseteq B$"],
       "scope": [
         {
           "type": "Show",
@@ -578,25 +586,29 @@ Structure:
 
 Given a piece of natural language text, due to the ambiguity of natural language, we cannot use a precise algorithm to extract the corresponding structure. We cannot precisely define whether a structure is the correct corresponding structure or not, either. However, we can summarize some key characteristics of a "good corresponding structure" as follows:
 
-- Information Equivalency
-- No Free Variables
+- Information Equivalency Principle
+- No Free Variables Principle
+- Concrete-Reference Principle
+- Accurate Node-Type Identification Principle
+- Accurate Quantifier Scoping Principle
+- Logical Clarification Principle
 
-### Information Equivalency
+### Information Equivalency Principle
 
 The structure should exactly preserve the information of the natural language text. It should not omit given information, nor should it arbitrarily add redundant information.
 
 There are two basic principles:
 
-- DO NOT add or omit "reasoning steps" or "reasons for the claim"
-- DO add "type/domain" for the variables
-- DO NOT try to correct a wrong proof
+- **DO NOT** add or omit "reasoning steps" or "reasons for the claim"
+- **DO** add type or domain for the variables
+- **DO NOT** try to correct a wrong proof
 
 #### Example 1
 
-Natural language text: 
+**Natural language text**
 "Since $(x-1)(x-3)=0$, we have $x=1$ or $x=3$."
 
-Structure with information equivalency:
+**Structure with information equivalency**
 ```json
 {
     "type": "Have",
@@ -605,7 +617,7 @@ Structure with information equivalency:
 }
 ```
 
-Structure with redundant information:
+**Structure with redundant information**
 ```json
 {
     "type": "Have",
@@ -623,10 +635,10 @@ In this example, even though the middle reasoning step "$x-1=0$ or $x-3=0$" is c
 
 #### Example 2
 
-Natural language text: 
+**Natural language text**
 "Therefore, $X \in \mathcal{P}(B)$."
 
-Structure with information equivalency:
+**Structure with information equivalency**
 ```json
 {
     "type": "Have",
@@ -635,7 +647,7 @@ Structure with information equivalency:
 }
 ```
 
-Structure with redundant information:
+**Structure with redundant information**
 ```json
 {
     "type": "Have",
@@ -648,10 +660,10 @@ In this example, even though "by the definition of power set" is indeed the reas
 
 #### Example 3
 
-Natural language text: 
+**Natural language text**
 "By definition of power set, $X \subseteq A$."
 
-Structure with information equivalency:
+**Structure with information equivalency**
 ```json
 {
     "type": "Have",
@@ -660,7 +672,7 @@ Structure with information equivalency:
 }
 ```
 
-Structure with omitted information:
+**Structure with omitted information**
 ```json
 {
     "type": "Have",
@@ -673,7 +685,7 @@ In this example, since the original text has given the hint information "definit
 
 #### Example 4
 
-Natural language text:
+**Natural language text**
 """
 $A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$
 
@@ -684,7 +696,7 @@ $A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$
 Hence, $A \times \bigcup B = \bigcup \{A \times X \mid X \in B\}$.
 """
 
-Structure with information equivalency:
+**Structure with information equivalency**
 ```json
 {
   "structure": [
@@ -787,13 +799,13 @@ We should keep in mind that "do not add redundant information" does not mean "on
 
 #### Example 5
 
-Natural language text:
+**Natural language text**
 """
 A, B are sets. Proof that if $A \subseteq B$, $\mathcal{P}(A) \subseteq \mathcal{P}(B)$.
 Let $n,m$ be integers. Let $A = \{a_1, a_2, \dots, a_n\}$, $B = \{b_1, b_2, \dots, b_m\}$. Since $A \subseteq B$, we have $n \leq m$. $\forall i \in [n], \exists j \in [m] s.t. a_i=b_j$. Hence $\mathcal{P}(A) \subseteq \mathcal{P}(B)$.
 """
 
-Structure with information equivalency:
+**Structure with information equivalency**
 ```json
 {
   "structure": [
@@ -846,595 +858,1111 @@ Structure with information equivalency:
 
 While this proof is complete wrong(because $A,B$ are not necessarily finite sets), we should still extract the structure in the way of the original text, instead of modifying it into a correct proof.
 
-### Variable Introduction
+### No Free Variables Principle
 
-The four nodes Fix, Obtain, Find, Define have the function of "introducing variables". Here, the definition of "introduction" is as follows:
+A logically sound mathematical text does not contain variables that appear without being properly "introduced". In formal logic, such variables are called "free variables". We apply this concept to our structure extraction and establish a fundamental principle for a "good structure": the No Free Variables Principle.
 
-- For the node [Fix] {x1, ..., xn} such that {P}, the variables x1, ..., xn are introduced within the scope of this node;
-- For the node [Obtain] {x1, ..., xn} such that {P} by {Q}, the variables x1, ..., xn are introduced within the scope where the Obtain node is located, specifically in the range after this Obtain node;
-- For the node [Find] {x1, ..., xn} such that {P}, the variables x1, ..., xn are introduced within the scope of this node;
-- For the node [Define] {x} as {P}, the variable x is introduced within the scope where the Define node is located, specifically in the range after this Define node;
+For a single natural language proposition, the definition is as follows (which is identical to the definition in formal logic):
 
-A good structure needs to satisfy the "No Free Variables Principle": every "free variable" appearing in the mathematical proposition of each node must have been introduced.
+- A proposition of the form "for all x, P" contains the free variables of P, **minus the variable x**.
+- A proposition of the form "there exists x, P" contains the free variables of P, **minus the variable x**.
+- A "temporary variable" used as a binder in a proposition is NOT considered as a free variable.
 
-> The definition of "free variable" is the traditional logical definition. For example, in $\forall x, x+a=y$, $a$ and $y$ are free variables, and $x$ is a bound variable.
->
-> Note that it is the "mathematical proposition of the node" that cannot have free variables. There is no such requirement for natural language hints or narrative reasoning. For example, [Have] {$\forall x,x^2>0$} by {$x$ squared is non-negative} does not violate the no free variables requirement, because the reasoning hint "$x$ squared is non-negative" is not a mathematical proposition, so naturally there is no concept of free variables.
+The free variables for each node type are defined as follows:
 
-### Quantifier Handling
+- Show(proposition, method, scope): The free variables are the union of the free variables from the `proposition` and the `scope`. The `method` field is a hint and its variables are not considered.
+- Assume(assumption, scope): The free variables are the union of the free variables from the `assumption` and the `scope`.
+- Have(claim, reason): The free variables are those from the `claim` proposition. The `reason` field is a hint and its variables are not considered.
+- SufficesToProve(sufficient_proposition, reason): The free variables are those from the `sufficient_proposition`. The `reason` field is a hint and its variables are not considered.
+- LogicChain: The free variables are the union of the free variables from the propositions in each step.
+- CalculationChain: The free variables are the union of the free variables from the expressions in each step.
+- Hint: Contains no free variables.
 
-The biggest difference between natural language and traditional logic is: the handling of quantifiers $\forall,\exists$ in natural language is ambiguous. Quantifiers in natural language are often omitted. Even when not omitted, quantifiers in natural language often span multiple lines.
+(Pay special attention to the definitions for the following variable-binding nodes)
 
-Let's look at the following example:
+- Fix(variable, condition, scope): The free variables are the free variables of the `scope` and `condition`, **with the variables in the `variable` list removed from both**.
+- Obtain(obtained_variable, condition, reason): The free variables of the `Obtain` node itself are the free variables of the `condition` proposition, **with the `obtained_variable` list removed**; Furthermore, the `obtained_variable`s are considered **not free** for all **subsequent nodes within the same scope** as the `Obtain` node. (As always, the `reason` field is a hint and its variables are not considered.)
+- Find(target, condition, scope): The free variables are the free variables of the `scope` and `condition`, **with the variables in the `target` list removed from both**.
+- Define(term, definition): The free variables of the `Define` node itself are the free variables of the `definition`, **with the `term` removed**. Furthermore, the `term` is considered **not free** for all **subsequent nodes within the same scope** as the `Define` node.
 
-> Theorem 2.4.7 (Cauchy Convergence): A sequence $\{x_n\}$ converges if and only if $\{x_n\}$ is a Cauchy sequence.
->
-> Proof: First, we prove the necessity.
-> Assume $\{x_n\}$ converges to $a$.
-> By definition, for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$.
-> Thus, $|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$.
->
-> Next, we prove the sufficiency.
-> First, we show that a Cauchy sequence must be bounded.
-> Take $\varepsilon_0 = 1$. Since $\{x_n\}$ is a Cauchy sequence, there exists $N_0$ such that for all $n > N_0$: $|x_n - x_{N_0 + 1}| < 1$.
-> Let $M = \max \{|x_1|, |x_2|, \ldots, |x_{N_0}|, |x_{N_0 + 1}| + 1\}$.
-> Then for all $n$, we have $|x_n| \leq M$.
->By the Bolzano-Weierstrass theorem, there exists a convergent subsequence in $\{x_n\}$: $\lim_{k \to \infty} x_{n_k} = \xi$.
-> Since $\{x_n\}$ is a Cauchy sequence, for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - x_m| < \frac{\varepsilon}{2}$.
-> In the above inequality, take $x_m = x_{n_k}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \to \infty$. Then we obtain $|x_n - \xi| \leq \frac{\varepsilon}{2}$.
-> Thus, $|x_n - \xi| < \varepsilon$.
-> This shows that the sequence $\{x_n\}$ converges.
-> The proof is complete.
+The No Free Variables Principle: A good structure must have no free variables **overall at the top level.**
 
-Let's extract the structure of the passage "By definition, for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$. Thus, $|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$." (assuming the outer structure has already introduced $x, a$).
+#### Example 1
 
-First, writing it like this is incorrect:
-
-[Have] {for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$} by {definition}
-[Have] {$|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$}
-
-The first Have node does not violate the variable introduction requirement because, from the perspective of the proposition "for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$", $\varepsilon, N, n, m$ are all bound variables, so this node does not have any unbound free variables. However, in the second Have node, $n, m, \varepsilon$ are all unbound free variables.
-
-To eliminate the free variables in the second node, it can be rewritten as:
-
-[Have] {for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$} by {definition}
-[Have] {for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$}
-
-By repeating the quantifier introduction method from the first Have node, we successfully eliminated the unbound free variables and made the semantics match the original text. However, doing this seems repetitive and cumbersome because we keep repeating the quantifier introduction. A better approach is to split the first Have node into Fix and Obtain nodes:
-
-[Fix] {$\varepsilon$} such that {$\varepsilon>0$}
+```json
 {
-	[Obtain] {$N$} such that {$\forall n, m > N$：$|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$} by {definition}
-	[Fix] {$n$,$m$} such that {$n>N$, $m>N$}
-	{
-		[Have] {$|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$}	
-	}
+    "type": "Have",
+    "claim": ["$\\forall x, x^2 > 0$"],
+    "reason": ["$x$'s square is non-negative"]
 }
+```
 
-To summarize, we see that the following two structures are equivalent:
+This node does not violate the No Free Variables Principle. The proposition "`$\forall x, x^2 > 0$`" contains no free variables because `x` is bound by the quantifier `$\forall$`. The variable `x` appearing in the `reason` field is not considered a formal mathematical free variable under this principle.
 
-- [Have] {$\forall x, P(x)\implies Q(x)$}
-- [Fix] {x} such that {P(x)}
+#### Example 2
+
+**Natural language text:** (Assume the variables for the sequence `$x_n$` and the limit `$a$` have been introduced by an outer scope)
+"""
+By definition, for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$. Thus, $|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$.
+"""
+
+**Structure 1**
+```json
+[
+    {
+        "type": "Have",
+        "claim": ["for any $\\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \\frac{\\varepsilon}{2}, \\quad |x_m - a| < \\frac{\\varepsilon}{2}$"],
+        "reason": ["definition"]
+    },
+    {
+        "type": "Have",
+        "claim": ["$|x_n - x_m| \\leq |x_n - a| + |x_m - a| < \\varepsilon$"],
+        "reason": null
+    }
+]
+```
+This structure violates the No Free Variables principle. The first `Have` node is valid because the natural language quantifiers ("for any", "there exists") bind the variables `$\varepsilon, N, n, m$` within that proposition. However, in the second `Have` node, the variables `$\varepsilon, n, m$` are all free variables, as they have not been introduced into its scope.
+
+**Structure 2**
+```json
+[
+    {
+        "type": "Have",
+        "claim": ["for any $\\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \\frac{\\varepsilon}{2}, \\quad |x_m - a| < \\frac{\\varepsilon}{2}$"],
+        "reason": ["definition"]
+    },
+    {
+        "type": "Have",
+        "claim": ["for any $\\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - x_m| \\leq |x_n - a| + |x_m - a| < \\varepsilon$"],
+        "reason": null
+    }
+]
+```
+This structure does not violates the No Free Variables principle. By repeating the quantifiers from the first node, the variables in the second `Have` node are properly bound, eliminating the free variables.
+
+**Structure 3**
+```json
+{
+    "type": "Fix",
+    "variable": ["$\\varepsilon$"],
+    "condition": ["$\\varepsilon>0$"],
+    "scope": [
+        {
+            "type": "Obtain",
+            "obtained_variable": ["$N$"],
+            "condition": ["$\\forall n, m > N, |x_n - a| < \\frac{\\varepsilon}{2} \\text{ and } |x_m - a| < \\frac{\\varepsilon}{2}$"],
+            "reason": ["definition"]
+        },
+        {
+            "type": "Fix",
+            "variable": ["$n$", "$m$"],
+            "condition": ["$n>N$", "$m>N$"],
+            "scope": [
+                {
+                    "type": "Have",
+                    "claim": ["$|x_n - x_m| \\leq |x_n - a| + |x_m - a| < \\varepsilon$"],
+                    "reason": null
+                }
+            ]
+        }
+    ]
+}
+```
+This structure also does not violates the No Free Variables principle. Compared to Structure 2, it achieves the goal of eliminating free variables by breaking down the natural language quantifiers into `Fix` and `Obtain` nodes.
+While both Structure 2 and Structure 3 does not violates the No Free Variables principle, **Structure 3 is generally preferred**. The reason for this preference will be detailed in the upcoming "Accurate Quantifier Scoping Principle".
+
+#### Example 3
+
+**Natural language text:**
+"When $n = 1$, $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds"
+
+**Correct Structure**
+```json
+{
+	"type": "Have",
+	"claim": ["When $n = 1$, $1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$ holds"],
+	"reason": null
+}
+```
+
+In this example, although there's no expressions like "forall" or "exists" in the natural language text, but we know that $n$ is just a binder, used as a temporary variable, not a free variable.
+
+### Concrete-Reference Principle
+
+Propositions and hints in natural language often contain **abstract references**. For example, phrases like "this fact", "that equation", "those theorems", etc. Mathematical texts might also label propositions or expressions with numbers, such as $f(x)=0\quad (1)$ and $g(x)=1\quad (2)$, and then refer to these labels, for instance, "Combining (1) and (2), we get...".
+
+We refer to these phenomena as **"abstract references"**. A good structure must resolve these abstract references into **concrete references**. We call this the Concrete-Reference Principle.
+
+#### Example 1
+
+**Natural language text:**
+```
+...
+Hence we have $\forall x \in \R, f(x)=g(-x)$.
+By the above equation, we have $f(1)=g(-1)$.
+...
+```
+
+**Correct Structure:**
+```json
+[
   {
-		[Have] {Q(x)}
+    "type": "Have",
+    "claim": ["$\\forall x \\in \\R, f(x)=g(-x)$"],
+    "reason": null
+  },
+  {
+    "type": "Have",
+    "claim": ["$f(1)=g(-1)$"],
+    "reason": ["$\\forall x \\in \\R, f(x)=g(-x)$"]
   }
+]
+```
 
-The following two structures are also equivalent:
+In this example, the abstract reference "the above equation" has been replaced with the concrete mathematical expression it refers to: "$\\forall x \in \\R, f(x)=g(-x)$".
 
-- [Have] {$\exists x, P(x)$}
-- [Obtain] {x} such that {P(x)}
+#### Example 2
 
-To avoid a large amount of supplementing quantifiers inside Have nodes, splitting Have nodes containing quantifiers into Fix and Obtain nodes is usually beneficial for simplifying the structure.
-
-Below we completely write out the structure of the Cauchy Convergence Theorem text above:
-
-[Hint] {Theorem 2.4.7 (Cauchy Convergence)}
-[Fix] {$x$} such that {$\{x_n\}$ is a real sequence}
-{
-	[Show] {sequence $\{x_n\}$ converges if and only if $\{x_n\}$ is a Cauchy sequence.}
-	{
-		[Show] {sequence $\{x_n\}$ converges implies $\{x_n\}$ is a Cauchy sequence.}
-		{
-			[Fix] {$a$} such that { $\{x_n\}$ converges to $a$}
-			{
-				[Fix] {$\varepsilon$} such that {$\varepsilon>0$}
-				{
-					[Obtain] {$N$} such that {$\forall n, m > N$：$|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$} by {definition}
-					[Fix] {$n$,$m$} such that {$n>N$, $m>N$}
-					{
-						[Have] {$|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$}	
-					}
-				}
-			}
-		}
-		[Show] { $\{x_n\}$ is a Cauchy sequence implies sequence $\{x_n\}$ converges}
-		{
-			[Show] {Cauchy sequence $\{x_n\}$ is bounded}
-			{
-				[Obtain] {$N_0$} such that {$\forall n > N_0$：$|x_n - x_{N_0 + 1}| < 1$} by {take $\varepsilon_0 = 1$};{$\{x_n\}$ is a cauchy sequence}
-				[Define] {$M$} as {$M = \max \{|x_1|, |x_2|, \ldots, |x_{N_0}|, |x_{N_0 + 1}| + 1\}$}
-				[Have] {$\forall n, |x_n| \leq M$}
-			}
-			[Obtain] {$\{x_{n_k}\}$};{$\xi$} such that {$\{x_{n_k}\}$ is a subsequence of $\{x_n\}$};{$\lim_{k \to \infty} x_{n_k} = \xi$} by {Bolzano-Weierstrass theorem}
-			[Fix] {$\varepsilon$} such that {$\varepsilon>0$}
-			{
-				[Obtain] {$N$} such that {$\forall n, m > N$：$|x_n - x_m| < \frac{\varepsilon}{2}$} by {$\{x_n\}$ is a Cauchy sequence}
-				[Fix] {$n$} such that {$n>N$}
-				{
-					[Have] {$|x_n - \xi| \leq \frac{\varepsilon}{2}$} by {take $x_m = x_{n_k}$ in the inequality $|x_n - x_m| < \frac{\varepsilon}{2}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \to \infty$}
-					[Have] {$|x_n - \xi| < \varepsilon$}
-				}
-			}
-			[Have] {$\{x_n\}$ converges}
-		}
-	}
-}
-
-Regarding some other key points in this example, brief explanations are given below:
-
-- The theorem's name and number appear at the beginning of the text; this is information without specific mathematical meaning, so it is written at the beginning using a Hint node;
-- The proof, from start to finish, discusses a fixed sequence $x$, so the outermost layer uses a Fix node to fix $x$;
-- The sentence "By the Bolzano-Weierstrass theorem, there exists a convergent subsequence in $\{x_n\}$: $\lim_{k \to \infty} x_{n_k} = \xi$." establishes the existence of a "subsequence", not the usual "existence of some variable". For existence, we still use an Obtain node, but the object obtained is a subsequence. [Obtain] {$\{x_{n_k}\}$};{$\xi$} such that {$\{x_{n_k}\}$ is a subsequence of $\{x_n\}$};{$\lim_{k \to \infty} x_{n_k} = \xi$} by {Bolzano-Weierstrass theorem}. In fact, obtaining a subsequence essentially means obtaining a mapping from $\N$ to $\N$, so through this Obtain node, we introduce the mapping $n$, which can continue to be used within the following scope. From this example, we can see that variable introduction can sometimes be "implicit"; the object obtained by Obtain can be an expression, and the introduction of this expression implies the introduction of some variable. Of course, strictly writing it as [Obtain] {$n$};{$\xi$} such that {$n:\N\to\N$}; {$\{x_{n_k}\}$ is a subsequence of $\{x_n\}$};{$\lim_{k \to \infty} x_{n_k} = \xi$} by {Bolzano-Weierstrass theorem} is also considered a correct structure extraction.
-
-### Natural Language Actions
-
-We need to distinguish between "variable introduction" and "natural language actions". The former has a clear mathematical meaning, while the latter is merely a natural language prompt. For example, in the Cauchy convergence theorem example from the previous section, there are two instances involving "actions":
-
-"Take $\varepsilon_0 = 1$. Since $\{x_n\}$ is a Cauchy sequence, there exists $N_0$ such that for all $n > N_0$: $|x_n - x_{N_0 + 1}| < 1$.". We note that $\varepsilon_0$ is not a variable that truly plays a role in the proof process; in fact, the variable $\varepsilon_0$ only appears this once and never appears again in any assertion. The reason the variable $\varepsilon$ is mentioned here is because the definition of a Cauchy sequence contains the quantifier $\forall \varepsilon>0, ...$, and the natural language here intends to express "specifically take $\varepsilon=1$ in the definition of a Cauchy sequence, we obtain...". Therefore, the phrase "Take $\varepsilon_0 = 1$" here is merely a suggestive statement, used to show us how we arrive at the assertion "there exists $N_0$ such that for all $n > N_0$: $|x_n - x_{N_0 + 1}| < 1$.". So the correct structure extraction for this sentence is [Obtain] {$N_0$} such that {$\forall n > N_0$：$|x_n - x_{N_0 + 1}| < 1$} by {take $\varepsilon_0 = 1$};{$\{x_n\}$ is a cauchy sequence}
-
-"In the above inequality, take $x_m = x_{n_k}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \to \infty$. Then we obtain $|x_n - \xi| \leq \frac{\varepsilon}{2}$." Similar to "Take $\varepsilon_0 = 1$", the series of actions "take $x_m = x_{n_k}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \to \infty$" in this sentence is showing us what method we use to obtain the assertion $|x_n - \xi| \leq \frac{\varepsilon}{2}$, so this series of actions should all be considered as suggestive statements. [Have] {$|x_n - \xi| \leq \frac{\varepsilon}{2}$} by {take $x_m = x_{n_k}$ in the inequality $|x_n - x_m| < \frac{\varepsilon}{2}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \to \infty$}.
-
-Let's look at another example of a functional equation:
-
-> We need to find all functions $ f: \mathbb{R} \rightarrow \mathbb{R} $ such that for all $ x, y \in \mathbb{R} $, $ f(x + y) - f(x - y) = f(x)f(y). $
-> Solution
-> First, interchange $ x $ and $ y $ in the original equation:
-> $ f(y + x) - f(y - x) = f(y)f(x). $
-> Thus, we have:
-> $ f(y + x) - f(y - x) = f(x + y) - f(x - y). $
-> This implies:
-> $ f(y - x) = f(x - y). $
-> Let $ y = 0 $, then:
-> $ f(-x) = f(x). $
-> So $ f $ is an even function.
-> Now, in the original equation, replace $ y $ with $ -y $:
-> $ f(x + (-y)) - f(x - (-y)) = f(x)f(-y), $
-> which simplifies to:
-> $ f(x - y) - f(x + y) = f(x)f(-y). $
-> Since $ f $ is even, $ f(-y) = f(y) $, so:
-> $ f(x - y) - f(x + y) = f(x)f(y). $
-> But from the original equation,
-> $ f(x + y) - f(x - y) = f(x)f(y). $
-> Adding these two equations:
-> $ [f(x + y) - f(x - y)] + [f(x - y) - f(x + y)] = f(x)f(y) + f(x)f(y), $
-> which gives:
-> $ 0 = 2f(x)f(y). $
-> Therefore, for all $ x, y \in \mathbb{R} $,
-> $ f(x)f(y) = 0. $
-> In particular, let $ y = x $:
-> $ f(x)^2 = 0 \quad \Rightarrow \quad f(x) = 0. $
-> Thus, the only function satisfying the condition is the zero function.
-> In conclusion, the only solution is:
-> $ \boxed{f(x) = 0} $
-
-Actions like "Let $y=0$", "replace $y=-y$", "let $y=x$", etc., that appear in this example are all suggestive statements, not assertions or assumptions. For example, for "let $y=x$", the correct structure extraction is: [Have] {$\forall x \in \mathbb{R}, f(x)^2 = 0$} by {Let $y = x$}
-
-Below we write out the complete structure corresponding to this functional equation example. (We will come back to this example later when we discuss the variability of natural language variables.)
-
-[Find] {f} such that {$f: \mathbb{R} \rightarrow \mathbb{R}$}; {$\forall x, y \in \mathbb{R}, f(x + y) - f(x - y) = f(x)f(y)$}
-{
-	[Have] {$\forall x, y \in \mathbb{R}, f(y + x) - f(y - x) = f(y)f(x)$} by {interchanging $x$ and $y$ in $f(x + y) - f(x - y) = f(x)f(y)$}
-	[Have] {$\forall x,y\in\R,f(y + x) - f(y - x) = f(x + y) - f(x - y)$}
-	[Have] {$\forall x, y \in \mathbb{R}, f(y - x) = f(x - y)$}
-	[Have] {$\forall x \in \mathbb{R}, f(-x) = f(x)$} by {Letting y = 0 in $\forall x, y \in \mathbb{R}, f(y - x) = f(x - y)$}
-	[Have] {$f$ is an even function}
-	[Have] {$\forall x,y\in\R, f(x + (-y)) - f(x - (-y)) = f(x)f(-y)$} by {replacing $y$ with $-y$ in $f(x + y) - f(x - y) = f(x)f(y)$}
-	[Have] {$\forall x, y \in \mathbb{R},  f(x - y) - f(x + y) = f(x)f(-y). $} by {simplify}
-	[Have] {$\forall x,y\in\R, f(x - y) - f(x + y) = f(x)f(y). $} by {$ f $ is even};{$ f(-y) = f(y) $}
-	[Have] {$\forall x,y\in\R,  f(x + y) - f(x - y) = f(x)f(y). $} by {this is the original equation}
-	[Have] {$\forall x, y \in \mathbb{R},  [f(x + y) - f(x - y)] + [f(x - y) - f(x + y)] = f(x)f(y) + f(x)f(y), $} by {Adding the equation $f(x + y) - f(x - y) = f(x)f(y)$ and the equation $f(x - y) - f(x + y) = f(x)f(y)$}
-	[Have] {$\forall x,y\in\R, 0 = 2f(x)f(y)$}
-	[Have] {$\forall x, y \in \mathbb{R}, f(x)f(y) = 0$}
-	[Have] {$\forall x \in \mathbb{R}, f(x)^2 = 0$} by {Letting $y = x$}
-	[Have] {$\forall x \in \mathbb{R}, f(x) = 0$}
-	[Have] {The only solution is the function $f(x) = 0$ for all $x \in \mathbb{R}$}
-}
-
-### Natural Language Reference
-
-In the Cauchy convergence theorem example, when extracting the structure, we specifically supplemented the "In the above inequality" in the prompt to "in the inequality $|x_n - x_m| < \frac{\varepsilon}{2}$". In the functional equation example, when extracting the structure, we specifically supplemented the "the original equation" in the prompt to "$\forall x, y \in \mathbb{R}, f(x + y) - f(x - y) = f(x)f(y)$".
-
-We summarize this practice as: a good structure should specify the references in natural language.
-
-Similar situations include: natural language texts assign formula numbers, e.g., $f(x)=0\quad (1)$, $g(x)=1\quad (2)$; and then reference these numbers in narratives, e.g., "Combining equations (1) and (2) yields...". For such cases, we handle them as follows: in the nodes asserting $f(x)=0, g(x)=1$, do not retain the $(1)(2)$ labels; when referencing labels in narratives, complete the specific expressions or propositions corresponding to the labels. Specifically:
-
-[Have] {$f(x)=0$}
-[Have] {$g(x)=0$}
+**Natural language text:**
+```
+$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
+Proof: 
+We prove by mathematical induction. 
+When $n = 1$, the equality holds.
 ...
-[Have] {...} by {Combining the equations $f(x)=0$ and $g(x)=0$}
+```
 
-### Variability of Variables in Natural Language
-
-Consider the previous functional equation example. In the natural language argumentation process, $\forall x,y$ is not repeatedly mentioned; instead, equations with free variables like $f(y + x) - f(y - x) = f(y)f(x)$ are simply written. In the structure provided earlier, we supplemented $\forall x,y\in\R$ inside each Have node, thereby eliminating the free variables.
-
-Similarly aiming to eliminate free variables, could we do it like this:
-
-[Find] {$f$} such that {$f: \mathbb{R} \rightarrow \mathbb{R}$}; {$\forall x, y \in \mathbb{R}, f(x + y) - f(x - y) = f(x)f(y)$}
+**Correct Structure:**
+```json
 {
-	[Fix] {$x,y$} such that {$x,y\in\R$}
-	{
-		[Have] {$f(y + x) - f(y - x) = f(y)f(x)$} by {interchanging $x$ and $y$ in $f(x + y) - f(x - y) = f(x)f(y)$}
-		[Have] {$f(y + x) - f(y - x) = f(x + y) - f(x - y)$}
-		[Have] {$f(y - x) = f(x - y)$}
+    "type": "Show",
+    "proposition": ["$\\forall n \\in \\N^*, 1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$"],
+    "method": ["mathematical induction"],
+    "scope": [
+        {
+			"type": "Have",
+			"claim": ["When $n = 1$, the equality $1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$ holds"],
+			"reason": null
+        },
 		...
-
-It can be found that writing this way is logically incorrect. In the derivation process of the functional equation, it is not the case that for fixed $x,y$, $f(y + x) - f(y - x) = f(y)f(x)$ is derived from $f(x + y) - f(x - y) = f(x)f(y)$; rather, $\forall x, y \in \mathbb{R}, f(y + x) - f(y - x) = f(y)f(x)$ is derived from $\forall x, y \in \mathbb{R}, f(x + y) - f(x - y) = f(x)f(y)$. These two are mathematically fundamentally different! In natural language, the variables $x,y$ here vary arbitrarily within the real numbers, they are not fixed. Therefore, when extracting the structure, we must absolutely not write Fix {x,y} at the outer level and then perform derivations inside; instead, we should reiterate $\forall x,y$ with each assertion.
-
-Let's look at another example of solving an indefinite integral using the method of undetermined coefficients:
-
->  Find the integral $\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$.
-> First, decompose the integrand into a sum of simple fractions. Let:
-> $\displaystyle\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}.$
-> After combining the right-hand side over a common denominator, the numerators on both sides must be equal, so:
-> $4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 +$
-> $C(x+1)(x-2)(x-1) + D(x+1)(x-2).$
-> Let $x = -1$, we get $A = 1$;
-> Let $x = 2$, we get $B = -2$;
-> Let $x = 1$, we get $D = -1$;
-> Differentiate both sides then let $x = 1$, we get $C = 5$;
-> Thus:
-> $\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx = \int \left[ \frac{1}{x+1} - \frac{2}{x-2} + \frac{5}{x-1} - \frac{1}{(x-1)^2} \right]  dx$
-> $= \ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C.$
-
-In this example, deriving $4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 + C(x+1)(x-2)(x-1) + D(x+1)(x-2)$ from $\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}$ is not for some fixed $x$; it is based on "$\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}$ and $\frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}$ are two identical rational functions", leading to the conclusion that $4x^3 - 13x^2 + 3x + 8$ and $A(x-2)(x-1)^2 + B(x+1)(x-1)^2 + C(x+1)(x-2)(x-1) + D(x+1)(x-2)$ are two identical polynomials. This shows that $x$ is a varying quantity, not a fixed one. Therefore, Fix {x} should not be used at the outer level during the derivation; instead, $\forall x$ should be supplemented in each line.
-
-When supplementing $\forall x$, $\forall x, \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}$ is actually more precisely $\forall x\in \R\setminus\{1,-1,2\}, \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}$, because the denominator cannot be zero. However, the latter formulation involves reasoning at the arithmetic level, which is too cumbersome for the purpose of structure extraction. Therefore, we do not mandate writing it in the latter form; instead, we allow simply writing $\forall x$, used to address the issue of free occurrence and variability of $x$. The reason for this design is also because sometimes the range of variation of the variable is not easy to represent precisely.
-
-$\ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C$ is actually a family of functions; we need to ensure that both variables $x$ and $C$ are properly handled in the final structure; they cannot be free variables. Logically, the strict expression here should be $\{\lambda x.(\ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C)\mid C\in \R\}$. But writing this is too cumbersome; we directly use a "descriptive phrase" to eliminate the free variable property of $x$ and $C$, writing it as {function family $\ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C$}
-
-The final structure is:
-
-[Find] {$\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$}
-{
-	[Hint] {First, decompose the integrand into a sum of simple fractions.}
-	[Find] {$A, B, C, D$} such that {$\forall x, \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}$}
-	{
-		[Have] {$\forall x, 4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 + C(x+1)(x-2)(x-1) + D(x+1)(x-2)$} by {combining the right-hand side over a common denominator, the numerators on both sides must be equal}
-		[Have] {$A = 1$} by {Let $x = -1$}
-		[Have] {$B = -2$} by {Let $x = 2$}
-		[Have] {$D = -1$} by {Let $x = 1$}
-		[Have] {$C = 5$} by {Differentiate both sides then let $x = 1$}
-	}
-	[CalculationChain] {$\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$} {=} {} {$\int \left[ \frac{1}{x+1} - \frac{2}{x-2} + \frac{5}{x-1} - \frac{1}{(x-1)^2} \right]  dx$} {=} {} {function family $\ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C$}
+    ]
 }
+```
 
-> This example involves the method of undetermined coefficients. The essence of the method of undetermined coefficients is to "solve" for the set parameters, so the Find node is used.
+In this example, the abstract reference "the equality" is replaced with the concrete equation it refers to: "$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$".
 
-The above observation tells us: Although both "writing Fix in the outer layer" and "supplementing forall inside the node" can achieve the purpose of "eliminating free variables", the semantics produced by these two approaches are completely different! In structure extraction, a most critical task is to accurately judge the "variability" of natural language variables, and then use the correct method to eliminate free variables.
+Note two other important points in this example:
 
-The above discussions are all aimed at independently varying variables. However, many times there are situations where the changes of different variables are interrelated. And the dependency relationship between variable changes is essentially a function. But because natural language is ambiguous, this functional relationship is not explicitly written out, which creates another key difficulty in the structure extraction process. Often, to ensure the "no free variables" principle, the implicit functional relationship must be supplemented.
+1.  We added the quantifier `$\forall n \in \N^*$` to the main proof goal to eliminate the free variable `n`, following the **No Free Variables Principle**.
+2.  We did **not** simplify the statement "When $n = 1$, the equality holds" by substituting `n=1` to get `$1=1$` or `$1=\frac{1\times 2}{2}$`. Instead, we preserved the original phrasing while resolving the reference. This follows the **Information Equivalency Principle**, as we do not add unstated simplification steps. In many cases, substitution might not be trivial, so we must not add information that wasn't explicitly written.
 
-Let's look at an example of the mean value theorem for integrals:
+#### Example 3
 
->  Suppose $f(x)$ is continuous on $[0,1]$ , prove that: $\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$
->
-> Pf:
-> $\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
-> Let $I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$, $I_2 = \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
-> where $I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx \quad (0 \leq \xi \leq h^{1/4})$
-> $= f(\xi) \arctan \frac{x}{h} \Big|_0^{h^{1/4}} = f(\xi) \arctan \frac{1}{h^{3/4}} \to f(0)\dfrac{\pi}{2} \quad (h \to 0^+)$
-> $|I_2| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx(\quad |f(x)|\leq M\quad)$
-> $= M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) \to 0 \quad (h \to 0^+)$
-> Hence $h\to 0^+$时$I_1+I_2\to f(0)\dfrac{\pi}{2}$
-> Qed.
-
-First, in this proof process, is $h$ fixed or variable? Note the $h\to 0^+$ below. In the original text, according to $I_1=f(\xi)\arctan \frac{1}{h^{3/4}}$, let $h\to 0^+$ at this point, thus obtaining the limit value of $I_1$. If this entire process is said for a fixed $h$, then we must first exit the scope of Fix {h} to be able to discuss $h\to 0^+$. However, after discussing the limit value of $I_1$, the original text begins to discuss the limit value of $I_2$. If $I_2$ is defined for that fixed $h$, then after exiting the scope of Fix {h}, the definition of $I_2$ becomes invalid. But natural language does not re-narrate the definition of $I_2$, which shows that it is more reasonable to understand $h$ as "variable" in this example. For this reason, we need to supplement $\forall h$ inside the node. (If we want to be more precise, we can see that the range of variation of $h$ is some right neighborhood of $0$. Through simple observation, we can set this neighborhood as $(0,1/2)$.)
-
-Since $h$ is variable, then $I_1,I_2$ are quantities defined with respect to the variable $h$, they are quantities that change with $h$. Therefore, $I_1,I_2$ are no longer real numbers, but functions of $h$. Therefore, the correct structure extraction is [Define] {$I_1$} as {$\forall h\in(0,1/2)$, $I_1(h)=\int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$}, not [Define] {$I_1$} as {$I_1=\int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$}. Similarly, $\xi$ is also a function of $h$.
-
-Final structure:
-
-[Fix] {$f$} such that {$f:\R \to \R$};{ $f(x)$ is continuous on $[0,1]$ }
-{
-	[Show] {$\lim\limits_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$}
-	{
-		[Have] {$\forall h\in (0,1/2)$, $\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$}
-		[Define] {$I_1$} as {$\forall h\in (0,1/2)$, $I_1(h)=\int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$}
-		[Define] {$I_2$} as {$\forall h\in (0,1/2)$, $I_2(h)=\int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$}
-		[Obtain] {$\xi$} such that {$\xi:\R\to \R\land \forall h\in (0,1/2),\xi(h)\in [0, h^{1/4}]$ $\land$ $\forall h\in (0,1/2),I_1(h) = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi(h)) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx$}
-		[Have] {$\forall h\in (0,1/2),f(\xi(h)) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx = f(\xi(h)) \arctan \frac{x}{h} \Big|_0^{h^{1/4}} = f(\xi(h)) \arctan \frac{1}{h^{3/4}}$}
-		[Have] {$\lim\limits_{h \to 0^+} f(\xi(h)) \arctan \frac{1}{h^{3/4}} = f(0)\dfrac{\pi}{2}$}
-		[Obtain] {$M$} such that {$M \in \R$};{$\forall x \in [0,1],|f(x)|\leq M$}
-		[Have] {$\forall h\in (0,1/2),|I_2(h)| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx$}]
-		[Have] {$\forall h\in (0,1/2),M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx = M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right)$}
-		[Have] {$\lim\limits_{h \to 0^+} M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) = 0$}
-		[Have] {$\lim\limits_{h \to 0^+} (I_1(h) + I_2(h)) = f(0)\dfrac{\pi}{2}$}
-	}
-}
-
-> The two limit calculations in this example appear on the surface to be suitable for identification as CalculationChain, but because the calculation process involves obtaining variables such as $\xi,M$, identifying them as CalculationChain would violate the "no free variables" principle. So they are still split apart and identified as multiple nodes.
-
-Summary: Variables in natural language are divided into two types: "fixed" and "variable". For fixed variables, usually use outer Fix to eliminate free variables; for variable variables, usually use the method of supplementing forall inside the node to eliminate free variables. To extract the correct structure, the variability of variables must be accurately identified.
-
-### Common Structures
-
-#### Sufficient Condition Derivation
-
->  Let ${x}_{n} = \frac{n}{n + 1} \quad (n = 1,2,\cdots)$. Prove: $\lim_{n \to \infty} {x}_{n} = 1$.
-> Proof:
-> $|{x}_{n} - 1| = \frac{1}{n + 1}$.
-> For any $\varepsilon > 0$, to have $|{x}_{n} - 1| < \varepsilon$, it suffices to have $\frac{1}{n + 1} < \varepsilon$, i.e., $n > \frac{1}{\varepsilon} - 1$.
-> We may take $N = N(\varepsilon) = \left\lfloor \frac{1}{\varepsilon} \right\rfloor$. Then when $n > N$, $|{x}_{n} - 1| < \varepsilon$.
-> Therefore, $\lim_{n \to \infty} {x}_{n} = 1$.
-
-In this example, the part "to have $|{x}_{n} - 1| < \varepsilon$, it suffices to have $\frac{1}{n + 1} < \varepsilon$, i.e., $n > \frac{1}{\varepsilon} - 1$. " is doing a mixed logical derivation of sufficient condition derivation and equivalent derivation. We generally use the LogicChain node to represent this structure:
-
-[Define] {$x$} as {$\forall n\in \N^*, {x}_{n} = \frac{n}{n + 1}$}
-[Show] {$\lim_{n \to \infty} {x}_{n} = 1$}
-{
-	[Have] {$\forall n \in \N^*, |{x}_{n} - 1| = \frac{1}{n + 1}$}
-	[Fix] {$\varepsilon$} such that {$\varepsilon>0$}
-	{
-		[Fix] {$n$} such that {$n \in \N^*$}
-		{
-			[LogicChain] {$|{x}_{n} - 1| < \varepsilon$} {⇐} {} {$\frac{1}{n + 1} < \varepsilon$} {⇔} {} {$n > \frac{1}{\varepsilon} - 1$}
-		}
-		[Define] {$N$} such that {$N=\left\lfloor \frac{1}{\varepsilon} \right\rfloor$}
-		[Have] {$\forall n > N$, $|{x}_{n} - 1| < \varepsilon$}
-	}
-	[Have] {$\lim_{n \to \infty} {x}_{n} = 1$}
-}
-
-#### Case Analysis
-
-The basic structure for case analysis is:
-
-[Assume] {Case 1}
-{
-	...
-}
-[Assume] {Case 2}
-{
-	...
-}
+**Natural language text:**
+```
+$f(x)=0\quad (1)$
+$g(x)=1\quad (2)$
 ...
-[Assume] {Case n}
-{
+Combining equations (1) and (2), we get $f(x)+g(x)=1$.
+...
+```
+
+**Correct Structure:**
+```json
+[
+    {
+        "type": "Have",
+        "claim": ["$f(x)=0$"],
+        "reason": null
+    },
+    {
+        "type": "Have",
+        "claim": ["$g(x)=1$"],
+        "reason": null
+    },
 	...
-}
+    {
+        "type": "Have",
+        "claim": ["$f(x)+g(x)=1$"],
+        "reason": ["By combining the equations $f(x)=0$ and $g(x)=1$"]
+    },
+	...
+]
+```
 
-> $\lim_{n \to \infty} \sqrt[n]{a} = 1(a>0)$
-**Proof:**
-(1) When $a = 1$, the equality obviously holds.
-(2) When $a > 1$, since $(1 + \varepsilon)^{n} > 1 + n\varepsilon$ (for $n > 1, \varepsilon > 0$), then for sufficiently large $n$, we can ensure $1 + n\varepsilon > a$, i.e., $(1 + \varepsilon)^{n} > a$. In fact, it suffices to take $N = \left\lceil \frac{a - 1}{\varepsilon} \right\rceil$; when $n > N$, this is guaranteed. Therefore, $1 < \sqrt[n]{a} < 1 + \varepsilon$, and when $n > N$, we have $|\sqrt[n]{a} - 1| < \varepsilon$, which implies $\lim_{n \to \infty} \sqrt[n]{a} = 1$.
-(3) When $0 < a < 1$, let $a = \frac{1}{a'}$, where $a' > 1$. Then, as $n \to \infty$, $\sqrt[n]{a} = \frac{1}{\sqrt[n]{a'}} \to 1$.
+For references to numbered labels, we handle them as follows: in the nodes that assert the original propositions (`$f(x)=0$`), we do not store the labels `(1)` and `(2)`. When these labels are later referenced in a reason, we replace the reference with the full proposition that the label points to.
 
-The correct structure for this example is as follows:
+### Accurate Node-Type Identification Principle
 
-[Fix] {$a$} such that {$a > 0$}
+A good structure must correctly identify the node type for each node.
+
+In most cases, determining the node type is straightforward by literal interpretation. For example, if the natural language says "Now we prove...", it corresponds to a `Show` node; if it says "It suffices to prove...", it corresponds to a `SufficesToProve` node.
+
+However, identifying the node type can be very error-prone when dealing with natural language "Actions", which cannot be judged literally. A good structure must correctly identify the node type corresponding to these "Actions". This is explained in detail below:
+
+In natural language, sentences like "Let $a > 0$", "When $a > 0$", "Let $a=1$", or "Let $a=b$" can correspond to an `Assume` node, a `Fix` node, a `Define` node, or they might not correspond to a standalone node at all but rather be part of a hint or reason. The correct choice depends on the context. Generally:
+
+  * If **`a` is a newly introduced variable** and the subsequent text discusses arguments under a certain condition on `a` (e.g., $a>0$), use a **`Fix`** node.
+  * If **`a` is a pre-existing variable** and the text is making a deduction under a new, temporary condition (common in case analysis), use an **`Assume`** node.
+  * If **`a` is a newly introduced variable** that is assigned a specific, determined value, use a **`Define`** node.
+  * If the action performed on `a` has no independent logical significance and serves only as a **hint for how a conclusion is reached**, include the action as part of the **`reason`** field in the relevant node.
+
+#### Example 1
+
+**Natural language text:**
+"""
+$\lim_{n \to \infty} \sqrt[n]{a} = 1$ (for $a>0$)
+**Proof:** 
+(1) When $a = 1$, the equality obviously holds. 
+(2) When $a > 1$, for any $\varepsilon>0$, let $N = \left\lceil \frac{a - 1}{\varepsilon} \right\rceil$, then for any $n > N$, we have $|\sqrt[n]{a} - 1| < \varepsilon$, which implies $\lim_{n \to \infty} \sqrt[n]{a} = 1$. 
+(3) When $0 < a < 1$, let $a' = \frac{1}{a}$. Then $a' > 1$. Then, as $n \to \infty$, $\sqrt[n]{a} = \frac{1}{\sqrt[n]{a'}} \to 1$. 
+"""
+
+In this example, the entire proof is for a fixed positive real number `a`, so a `Fix` node is used at the outermost level. Within the scope of the main `Show` node, a case analysis is performed based on the range of `a`. Each case makes an assumption about the pre-existing variable `a`, so `Assume` nodes are used for each case. "let $N = \left\lceil \frac{a - 1}{\varepsilon} \right\rceil$" and "let $a' = \frac{1}{a}$" both introduce new variables with specific values, so `Define` nodes are used. "for any $\varepsilon>0$" and "for any $n > N$" both introduce new variables under certain conditions for further discussion, corresponding to `Fix` nodes.
+
+**Correct Structure:**
+```json
 {
-	[Show] {$\lim_{n \to \infty} \sqrt[n]{a} = 1$}
-	{
-		[Assume] {$a = 1$}
-		{
-			[Have] {$\lim_{n \to \infty} \sqrt[n]{a} = 1$}
-		}
-		[Assume] {$a > 1$}
-		{
-			[Fix] {$\varepsilon$} such that {$\varepsilon > 0$}
-			{
-				[Define] {$N$} as {$\left\lceil \frac{a - 1}{\varepsilon} \right\rceil$}
-				[Fix] {$n$} such that {$n > N$; $n>1$}
-				{
-					[Have] {$1+n\varepsilon > a$}
-					[Have] {$(1+\varepsilon)^n > a$}
-					[Have] {$1 < \sqrt[n]{a} < 1 + \varepsilon$}
-					[Have] {$|\sqrt[n]{a} - 1| < \varepsilon$}
-				}
-			}
-			[Have] {$\lim_{n \to \infty} \sqrt[n]{a} = 1$}
-		}
-		[Assume] {$0 < a < 1$}
-		{
-			[Define] {$a'$} as {$a=\frac{1}{a'}$}
-			[Have] {$a' > 1$}
-			[Have] {$\lim_{n \to \infty} \sqrt[n]{a} = \lim_{n \to \infty} \frac{1}{\sqrt[n]{a'} }= 1$}
-		}
-	}
+    "type": "Fix",
+    "variable": ["$a$"],
+    "condition": ["$a > 0$"],
+    "scope": [
+        {
+            "type": "Show",
+            "proposition": ["$\\lim_{n \\to \\infty} \\sqrt[n]{a} = 1$"],
+            "method": null,
+            "scope": [
+                {
+                    "type": "Assume",
+                    "assumption": ["$a = 1$"],
+                    "scope": [
+                        {
+                            "type": "Have",
+                            "claim": ["$\\lim_{n \\to \\infty} \\sqrt[n]{a} = 1$"],
+                            "reason": null
+                        }
+                    ]
+                },
+                {
+                    "type": "Assume",
+                    "assumption": ["$a > 1$"],
+                    "scope": [
+                        {
+                            "type": "Fix",
+                            "variable": ["$\\varepsilon$"],
+                            "condition": ["$\\varepsilon > 0$"],
+                            "scope": [
+                                {
+                                    "type": "Define",
+                                    "term": "$N$",
+                                    "definition": "$N = \\lceil \\frac{a - 1}{\\varepsilon} \\rceil$"
+                                },
+                                {
+                                    "type": "Fix",
+                                    "variable": ["$n$"],
+                                    "condition": ["$n > N$"],
+                                    "scope": [
+                                        {
+                                            "type": "Have",
+                                            "claim": ["$|\\sqrt[n]{a} - 1| < \\varepsilon$"],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": ["$\\lim_{n \\to \\infty} \\sqrt[n]{a} = 1$"],
+                            "reason": null
+                        }
+                    ]
+                },
+                {
+                    "type": "Assume",
+                    "assumption": ["$0 < a < 1$"],
+                    "scope": [
+                        {
+                            "type": "Define",
+                            "term": "$a'$",
+                            "definition": "$a' = \\frac{1}{a}$"
+                        },
+                        {
+                            "type": "Have",
+                            "claim": ["$a' > 1$"],
+                            "reason": null
+                        },
+                        {
+                            "type": "Have",
+                            "claim": ["as $n \\to \\infty$, $\\sqrt[n]{a} = \\frac{1}{\\sqrt[n]{a'}} \\to 1$"],
+                            "reason": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
+```
 
-> There exist irrational numbers $a$ and $b$ such that $a^b$ is rational.
-> Pf:
-> The number $\sqrt{2}^{\sqrt{2}}$ must either be rational or irrational.
-> If $\sqrt{2}^{\sqrt{2}}$ is rational, then let $a = \sqrt{2}$ (irrational) and $b = \sqrt{2}$ (irrational). The result $a^b$ is rational by assumption.
-> If $\sqrt{2}^{\sqrt{2}}$ is irrational, then let $a = \sqrt{2}^{\sqrt{2}}$ and $b = \sqrt{2}$. Both are irrational. We have $a^b  =\left( \sqrt{2}^{\sqrt{2}} \right)^{\sqrt{2}} = \sqrt{2}^{(\sqrt{2} \times \sqrt{2})} = \sqrt{2}^2 = 2$, which is rational.
-> the claim is proven.
+#### Example 2
 
-The final structure is as follows:
+**Natural language text:**
+"""
+Let ${x}_{n} = \frac{n}{n + 1} \quad (n = 1,2,\cdots)$. Prove: $\lim_{n \to \infty} {x}_{n} = 1$.
+Proof: 
+$|{x}_{n} - 1| = \frac{1}{n + 1}$. 
+For any $\varepsilon > 0$, to have $|{x}_{n} - 1| < \varepsilon$, it suffices to have $\frac{1}{n + 1} < \varepsilon$, i.e., $n > \frac{1}{\varepsilon} - 1$. 
+We may take $N = N(\varepsilon) = \left\lfloor \frac{1}{\varepsilon} \right\rfloor$. Then when $n > N$, $|{x}_{n} - 1| < \varepsilon$. 
+Therefore, $\lim_{n \to \infty} {x}_{n} = 1$.
+"""
 
-[Show] {There exist irrational numbers $a$ and $b$ such that $a^b$ is rational}
+In this example, "Let $x_n=\frac{n}{n+1}$" defines the sequence $x$ at the outermost level, so a `Define` node is used. (it is also logically correct to use a `Fix` node for $x$ satisfying $\forall n\in \N^*, {x}_{n} = \frac{n}{n + 1}$ and place the rest of the proof in its scope.)
+
+The phrase "to have..., it suffices to have..., i.e., ..." represents a logical derivation mixing sufficient conditions and equivalences. We use a `LogicChain` node to represent this. To eliminate the free variable $n$ in this chain, we wrap the `LogicChain` node within a `Fix` node for $n$.
+
+The text "We may take $N = N(\varepsilon) = \left\lfloor \frac{1}{\varepsilon} \right\rfloor$" explicitly notes that $N$ is a function of $\varepsilon$. Since we can place the `Define` node for $N$ inside the scope of $\varepsilon$, this dependency is correctly captured, making the logic sound whether $N$ is considered a function or a value.
+
+**Correct Structure:**
+```json
+[
+    {
+        "type": "Define",
+        "term": "$x$",
+        "definition": "$\\forall n\\in \\N^*, {x}_{n} = \\frac{n}{n + 1}$"
+    },
+    {
+        "type": "Show",
+        "proposition": ["$\\lim_{n \\to \\infty} {x}_{n} = 1$"],
+        "method": null,
+        "scope": [
+            {
+                "type": "Have",
+                "claim": ["$\\forall n \\in \\N^*, |{x}_{n} - 1| = \\frac{1}{n + 1}$"],
+                "reason": null
+            },
+            {
+                "type": "Fix",
+                "variable": ["$\\varepsilon$"],
+                "condition": ["$\\varepsilon>0$"],
+                "scope": [
+                    {
+                        "type": "Fix",
+                        "variable": ["$n$"],
+                        "condition": ["$n \\in \\N^*$"],
+                        "scope": [
+                            {
+                                "type": "LogicChain",
+                                "initial_proposition": ["$|{x}_{n} - 1| < \\varepsilon$"],
+                                "steps": [
+                                    {
+                                        "operator": "⇐",
+                                        "proposition": ["$\\frac{1}{n + 1} < \\varepsilon$"],
+                                        "reason": null
+                                    },
+                                    {
+                                        "operator": "⇔",
+                                        "proposition": ["$n > \\frac{1}{\\varepsilon} - 1$"],
+                                        "reason": null
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "Define",
+                        "term": "$N$",
+                        "definition": "$N=\\lfloor \\frac{1}{\\varepsilon} \\rfloor$"
+                    },
+                    {
+                        "type": "Have",
+                        "claim": ["$\\forall n > N, |{x}_{n} - 1| < \\varepsilon$"],
+                        "reason": null
+                    }
+                ]
+            },
+            {
+                "type": "Have",
+                "claim": ["$\\lim_{n \\to \\infty} {x}_{n} = 1$"],
+                "reason": null
+            }
+        ]
+    }
+]
+```
+
+#### Example 3
+
+**Natural language text:**
+"""
+Theorem 2.4.7 (Cauchy Convergence): A sequence $\{x_n\}$ converges if and only if $\{x_n\}$ is a Cauchy sequence.
+
+Proof: First, we prove the necessity.
+Assume $\{x_n\}$ converges to $a$.
+By definition, for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - a| < \frac{\varepsilon}{2}, \quad |x_m - a| < \frac{\varepsilon}{2}$.
+Thus, $|x_n - x_m| \leq |x_n - a| + |x_m - a| < \varepsilon$.
+
+Next, we prove the sufficiency.
+First, we show that a Cauchy sequence must be bounded.
+Take $\varepsilon_0 = 1$. Since $\{x_n\}$ is a Cauchy sequence, there exists $N_0$ such that for all $n > N_0$: $|x_n - x_{N_0 + 1}| < 1$.
+Let $M = \max \{|x_1|, |x_2|, \ldots, |x_{N_0}|, |x_{N_0 + 1}| + 1\}$.
+Then for all $n$, we have $|x_n| \leq M$.
+By the Bolzano-Weierstrass theorem, there exists a convergent subsequence in $\{x_n\}$: $\lim_{k \to \infty} x_{n_k} = \xi$.
+Since $\{x_n\}$ is a Cauchy sequence, for any $\varepsilon > 0$, there exists $N$ such that for all $n, m > N$: $|x_n - x_m| < \frac{\varepsilon}{2}$.
+In the above inequality, take $x_m = x_{n_k}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \to \infty$. Then we obtain $|x_n - \xi| \leq \frac{\varepsilon}{2}$.
+Thus, $|x_n - \xi| < \varepsilon$.
+This shows that the sequence $\{x_n\}$ converges.
+The proof is complete.
+"""
+
+"Take $\varepsilon_0 = 1$. Since $\{x_n\}$ is a Cauchy sequence, there exists $N_0$ such that...". We notice that $\varepsilon_0$ is not an effective variable in the proof: it appears only once and is not used in any subsequent assertions. The mention of $\varepsilon_0$ arises from the definition of a Cauchy sequence ($\forall \varepsilon > 0, ...$). The text's intent is to express: "By specializing $\varepsilon=1$ in the definition of a Cauchy sequence, we get...". Therefore, "Take $\varepsilon_0 = 1$" is merely a hint, explaining how the assertion "there exists $N_0$..." is derived. It should be part of the `reason` field of the `Obtain` node.
+
+Similarly, the series of actions "take $x_m = x_{n_k}$..., and let $k \to \infty$" explains *how* the assertion "$|x_n - \xi| \leq \frac{\varepsilon}{2}$" is obtained. These actions are explanatory and should be captured in the `reason` field of the corresponding `Have` node.
+
+Other points to note: 
+(1) The outermost level of the proof refers to a real sequence $x$, without defining exactly what each $x_n$ will take, hence we use `Fix` node instead of `Define`. 
+(2) The abstract reference "In the above inequality" must be made concrete. 
+(3) "Assume $\{x_n\}$ converges to $a$", although natural languages uses the word 'assume', it introduces a new variable $a$, hence we must use a `Fix` node. 
+(4) "there exists a convergent subsequence in $\{x_n\}$: $\lim_{k \to \infty} x_{n_k} = \xi$", not only did we obtained a subsequence, we also obtained $\xi$.
+
+**Correct Structure:**
+```json
+[
+    {
+        "type": "Hint",
+        "text": "Theorem 2.4.7 (Cauchy Convergence)"
+    },
+    {
+        "type": "Fix",
+        "variable": ["$x$"],
+        "condition": ["$\\{x_n\\}$ is a real sequence"],
+        "scope": [
+            {
+                "type": "Show",
+                "proposition": ["sequence $\\{x_n\\}$ converges if and only if $\\{x_n\\}$ is a Cauchy sequence."],
+                "method": null,
+                "scope": [
+                    {
+                        "type": "Show",
+                        "proposition": ["sequence $\\{x_n\\}$ converges implies $\\{x_n\\}$ is a Cauchy sequence."],
+                        "method": null,
+                        "scope": [
+                            {
+                                "type": "Fix",
+                                "variable": ["$a$"],
+                                "condition": ["$\\{x_n\\}$ converges to $a$"],
+                                "scope": [
+                                    {
+                                        "type": "Fix",
+                                        "variable": ["$\\varepsilon$"],
+                                        "condition": ["$\\varepsilon>0$"],
+                                        "scope": [
+                                            {
+                                                "type": "Obtain",
+                                                "obtained_variable": ["$N$"],
+                                                "condition": ["$\\forall n, m > N, |x_n - a| < \\frac{\\varepsilon}{2} \\text{ and } |x_m - a| < \\frac{\\varepsilon}{2}$"],
+                                                "reason": ["definition"]
+                                            },
+                                            {
+                                                "type": "Fix",
+                                                "variable": ["$n$", "$m$"],
+                                                "condition": ["$n>N$", "$m>N$"],
+                                                "scope": [
+                                                    {
+                                                        "type": "Have",
+                                                        "claim": ["$|x_n - x_m| \\leq |x_n - a| + |x_m - a| < \\varepsilon$"],
+                                                        "reason": null
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "Show",
+                        "proposition": ["$\\{x_n\\}$ is a Cauchy sequence implies sequence $\\{x_n\\}$ converges"],
+                        "method": null,
+                        "scope": [
+                            {
+                                "type": "Show",
+                                "proposition": ["Cauchy sequence $\\{x_n\\}$ is bounded"],
+                                "method": null,
+                                "scope": [
+                                    {
+                                        "type": "Obtain",
+                                        "obtained_variable": ["$N_0$"],
+                                        "condition": ["$\\forall n > N_0, |x_n - x_{N_0 + 1}| < 1$"],
+                                        "reason": ["take $\\varepsilon_0 = 1$", "$\\{x_n\\}$ is a cauchy sequence"]
+                                    },
+                                    {
+                                        "type": "Define",
+                                        "term": "$M$",
+                                        "definition": "$M = \\max \\{|x_1|, |x_2|, \\ldots, |x_{N_0}|, |x_{N_0 + 1}| + 1\\}$"
+                                    },
+                                    {
+                                        "type": "Have",
+                                        "claim": ["$\\forall n, |x_n| \\leq M$"],
+                                        "reason": null
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "Obtain",
+                                "obtained_variable": ["$\\{x_{n_k}\\}$", "$\\xi$"],
+                                "condition": ["$\\{x_{n_k}\\}$ is a subsequence of $\\{x_n\\}$", "$\\lim_{k \\to \\infty} x_{n_k} = \\xi$"],
+                                "reason": ["Bolzano-Weierstrass theorem"]
+                            },
+                            {
+                                "type": "Fix",
+                                "variable": ["$\\varepsilon$"],
+                                "condition": ["$\\varepsilon>0$"],
+                                "scope": [
+                                    {
+                                        "type": "Obtain",
+                                        "obtained_variable": ["$N$"],
+                                        "condition": ["$\\forall n, m > N, |x_n - x_m| < \\frac{\\varepsilon}{2}$"],
+                                        "reason": ["$\\{x_n\\}$ is a Cauchy sequence"]
+                                    },
+                                    {
+                                        "type": "Fix",
+                                        "variable": ["$n$"],
+                                        "condition": ["$n>N$"],
+                                        "scope": [
+                                            {
+                                                "type": "Have",
+                                                "claim": ["$|x_n - \\xi| \\leq \\frac{\\varepsilon}{2}$"],
+                                                "reason": ["take $x_m = x_{n_k}$ in the inequality $|x_n - x_m| < \\frac{\\varepsilon}{2}$, where $k$ is sufficiently large such that $n_k > N$, and let $k \\to \\infty$"]
+                                            },
+                                            {
+                                                "type": "Have",
+                                                "claim": ["$|x_n - \\xi| < \\varepsilon$"],
+                                                "reason": null
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "Have",
+                                "claim": ["$\\{x_n\\}$ converges"],
+                                "reason": null
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]
+```
+
+### Accurate Quantifier Scoping Principle
+
+The handling of quantifiers like $\forall$, $\exists$ in natural language is often ambiguous. Quantifiers are frequently omitted. Even when they are not omitted, their scope often extends across multiple lines of text. Therefore, when a free variable appears in a proposition, it's either because its quantifier was omitted or because it inherits a quantifier that has already appeared before.
+
+As we discussed in the "No Free Variables Principle" section, to eliminate the free variables `n,m` in the following structure:
+
+```
+forall n,m, P(n,m)
+Q(n,m)
+```
+
+There are two valid approaches:
+
+**Approach 1: Repeat the Quantifier**
+
+```
+forall n,m, P(n,m)
+forall n,m, Q(n,m)
+```
+
+**Approach 2: Use a `Fix` Node**
+
+```
+Fix n,m
 {
-	[Have] {The number $\sqrt{2}^{\sqrt{2}}$ is either rational or irrational}
-	[Assume] {$\sqrt{2}^{\sqrt{2}}$ is rational}
-	{
-		[Define] {$a$} as {$\sqrt{2}$}
-		[Define] {$b$} as {$\sqrt{2}$}
-		[Have] {$a$ is irrational and $b$ is irrational}
-		[Have] {$a^b$ is rational} by {the assumption that $\sqrt{2}^{\sqrt{2}}$ is rational}
-	}
-	[Assume] {$\sqrt{2}^{\sqrt{2}}$ is irrational}
-	{
-		[Define] {$a$} as {$\sqrt{2}^{\sqrt{2}}$}
-		[Define] {$b$} as {$\sqrt{2}$}
-		[Have] {$a,b$ are both irrational}
-		[CalculationChain] {$a^b$} {=} {} {$\left( \sqrt{2}^{\sqrt{2}} \right)^{\sqrt{2}}$} {=} {} {$\sqrt{2}^{(\sqrt{2} \times \sqrt{2})}$} {=} {} {$\sqrt{2}^2$} {=} {} {2}
-		[Have] {$a^b$ is rational}
-	}
-	[Have] {The claim is proven}
+	P(n,m)
+	Q(n,m)
 }
+```
 
-#### Proof by Contradiction
+Although both approaches eliminate free variables, they represent fundamentally different meanings. In the first approach, the `n,m` in the two lines are not connected; they are two independent sets of quantified variables. In the second approach, the discussion is about the same fixed pair of `n,m`. The following examples will demonstrate the difference. A good structure must not only eliminate free variables, but also correctly preserve the original meaning of the natural language text.
 
-The basic structure for proof by contradiction is:
+#### Example 1
 
-[Show] {P} using {contradiction}
+**Natural language text:**
+```
+We need to find all functions $ f: \mathbb{R} \rightarrow \mathbb{R} $ such that for all $ x, y \in \mathbb{R} $, $ f(x + y) - f(x - y) = f(x)f(y). $
+Solution
+First, interchange $ x $ and $ y $ in the original equation: 
+$ f(y + x) - f(y - x) = f(y)f(x). $ 
+Thus, we have: 
+$ f(y + x) - f(y - x) = f(x + y) - f(x - y). $ 
+This implies: 
+$ f(y - x) = f(x - y). $ 
+Let $ y = 0 $, then: 
+$ f(-x) = f(x). $ 
+So $ f $ is an even function. 
+Now, in the original equation, replace $ y $ with $ -y $: 
+$ f(x + (-y)) - f(x - (-y)) = f(x)f(-y), $ 
+which simplifies to: 
+$ f(x - y) - f(x + y) = f(x)f(-y). $ 
+Since $ f $ is even, $ f(-y) = f(y) $, so: 
+$ f(x - y) - f(x + y) = f(x)f(y). $ 
+But from the original equation, 
+$ f(x + y) - f(x - y) = f(x)f(y). $
+Adding these two equations: 
+$ [f(x + y) - f(x - y)] + [f(x - y) - f(x + y)] = f(x)f(y) + f(x)f(y), $ 
+which gives: 
+$ 0 = 2f(x)f(y). $ 
+Therefore, for all $ x, y \in \mathbb{R} $, 
+$ f(x)f(y) = 0. $ 
+In particular, let $ y = x $: 
+$ f(x)^2 = 0 \quad \Rightarrow \quad f(x) = 0. $ 
+Thus, the only function satisfying the condition is the zero function. 
+In conclusion, the only solution is: 
+$ \boxed{f(x) = 0} $
+```
+
+In this example, all free occurrences of `x` and `y` "varies" within individual propositions. The reasoning process involves transforming the *function equation itself*, not discussing an equality relation for fixed `x` and `y`. Wrapping the entire proof in a `Fix x,y` node would completely contradict the original meaning.
+
+**Correct Structure:**
+```json
 {
-	[Assume] {not P}
-	{
-		...
-		[Have] {contradiction}
-	}
+    "type": "Find",
+    "target": ["$f$"],
+    "condition": [
+        "$f: \\mathbb{R} \\rightarrow \\mathbb{R}$",
+        "$\\forall x, y \\in \\mathbb{R}, f(x + y) - f(x - y) = f(x)f(y)$"
+    ],
+    "scope": [
+        {
+            "type": "Have",
+            "claim": ["$\\forall x, y \\in \\mathbb{R}, f(y + x) - f(y - x) = f(y)f(x)$"],
+            "reason": ["interchanging $x$ and $y$ in $f(x + y) - f(x - y) = f(x)f(y)$"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x,y \\in \\R,f(y + x) - f(y - x) = f(x + y) - f(x - y)$"],
+            "reason": null
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x, y \\in \\mathbb{R}, f(y - x) = f(x - y)$"],
+            "reason": null
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x \\in \\mathbb{R}, f(-x) = f(x)$"],
+            "reason": ["Letting y = 0 in $\\forall x, y \\in \\mathbb{R}, f(y - x) = f(x - y)$"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$f$ is an even function"],
+            "reason": null
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x,y \\in \\R, f(x + (-y)) - f(x - (-y)) = f(x)f(-y)$"],
+            "reason": ["replacing $y$ with $-y$ in $f(x + y) - f(x - y) = f(x)f(y)$"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x, y \\in \\mathbb{R}, f(x - y) - f(x + y) = f(x)f(-y)$"],
+            "reason": ["simplify"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x,y \\in \\R, f(x - y) - f(x + y) = f(x)f(y)$"],
+            "reason": ["$f$ is even", "$f(-y) = f(y)$"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x,y \\in \\R, f(x + y) - f(x - y) = f(x)f(y)$"],
+            "reason": ["this is the original equation"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x, y \\in \\mathbb{R}, [f(x + y) - f(x - y)] + [f(x - y) - f(x + y)] = f(x)f(y) + f(x)f(y)$"],
+            "reason": ["Adding the equation $f(x + y) - f(x - y) = f(x)f(y)$ and the equation $f(x - y) - f(x + y) = f(x)f(y)$"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x,y \\in \\R, 0 = 2f(x)f(y)$"],
+            "reason": null
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x, y \\in \\mathbb{R}, f(x)f(y) = 0$"],
+            "reason": null
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x \\in \\mathbb{R}, f(x)^2 = 0$"],
+            "reason": ["Letting $y = x$"]
+        },
+        {
+            "type": "Have",
+            "claim": ["$\\forall x \\in \\mathbb{R}, f(x) = 0$"],
+            "reason": null
+        },
+        {
+            "type": "Have",
+            "claim": ["The only solution is the function $f(x) = 0$ for all $x \\in \\mathbb{R}$"],
+            "reason": null
+        }
+    ]
 }
+```
 
-> Let $ T = \{ x \mid x \in \mathbb{Q} \text{ and } x > 0, x^2 < 2 \} $. Prove that $ T $ has no least upper bound in $ \mathbb{Q} $.
->
-> **Proof**: By contradiction, suppose $ T $ has a least upper bound in $ \mathbb{Q} $. Let $ \sup T = \frac{n}{m} $ (where $ m, n \in \mathbb{N}^* $ and $ m, n $ are coprime). Then it is obvious that $1 < \left( \frac{n}{m} \right)^2 < 3$
->
-> Since the square of a rational number cannot be 2, there are only two possible cases:
->
-> 1. $ 1 < \left( \frac{n}{m} \right)^2 < 2 $.
->
->    Let $ \frac{n^2}{m^2} = 2 - t $, where $ 0 < t < 1 $. Let $ r = \frac{n}{6m} $, then it is obvious that $ n + r > 0 $, $ \frac{n + r}{m} \in \mathbb{Q} $. Since
->
->    $
->    \frac{n^2}{3m^2} t < \frac{2}{3}, \quad \frac{2n}{m} - r < \frac{n}{18} t,
->    $
->
->    we get
->
->    $
->    \left( \frac{n + r}{m} \right)^2 = \frac{n^2}{m^2} + \frac{2n}{m} r + r^2 = 2 - t + \frac{2n}{m} r + r^2 < 2.
->    $
->
->    This implies $ \frac{n + r}{m} \in T $, contradicting the assumption that $ \frac{n}{m} $ is the least upper bound of $ T $.
->
-> 2. $ 2 < \left( \frac{n}{m} \right)^2 < 3 $.
->
->    Let $ \frac{n^2}{m^2} = 2 + t $, where $ 0 < t < 1 $. Let $ r = \frac{n}{6m} $, then it is obvious that $ n - r > 0 $, $ \frac{n - r}{m} \in \mathbb{Q} $. Since
->
->    $
->    \frac{2n}{m} - r < \frac{n^2}{3m^2} t < 1,
->    $
->
->    we get
->
->    $
->    \left( \frac{n - r}{m} \right)^2 = \frac{n^2}{m^2} - \frac{2n}{m} r + r^2 = 2 + t - \frac{2n}{m} r + r^2 > 2.
->    $
->
->    This implies $ \frac{n - r}{m} \in T $, contradicting the assumption that $ \frac{n}{m} $ is the least upper bound of $ T $.
->
-> Therefore, we conclude that $ T $ has no least upper bound in $ \mathbb{Q} $.
+(Note: Actions like "Let $y=0$", "replace $y=-y$", and "let $y=x$" are all reason-hints for the statements.)
 
-[Define] {T} as {$\{ x \mid x \in \mathbb{Q} \text{ and } x > 0, x^2 < 2 \}$}
-[Show] {$T$ has no least upper bound in $\mathbb{Q}$} using {contradiction}
+#### Example 2
+
+**Natural language text:**
+```
+Find the integral $\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$.
+First, decompose the integrand into a sum of simple fractions. Let: 
+$\displaystyle\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}.$ 
+After combining the right-hand side over a common denominator, the numerators on both sides must be equal, so: 
+$4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 +$ 
+$C(x+1)(x-2)(x-1) + D(x+1)(x-2).$ 
+Let $x = -1$, we get $A = 1$; 
+Let $x = 2$, we get $B = -2$; 
+Let $x = 1$, we get $D = -1$; 
+Differentiate both sides, then let $x = 1$, we get $C = 5$; 
+Thus: 
+$\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx = \int \left[ \frac{1}{x+1} - \frac{2}{x-2} + \frac{5}{x-1} - \frac{1}{(x-1)^2} \right]  dx$ 
+$= \ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C.$
+```
+
+In this example, the deduction from the equality of rational functions to the equality of their numerators is not for a single fixed $x$. It's based on the premise that the two rational functions are identical, which implies their corresponding polynomial numerators are also identical. Therefore, $x$ is a "mutable" variable, and an outer `Fix {x}` should not be used. Instead, `$\forall x$` should be added to each relevant line.
+
+Other points to note:
+(1) This example involves the method of undetermined coefficients. The essence of this method is to "solve for" the unknown parameters, so a `Find` node is used.
+(2) When adding `$\forall x$` for the retionals, the strictly precise statement is `$\forall x\in \R\setminus\{1,-1,2\}, ...$` because the denominator cannot be zero. However, this level of arithmetic reasoning violates the Information Equivalency Principle. We allow the simpler `$\forall x$`, treating the domain restriction as an inherent property of the fraction.
+(3) The expression `$\ln |(x+1)(x-1)^5| - \dots + C$` contains free variables $x$ and $C$. It actually represents a family of functions, which could be strictly written as `$\{\lambda x.(\dots) \mid C\in \R\}$`. This is too cumbersome. We use a descriptive phrase like "function family ..." to resolve the free variables.
+
+**Correct Structure:**
+```json
 {
-	[Assume] {$T$ has a least upper bound in $\mathbb{Q}$}
-	{
-		[Obtain] {n, m} such that {$\sup T = \frac{n}{m}$}; {$m, n \in \mathbb{N}^*$}; {$m, n$ are coprime}
-		[Have] {$1 < \left( \frac{n}{m} \right)^2 < 3$}
-		[Have] {The square of a rational number cannot be 2}
-		[Hint] {There are only two possible cases:}
-		[Assume] {$1 < \left( \frac{n}{m} \right)^2 < 2$}
-		{
-			[Define] {t} as {$\frac{n^2}{m^2}=2-t$}
-			[Have] {$0 < t < 1$}
-			[Define] {r} as {$r=\frac{n}{6m}$}
-			[Have] {$n + r > 0$}
-			[Have] {$\frac{n + r}{m} \in \mathbb{Q}$}
-			[Have] {$\frac{n^2}{3m^2} t < \frac{2}{3}$}; {$\frac{2n}{m} - r < \frac{n}{18} t$}
-			[CalculationChain] {$\left( \frac{n + r}{m} \right)^2$} {=} {} {$\frac{n^2}{m^2} + \frac{2n}{m} r + r^2$} {=} {} {$2 - t + \frac{2n}{m} r + r^2$} {<} {} {2}
-			[Have] {$\frac{n + r}{m} \in T$}
-			[Have] {contradiction} by {$\frac{n}{m}$ is the least upper bound of $T$}
-		}
-		[Assume] {$2 < \left( \frac{n}{m} \right)^2 < 3$}
-		{
-			[Define] {t} as {$\frac{n^2}{m^2} = 2+t$}
-			[Have] {$0 < t < 1$}
-			[Define] {r} as {$r=\frac{n}{6m}$}
-			[Have] {$n - r > 0$}
-			[Have] {$\frac{n - r}{m} \in \mathbb{Q}$}
-			[Have] {$\frac{2n}{m} - r < \frac{n^2}{3m^2} t < 1$}
-			[CalculationChain] {$\left( \frac{n - r}{m} \right)^2$} {=} {} {$\frac{n^2}{m^2} - \frac{2n}{m} r + r^2$} {=} {} {$2 + t - \frac{2n}{m} r + r^2$} {>} {} {2}
-			[Have] {$\frac{n - r}{m}$ $\in$ $T$}
-			[Have] {contradiction} by {$\frac{n}{m}$ is the least upper bound of $T$}
-		}
-	}
-	[Have] {$T$ has no least upper bound in $\mathbb{Q}$}
+    "type": "Find",
+    "target": ["$\\int \\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$"],
+    "condition": null,
+    "scope": [
+        {
+            "type": "Hint",
+            "text": "First, decompose the integrand into a sum of simple fractions."
+        },
+        {
+            "type": "Find",
+            "target": ["$A$", "$B$", "$C$", "$D$"],
+            "condition": ["$\\forall x, \\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \\frac{A}{x+1} + \\frac{B}{x-2} + \\frac{C}{x-1} + \\frac{D}{(x-1)^2}$"],
+            "scope": [
+                {
+                    "type": "Have",
+                    "claim": ["$\\forall x, 4x^3 - 13x^2 + 3x + 8 = A(x-2)(x-1)^2 + B(x+1)(x-1)^2 + C(x+1)(x-2)(x-1) + D(x+1)(x-2)$"],
+                    "reason": ["combining the right-hand side over a common denominator, the numerators on both sides must be equal"]
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$A = 1$"],
+                    "reason": ["Let $x = -1$"]
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$B = -2$"],
+                    "reason": ["Let $x = 2$"]
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$D = -1$"],
+                    "reason": ["Let $x = 1$"]
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$C = 5$"],
+                    "reason": ["Differentiate both sides then let $x = 1$"]
+                }
+            ]
+        },
+        {
+            "type": "CalculationChain",
+            "initial_expression": ["$\\int \\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$"],
+            "steps": [
+                {
+                    "operator": "=",
+                    "expression": ["$\\int \\left[ \\frac{1}{x+1} - \\frac{2}{x-2} + \\frac{5}{x-1} - \\frac{1}{(x-1)^2} \\right]  dx$"],
+                    "reason": null
+                },
+                {
+                    "operator": "=",
+                    "expression": ["function family $\\ln |(x+1)(x-1)^5| - \\ln |(x-2)^2| + \\frac{1}{x-1} + C$"],
+                    "reason": null
+                }
+            ]
+        }
+    ]
 }
+```
 
-#### Mathematical Induction
+### Logical Clarification Principle
 
-The basic structure for mathematical induction is:
+In the examples so far, we have followed the Information Equivalency Principle and generally do not allow modifications deep inside the proposition's content. Modifications are usually limited to adding quantifiers externally or making references concrete.
 
-[Show] {$\forall n$, ...} using {mathematical induction}
+There is one specific scenario where we permit modifications inside a proposition: for the purpose of **"Logical Clarification"**.
+
+#### Example 1: Variable Dependencies
+
+Natural language has the characteristic that it does not always explicitly state the dependencies between variables. Often, some variables change in response to others, but this dependency is not written out using strict function notation. When encountering such cases during structure extraction, you must carefully identify and explicitly state these dependencies. Note that this is not the addition of redundant information, but a necessary clarification of existing information.
+
+**Natural language text:**
+"""
+Suppose $f(x)$ is continuous on $[0,1]$ , prove that: $\lim_{h \to 0^+} \int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \frac{\pi}{2} f(0)$
+
+Pf:
+$\int_0^1 \frac{h}{h^2 + x^2} f(x) dx = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx + \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
+令$I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx$, $I_2 = \int_{h^{1/4}}^1 \frac{hf(x)}{h^2 + x^2} dx$
+where $I_1 = \int_0^{h^{1/4}} \frac{hf(x)}{h^2 + x^2} dx = f(\xi) \int_0^{h^{1/4}} \frac{h}{h^2 + x^2} dx \quad (0 \leq \xi \leq h^{1/4})$
+$= f(\xi) \arctan \frac{x}{h} \Big|_0^{h^{1/4}} = f(\xi) \arctan \frac{1}{h^{3/4}} \to f(0)\dfrac{\pi}{2} \quad (h \to 0^+)$
+$|I_2| = \left| \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} f(x) dx \right| \leq M \int_{h^{1/4}}^1 \frac{h}{h^2 + x^2} dx(\quad |f(x)|\leq M\quad)$
+$= M \left( \arctan \frac{1}{h} - \arctan \frac{1}{h^{3/4}} \right) \to 0 \quad (h \to 0^+)$
+Hence $h\to 0^+$时$I_1+I_2\to f(0)\dfrac{\pi}{2}$
+Qed.
+"""
+
+First, it is clear that $h$ in this proof is not a fixed constant, so an outer `Fix h` node cannot be used. The logic of the proof is to split the function of $h$ (the integral $\int_0^1 \frac{h}{h^2 + x^2} f(x) dx$) into two parts and then calculate the limit of each part. From this, it is clear that $I_1$ and $I_2$ are both functions of $h$. However, the natural language does not use the notation $I_1(h)$ and $I_2(h)$, writing them simply as $I_1$ and $I_2$. Therefore, according to the principle "DO add type/domain for the variables", you must define $I_1$ and $I_2$ as functions when using the `Define` node.
+
+Similarly, $\xi$ is not a real number but a function of $h$, and this must also be pointed out in the `Obtain` node.
+
+The text also omits the range of $h$. From the context, we can infer that $h$ only needs to be in a right neighborhood of 0. We can make this specific, we can write $\forall h \in (0,1/2)$, or express it in natural language like "for all $h$ in a right neighborhood of $0$".
+
+Additionally, the two limit calculations in this example might seem suitable for a `CalculationChain`. However, because the process involves obtaining variables like $\xi$ and $M$, using a `CalculationChain` would make handling free variables more complicated. Therefore, we have opted not to use a chain structure here.
+
+```json
 {
-	[Have] {(Base Case)} or [Show] {(Base Case)} ...
-	[Fix] {$n$(or $k$)} such that {(Induction Hypothesis)}
-	{
-		...
-	}
+    "type": "Fix",
+    "variable": ["$f$"],
+    "condition": ["$f:\\R \\to \\R$", "$f(x)$ is continuous on $[0,1]$"],
+    "scope": [
+        {
+            "type": "Show",
+            "proposition": ["$\\lim_{h \\to 0^+} \\int_0^1 \\frac{h}{h^2 + x^2} f(x) dx = \\frac{\\pi}{2} f(0)$"],
+            "method": null,
+            "scope": [
+                {
+                    "type": "Have",
+                    "claim": ["$\\forall h \\in (0,1/2), \\int_0^1 \\frac{h}{h^2 + x^2} f(x) dx = \\int_0^{h^{1/4}} \\frac{hf(x)}{h^2 + x^2} dx + \\int_{h^{1/4}}^1 \\frac{hf(x)}{h^2 + x^2} dx$"],
+                    "reason": null
+                },
+                {
+                    "type": "Define",
+                    "term": "$I_1$",
+                    "definition": "$\\forall h \\in (0,1/2), I_1(h)=\\int_0^{h^{1/4}} \\frac{hf(x)}{h^2 + x^2} dx$"
+                },
+                {
+                    "type": "Define",
+                    "term": "$I_2$",
+                    "definition": "$\\forall h \\in (0,1/2), I_2(h)=\\int_{h^{1/4}}^1 \\frac{hf(x)}{h^2 + x^2} dx$"
+                },
+                {
+                    "type": "Obtain",
+                    "obtained_variable": ["$\\xi$"],
+                    "condition": [
+                        "$\\xi:\\R\\to \\R \\land \\forall h\\in (0,1/2),\\xi(h)\\in [0, h^{1/4}]$",
+                        "$\\forall h\\in (0,1/2),I_1(h) = \\int_0^{h^{1/4}} \\frac{hf(x)}{h^2 + x^2} dx = f(\\xi(h)) \\int_0^{h^{1/4}} \\frac{h}{h^2 + x^2} dx$"
+                    ],
+                    "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$\\forall h \\in (0,1/2),f(\\xi(h)) \\int_0^{h^{1/4}} \\frac{h}{h^2 + x^2} dx = f(\\xi(h)) \\arctan \\frac{x}{h} \\Big|_0^{h^{1/4}} = f(\\xi(h)) \\arctan \\frac{1}{h^{3/4}}$"],
+                    "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$\\lim_{h \\to 0^+} f(\\xi(h)) \\arctan \\frac{1}{h^{3/4}} = f(0)\\dfrac{\\pi}{2}$"],
+                    "reason": null
+                },
+                {
+                    "type": "Obtain",
+                    "obtained_variable": ["$M$"],
+                    "condition": ["$M \\in \\R$", "$\\forall x \\in [0,1],|f(x)|\\leq M$"],
+                    "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$\\forall h \\in (0,1/2),|I_2(h)| = \\left| \\int_{h^{1/4}}^1 \\frac{h}{h^2 + x^2} f(x) dx \\right| \\leq M \\int_{h^{1/4}}^1 \\frac{h}{h^2 + x^2} dx$"],
+                    "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$\\forall h \\in (0,1/2),M \\int_{h^{1/4}}^1 \\frac{h}{h^2 + x^2} dx = M \\left( \\arctan \\frac{1}{h} - \\arctan \\frac{1}{h^{3/4}} \\right)$"],
+                    "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$\\lim_{h \\to 0^+} M \\left( \\arctan \\frac{1}{h} - \\arctan \\frac{1}{h^{3/4}} \\right) = 0$"],
+                    "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["$\\lim_{h \\to 0^+} (I_1(h) + I_2(h)) = f(0)\\dfrac{\\pi}{2}$"],
+                    "reason": null
+                }
+            ]
+        }
+    ]
 }
+```
 
-The expressions of mathematical induction in natural language are diverse. However, for ease of processing, we prefer to uniformly treat mathematical induction as the two formats above (for this purpose, slight modifications to the original text are usually necessary, and we believe such modifications should be allowed here).
+#### Example 2: Induction
 
-Example 1:
+Induction is another case that is logically clear but can be expressed in various ways in natural language. Generally, we adopt the following basic structure to represent induction:
 
-> $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
-> Proof:
-> We prove by mathematical induction.
-> When $n = 1$, the equality holds.
-> Assume the equality holds for $n = k$.
-> Then for $n = k + 1$, we have
-> $1 + 2 + \cdots + k + (k + 1) = \frac{k(k + 1)}{2} + k + 1 = \frac{(k + 1)[(k + 1) + 1]}{2}$.
-> Thus, the equality also holds for $n = k + 1$.
-> Therefore, for any positive integer $n$, we have $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
-
-The structure is as follows:
-
-[Show] {$\forall n \in \N^*, 1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$} using {mathematical induction}
+```json
 {
-	[Have] {When $n = 1$, $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds}
-	[Fix] {$k$} such that {$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds for $n=k$}
-	{
-		[Have] {$1 + 2 + \cdots + k + (k + 1) = \frac{k(k + 1)}{2} + k + 1 = \frac{(k + 1)[(k + 1) + 1]}{2}$}
-		[Have] {$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds for $n = k + 1$}
-	}
+    "type": "Show",
+    "proposition": ["$\\forall n$, ..."],
+    "method": ["mathematical induction"],
+    "scope": [
+        {
+            "type": "Have",
+            "claim": ["(Base Case)"],
+            "reason": null
+        },
+        {
+            "type": "Fix",
+            "variable": ["$n$"(or "$k$")],
+            "condition": ["(Induction Hypothesis)"],
+            "scope": [
+                ...
+            ]
+        }
+    ]
 }
-[Have] {for any positive integer $n$, $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$}
+```
 
-> This example does not violate the "No Free Variables" principle because in the expression "$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds for $n=k$", $n$ is not a free variable but a temporary variable used for substitution. Note that we are not substituting $n=k$ into $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$, but rather keeping the whole expression "$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds for $n=k$". Because when the proposition is complex, the substitution operation may not be trivial, so we follow the "Information Equivalence" principle and retain the original expression.
+**Induction using an explicit variable `k`:**
+"""
+$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
+Proof: 
+We prove by mathematical induction. 
+When $n = 1$, the equality holds. 
+Assume the equality holds for $n = k$. 
+Then for $n = k + 1$, we have 
+$1 + 2 + \cdots + k + (k + 1) = \frac{k(k + 1)}{2} + k + 1 = \frac{(k + 1)[(k + 1) + 1]}{2}$. 
+Thus, the equality also holds for $n = k + 1$. 
+Therefore, for any positive integer $n$, we have $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
+"""
 
-Example 2:
+```json
+[
+    {
+        "type": "Show",
+        "proposition": ["$\\forall n \\in \\N^*, 1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$"],
+        "method": ["mathematical induction"],
+        "scope": [
+            {
+                "type": "Have",
+                "claim": ["When $n = 1$, $1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$ holds"],
+                "reason": null
+            },
+            {
+                "type": "Fix",
+                "variable": ["$k$"],
+                "condition": ["$1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$ holds for n=k"],
+                "scope": [
+                    {
+                        "type": "Have",
+                        "claim": ["$1 + 2 + \\cdots + k + (k + 1) = \\frac{k(k + 1)}{2} + k + 1 = \\frac{(k + 1)[(k + 1) + 1]}{2}$"],
+                        "reason": null
+                    },
+                    {
+                        "type": "Have",
+                        "claim": ["$1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$ holds for n = k + 1"],
+                        "reason": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "Have",
+        "claim": ["for any positive integer $n$, $1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$"],
+        "reason": null
+    }
+]
+```
 
-> $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
-> Proof:
-> We prove by mathematical induction.
-> When $n = 1$, the equality holds.
-> Assume the equality holds for $n$.
-> Then
-> $1 + 2 + \cdots + n + (n + 1) = \frac{n(n + 1)}{2} + n + 1 = \frac{(n + 1)[(n + 1) + 1]}{2}$.
-> Thus, the equality also holds for $n + 1$.
-> Therefore, for any positive integer $n$, we have $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
+**Induction reusing the variable `n`:**
+"""
+$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
+Proof: 
+We prove by mathematical induction. 
+When $n = 1$, the equality holds. 
+Assume the equality holds for $n$. 
+Then 
+$1 + 2 + \cdots + n + (n + 1) = \frac{n(n + 1)}{2} + n + 1 = \frac{(n + 1)[(n + 1) + 1]}{2}$. 
+Thus, the equality also holds for $n + 1$. 
+Therefore, for any positive integer $n$, we have $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$.
+"""
 
-The structure is as follows:
+```json
+[
+    {
+        "type": "Show",
+        "proposition": ["$\\forall n \\in \\N^*, 1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$"],
+        "method": ["mathematical induction"],
+        "scope": [
+            {
+                "type": "Have",
+                "claim": ["When $n = 1$, $1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$ holds"],
+                "reason": null
+            },
+            {
+                "type": "Fix",
+                "variable": ["$n$"],
+                "condition": ["$1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$"],
+                "scope": [
+                    {
+                        "type": "Have",
+                        "claim": ["$1 + 2 + \\cdots + n + (n + 1) = \\frac{n(n + 1)}{2} + n + 1 = \\frac{(n + 1)[(n + 1) + 1]}{2}$"],
+                        "reason": null
+                    },
+                    {
+                        "type": "Have",
+                        "claim": ["$1 + 2 + \\cdots + n+(n+1) = \\frac{(n+1)((n+1) + 1)}{2}$"],
+                        "reason": null
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "type": "Have",
+        "claim": ["for any positive integer $n$, $1 + 2 + \\cdots + n = \\frac{n(n + 1)}{2}$"],
+        "reason": null
+    }
+]
+```
 
-[Show] {$\forall n \in \N^*, 1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$} using {mathematical induction}
-{
-	[Have] {When $n = 1$, $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$ holds}
-	[Fix] {$n$} such that {$1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$}
-	{
-		[Have] {$1 + 2 + \cdots + n + (n + 1) = \frac{n(n + 1)}{2} + n + 1 = \frac{(n + 1)[(n + 1) + 1]}{2}$}
-		[Have] {$1 + 2 + \cdots + n+(n+1) = \frac{(n+1)((n+1) + 1)}{2}$}
-	}
-}
-[Have] {for any positive integer $n$, $1 + 2 + \cdots + n = \frac{n(n + 1)}{2}$}
+(Remark: In the latter type of induction that reuses `n` instead of introducing `k`, we need to substitute the concrete proposition for the phrase "the equality also holds for n+1". However, this does not require extra calculation, as the resulting expression is usually available from the preceding step.)
 
-> In this type of induction expression that does not introduce a variable $k$ for induction, we need to substitute for "the equality also holds for $n + 1$", but this does not require extra calculation because the expression after substitution has already been obtained in the previous step.
+## Comprehensive Examples
 
-#### Comprehensive Examples
+### Example 1: Cauchy Convergence Theorem
 
-> **Theorem 4** (Schröder-Bernstein's Theorem). If $f: A \to B$ and $g: B \to A$ are both injections, then there is a bijection from $A$ into $B$.
+**(Reference)** As detailed in the "Accurate Node-Type Identification Principle" section, this proof is an excellent example of handling "Actions as Reasons", quantifier scoping (`Fix`, `Obtain`), and making logical clarifications explicit. Please refer back to its full text and structure as an important example to study.
+
+### Example 2: Schröder-Bernstein's Theorem
+
+**Natural language text:**
+"""
+**Theorem 4** (Schröder-Bernstein's Theorem). If $f: A \to B$ and $g: B \to A$ are both injections, then there is a bijection from $A$ into $B$.
 **Proof.**
 Suppose $f: A \to B, g: B \to A$ are injections. Let’s construct the bijection $h$ from $A$ into $B$.
 $$C_0 = \{ a \in A \mid \forall b \in B. \, g(b) \neq a \}$$
@@ -1454,237 +1982,245 @@ b, \, \text{such that} \, g(b) = a, & \text{if} \, a \in A \setminus \bigcup_{i=
 Obviously, the $f$ part is a bijection from $C_n$ into $D_n$.
 So we just need to prove that the $g$ part is a bijection from $D := B \setminus \bigcup_{i=0}^{\infty} D_i$ into $C := A \setminus \bigcup_{i=0}^{\infty} C_i$.
 Thus, it is suffice to prove: (1) $\forall d \in D. \, \exists c \in C. \, g(d) = c$ and (2) $\forall c \in C. \, \exists d \in D. \, g(d) = c$.
-> - $\forall d \in D. \exists c \in C. g(d) = c$.
+
+- $\forall d \in D. \exists c \in C. g(d) = c$.
   As $g$ is an injection from $B$ into $A$, $\exists c \in A, g(d) = c$.
   Let prove $c \notin C_n$.
   Suppose $c \in C_n$.
-  	- $n = 0$, Obviously contradiction.
-  	- $n = m + 1$, $c \in C_{m+1} \Rightarrow d \in D_m$, contradiction.
-  Therefore, $c \in C$.
-> - $\forall c \in C. \exists d \in D. g(d) = c$.
+  - $n = 0$, Obviously contradiction.
+  - $n = m + 1$, $c \in C_{m+1} \Rightarrow d \in D_m$, contradiction.
+    Therefore, $c \in C$.
+- $\forall c \in C. \exists d \in D. g(d) = c$.
   $\exists d \in B. g(d) = c$. Otherwise, $c \in C_0$, contradiction.
   Let’s prove $d \notin D_n$.
   Suppose $d \in D_n$, so that $c \in C_{n+1}$, contradiction.
   Therefore, $d \in D$.
   Qed.
-
-This examples involves constructive proving, inductive definition, case analysis and proof by contradiction.
-
-[Hint] {Theorem 4 (Schröder-Bernstein's Theorem)}
-[Fix] {$A, B$} such that {$A, B$ are sets}
-{
-	[Fix] {$f, g$} such that {$f: A \to B$ is an injection}; {$g: B \to A$ is an injection}
-	{
-		[Show] {there is a bijection from $A$ into $B$}
-		{
-			[Define] {$C_0$} as {$\{ a \in A \mid \forall b \in B, g(b) \neq a \}$}
-			[Define] {$D_0$} as {$\{ f(a) \mid a \in C_0 \}$}
-			[Define] {$C_1$} as {$\{ a \in A \setminus C_0 \mid \forall b \in B \setminus D_0, g(b) \neq a \}$}
-			[Have] {$C_1 = \{ g(b) \mid b \in D_0 \}$}
-			[Define] {$D_1$} as {$\{ f(a) \mid a \in C_1 \}$}
-			[Define] {set sequence $\{C_{n}\}$} as {$\forall n>1,C_{n+1}=\{ a \in A \setminus \bigcup_{i=0}^{n} C_i \mid \forall b \in B \setminus \bigcup_{i=0}^{n} D_i, g(b) \neq a \}$}
-			[Define] {set sequence $\{D_{n}\}$} as {$\forall n>1,D_{n+1}=\{ f(a) \mid a \in C_{n+1} \}$}
-			[Have] {$\forall n \in \N, C_{n+1} = \{ g(b) \mid b \in D_n \}$} by {similarly}
-			[Define] {$h$} as {function $h: A \to B$ such that for any $a \in A$, $h(a) := \begin{cases} f(a), & \text{if } a \in \bigcup_{i=0}^{\infty} C_i \\ b, \text{ such that } g(b) = a, & \text{if } a \in A \setminus \bigcup_{i=0}^{\infty} C_i \end{cases}$}
-			[Have] {$\forall n$, the restriction of $f$ to $C_n$ is a bijection onto $D_n$}
-			[Define] {$C$} as {$A \setminus \bigcup_{i=0}^{\infty} C_i$}
-			[Define] {$D$} as {$B \setminus \bigcup_{i=0}^{\infty} D_i$}
-			[SufficeToProve] {$\forall d \in D. \, \exists c \in C. \, g(d) = c$};{$\forall c \in C. \, \exists d \in D. \, g(d) = c$.}
-			[Show] {$\forall d \in D. \, \exists c \in C. \, g(d) = c$}
-			{
-				[Fix] {$d$} such that {$d \in D$}
-				{
-					[Obtain] {$c$} such that {$c \in A$}; {$g(d) = c$} by {$g$ is a function from $B$ into $A$}
-					[Show] {$\forall n,c \notin C_n$} using {contradiction}
-					{
-						[Fix] {$n$} such that $n \in \N$
-						{
-							[Assume] {$c \in C_n$}
-							{
-								[Assume] {$n=0$}
-								{
-									[Have] {contradiction}
-								}
-								[Assume] {$n=m+1$ for some $m \in \N$}
-								{
-									[Have] {$c \in C_{m+1}\implies d \in D_m$}
-									[Have] {contradiction}
-								}
-							}
-						}
-					}
-					[Have] {$c \in C$}
-				}
-				[Show] {$\forall c \in C, \exists d \in D, g(d) = c$}
-				{
-					[Fix] {$c$} such that {$c \in C$}
-					{
-						[Obtain] {$d$} such that {$d \in B$}; {$g(d) = c$} by {otherwise $c \in C_0$, contradiction}
-						[Show] {$\forall n,d \notin D_n$} using {contradiction}
-						{
-							[Fix] {$n$} such that $n \in \N$
-							{
-								[Assume] {$d \in D_n$}
-								{
-									[Have] {$c \in C_{n+1}$}
-									[Have] {contradiction}
-								}
-							}
-						}
-						[Have] {$d \in D$}
-					}
-				}
-			}
-		}
-	}
-}
-
-Here's another comprehensive example in Group Theory:
-
-> **Theorem**
->
-> Let $G$ be a group which acts on a finite set $X$.
->
-> Let $x \in X$.
->
-> Let $\text{Orb}(x)$ denote the orbit of $x$.
->
-> Let $\text{Stab}(x)$ denote the stabilizer of $x$ by $G$.
->
-> Let $[G : \text{Stab}(x)]$ denote the index of $\text{Stab}(x)$ in $G$.
->
-> Then:
->
-> $$|\text{Orb}(x)| = [G : \text{Stab}(x)] = \frac{|G|}{|\text{Stab}(x)|}$$
->
-> **Proof**
->
-> Let us define the mapping:
->
-> $a : G \to \text{Orb}(x)$
->
-> such that:
->
-> $a(g) = g * x$
->
-> where $*$ denotes the group action.
->
-> It is clear that $a$ is surjective, because from the definition $x$ was acted on by all the elements of $G$.
->
-> Next, from Stabilizer is Subgroup: Corollary:
->
-> $a(g) = a(h) \iff g^{-1}h \in \text{Stab}(x)$
->
-> This means:
->
-> $g \equiv h \pmod{\text{Stab}(x)}$
->
-> Thus there is a well-defined bijection:
->
-> $G / \text{Stab}(x) \to \text{Orb}(x)$
->
-> given by:
->
-> $g \text{Stab}(x) \mapsto g * x$
->
-> So $\text{Orb}(x)$ has the same number of elements as $G / \text{Stab}(x)$.
->
-> That is:
->
-> $|\text{Orb}(x)| = [G : \text{Stab}(x)]$
->
-> The result follows.
+"""
 
 ```json
-{
-  "structure": [
+[
     {
-      "type": "Hint",
-      "text": "Theorem"
+        "type": "Hint",
+        "text": "Theorem 4 (Schröder-Bernstein's Theorem)"
     },
     {
-      "type": "Fix",
-      "variable": ["$G$", "$X$"],
-      "condition": ["$G$ is a group", "$X$ is a finite set", "$G$ acts on $X$"],
-      "scope": [
-        {
-          "type": "Fix",
-          "variable": ["$x$"],
-          "condition": ["$x \\in X$"],
-          "scope": [
+        "type": "Fix",
+        "variable": ["$A$", "$B$"],
+        "condition": ["$A$, $B$ are sets"],
+        "scope": [
             {
-              "type": "Define",
-              "term": "$\\text{Orb}(x)$",
-              "definition": "the orbit of $x$"
-            },
-            {
-              "type": "Define",
-              "term": "$\\text{Stab}(x)$",
-              "definition": "the stabilizer of $x$ by $G$"
-            },
-            {
-              "type": "Define",
-              "term": "$[G : \\text{Stab}(x)]$",
-              "definition": "the index of $\\text{Stab}(x)$ in $G$"
-            },
-            {
-              "type": "Show",
-              "proposition": ["$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$"],
-              "method": null,
-              "scope": [
-                {
-                  "type": "Define",
-                  "term": "$a$",
-                  "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $\\forall g\\in G,a(g) = g * x$, where $*$ denotes the group action"
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$a$ is surjective"],
-                  "reason": ["the definition x was acted on by all the elements of $G$"]
-                },
-                {
-                  "type": "Fix",
-                  "variable": ["$g$", "$h$"],
-                  "condition": ["$g, h \\in G$"],
-                  "scope": [
+                "type": "Fix",
+                "variable": ["$f$", "$g$"],
+                "condition": ["$f: A \\to B$ is an injection", "$g: B \\to A$ is an injection"],
+                "scope": [
                     {
-                      "type": "Have",
-                      "claim": ["$a(g) = a(h) \\iff g^{-1}h \\in \\text{Stab}(x)$"],
-                      "reason": ["Stabilizer is Subgroup: Corollary"]
-                    },
-                    {
-                      "type": "Have",
-                      "claim": ["$g^{-1}h \\in \\text{Stab}(x) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"],
-                      "reason": null
+                        "type": "Show",
+                        "proposition": ["there is a bijection from $A$ into $B$"],
+                        "method": null,
+                        "scope": [
+                            {
+                                "type": "Define",
+                                "term": "$C_0$",
+                                "definition": "$C_0=\\{ a \\in A \\mid \\forall b \\in B, g(b) \\neq a \\}$"
+                            },
+                            {
+                                "type": "Define",
+                                "term": "$D_0$",
+                                "definition": "$D_0=\\{ f(a) \\mid a \\in C_0 \\}$"
+                            },
+                            {
+                                "type": "Define",
+                                "term": "$C_1$",
+                                "definition": "$C_1=\\{ a \\in A \\setminus C_0 \\mid \\forall b \\in B \\setminus D_0, g(b) \\neq a \\}$"
+                            },
+                            {
+                                "type": "Have",
+                                "claim": ["$C_1 = \\{ g(b) \\mid b \\in D_0 \\}$"],
+                                "reason": null
+                            },
+                            {
+                                "type": "Define",
+                                "term": "$D_1$",
+                                "definition": "$D_1=\\{ f(a) \\mid a \\in C_1 \\}$"
+                            },
+                            {
+                                "type": "Define",
+                                "term": "set sequence $\\{C_{n}\\}$",
+                                "definition": "$\\forall n>1,C_{n+1}=\\{ a \\in A \\setminus \\bigcup_{i=0}^{n} C_i \\mid \\forall b \\in B \\setminus \\bigcup_{i=0}^{n} D_i, g(b) \\neq a \\}$"
+                            },
+                            {
+                                "type": "Define",
+                                "term": "set sequence $\\{D_{n}\\}$",
+                                "definition": "$\\forall n>1,D_{n+1}=\\{ f(a) \\mid a \\in C_{n+1} \\}$"
+                            },
+                            {
+                                "type": "Have",
+                                "claim": ["$\\forall n \\in \\N, C_{n+1} = \\{ g(b) \\mid b \\in D_n \\}$"],
+                                "reason": ["similarly"]
+                            },
+                            {
+                                "type": "Define",
+                                "term": "$h$",
+                                "definition": "function $h: A \\to B$ such that for any $a \\in A$, $h(a) := \\begin{cases} f(a), & \\text{if } a \\in \\bigcup_{i=0}^{\\infty} C_i \\\\ b, \\text{ such that } g(b) = a, & \\text{if } a \\in A \\setminus \\bigcup_{i=0}^{\\infty} C_i \\end{cases}$"
+                            },
+                            {
+                                "type": "Have",
+                                "claim": ["$\\forall n$, the restriction of $f$ to $C_n$ is a bijection onto $D_n$"],
+                                "reason": null
+                            },
+                            {
+                                "type": "Define",
+                                "term": "$C$",
+                                "definition": "$A \\setminus \\bigcup_{i=0}^{\\infty} C_i$"
+                            },
+                            {
+                                "type": "Define",
+                                "term": "$D$",
+                                "definition": "$B \\setminus \\bigcup_{i=0}^{\\infty} D_i$"
+                            },
+                            {
+                                "type": "SufficesToProve",
+                                "sufficient_proposition": [
+                                    "$\\forall d \\in D, \\exists c \\in C, g(d) = c$",
+                                    "$\\forall c \\in C, \\exists d \\in D, g(d) = c$"
+                                ],
+                                "reason": null
+                            },
+                            {
+                                "type": "Show",
+                                "proposition": ["$\\forall d \\in D, \\exists c \\in C, g(d) = c$"],
+                                "method": null,
+                                "scope": [
+                                    {
+                                        "type": "Fix",
+                                        "variable": ["$d$"],
+                                        "condition": ["$d \\in D$"],
+                                        "scope": [
+                                            {
+                                                "type": "Obtain",
+                                                "obtained_variable": ["$c$"],
+                                                "condition": ["$c \\in A$", "$g(d) = c$"],
+                                                "reason": ["$g$ is a function from $B$ into $A$"]
+                                            },
+                                            {
+                                                "type": "Show",
+                                                "proposition": ["$\\forall n, c \\notin C_n$"],
+                                                "method": ["contradiction"],
+                                                "scope": [
+                                                    {
+                                                        "type": "Fix",
+                                                        "variable": ["$n$"],
+                                                        "condition": ["$n \\in \\N$"],
+                                                        "scope": [
+                                                            {
+                                                                "type": "Assume",
+                                                                "assumption": ["$c \\in C_n$"],
+                                                                "scope": [
+                                                                    {
+                                                                        "type": "Assume",
+                                                                        "assumption": ["$n=0$"],
+                                                                        "scope": [
+                                                                            {
+                                                                                "type": "Have",
+                                                                                "claim": ["contradiction"],
+                                                                                "reason": null
+                                                                            }
+                                                                        ]
+                                                                    },
+                                                                    {
+                                                                        "type": "Assume",
+                                                                        "assumption": ["$n=m+1$ for some $m \\in \\N$"],
+                                                                        "scope": [
+                                                                            {
+                                                                                "type": "Have",
+                                                                                "claim": ["$c \\in C_{m+1} \\implies d \\in D_m$"],
+                                                                                "reason": null
+                                                                            },
+                                                                            {
+                                                                                "type": "Have",
+                                                                                "claim": ["contradiction"],
+                                                                                "reason": null
+                                                                            }
+                                                                        ]
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "Have",
+                                                "claim": ["$c \\in C$"],
+                                                "reason": null
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "Show",
+                                "proposition": ["$\\forall c \\in C, \\exists d \\in D, g(d) = c$"],
+                                "method": null,
+                                "scope": [
+                                    {
+                                        "type": "Fix",
+                                        "variable": ["$c$"],
+                                        "condition": ["$c \\in C$"],
+                                        "scope": [
+                                            {
+                                                "type": "Obtain",
+                                                "obtained_variable": ["$d$"],
+                                                "condition": ["$d \\in B$", "$g(d) = c$"],
+                                                "reason": ["otherwise $c \\in C_0$, contradiction"]
+                                            },
+                                            {
+                                                "type": "Show",
+                                                "proposition": ["$\\forall n, d \\notin D_n$"],
+                                                "method": ["contradiction"],
+                                                "scope": [
+                                                    {
+                                                        "type": "Fix",
+                                                        "variable": ["$n$"],
+                                                        "condition": ["$n \\in \\N$"],
+                                                        "scope": [
+                                                            {
+                                                                "type": "Assume",
+                                                                "assumption": ["$d \\in D_n$"],
+                                                                "scope": [
+                                                                    {
+                                                                        "type": "Have",
+                                                                        "claim": ["$c \\in C_{n+1}$"],
+                                                                        "reason": null
+                                                                    },
+                                                                    {
+                                                                        "type": "Have",
+                                                                        "claim": ["contradiction"],
+                                                                        "reason": null
+                                                                    }
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                "type": "Have",
+                                                "claim": ["$d \\in D$"],
+                                                "reason": null
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
-                  ]
-                },
-                {
-                  "type": "Have",
-                  "claim": ["there is a well-defined bijection from $G / \\text{Stab}(x)$ to $\\text{Orb}(x)$ given by $g \\text{Stab}(x) \\mapsto g * x$"],
-                  "reason": null
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$"],
-                  "reason": null
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$"],
-                  "reason": null
-                },
-                {
-                  "type": "Hint",
-                  "text": "The result follows."
-                }
-              ]
+                ]
             }
-          ]
-        }
-      ]
+        ]
     }
-  ]
-}
+]
 ```
 
+You have now been provided with the complete specification for extracting a Mathematical Structure. In all subsequent user requests, you must strictly adhere to all node definitions, principles, and examples outlined in this document. This document is your sole and definitive guide.

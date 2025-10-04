@@ -110,35 +110,37 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
         result_lines.append(line)
     
     elif node_type == "LogicChain":
-        initial_proposition = json_data.get("initial_proposition", "")
-        step = json_data.get("step", [])
+        initial_proposition = json_data.get("initial_proposition", []) 
+        steps = json_data.get("steps", [])                    
         
-        result_lines.append(f"{indent}[LogicChain] {{{initial_proposition}}}")
-        for s in step:
+        result_lines.append(f"{indent}[LogicChain] {{{_format_content(initial_proposition)}}}")
+        
+        for s in steps:
             operator = s.get("operator", "")
-            proposition = s.get("proposition", "")
-            reason = s.get("reason", "")
+            proposition = s.get("proposition", [])
+            reason = s.get("reason")             
             
-            step_line = f"{indent}    {operator} {{{proposition}}}"
+            step_line = f"{indent}    {operator} {{{_format_content(proposition)}}}"
             if reason:
-                step_line += f" by {{{reason}}}"
+                step_line += f" by {{{_format_content(reason)}}}"
             result_lines.append(step_line)
-    
+
     elif node_type == "CalculationChain":
-        initial_expression = json_data.get("initial_expression", "")
-        step = json_data.get("step", [])
+        initial_expression = json_data.get("initial_expression", [])
+        steps = json_data.get("steps", [])
         
-        result_lines.append(f"{indent}[CalculationChain] {{{initial_expression}}}")
-        for s in step:
+        result_lines.append(f"{indent}[CalculationChain] {{{_format_content(initial_expression)}}}")
+        
+        for s in steps:
             operator = s.get("operator", "")
-            expression = s.get("expression", "")
-            reason = s.get("reason", "")
+            expression = s.get("expression", [])
+            reason = s.get("reason")
             
-            step_line = f"{indent}    {operator} {{{expression}}}"
+            step_line = f"{indent}    {operator} {{{_format_content(expression)}}}"
             if reason:
-                step_line += f" by {{{reason}}}"
+                step_line += f" by {{{_format_content(reason)}}}"
             result_lines.append(step_line)
-    
+
     elif node_type == "Define":
         term = json_data.get("term", "")
         definition = json_data.get("definition", "")
@@ -154,7 +156,7 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
         result_lines.append(f"{indent}[PlaceHolder] {{{text}}}")
     
     else:
-        result_lines.append(f"{indent}{json.dumps(json_data, indent=2, ensure_ascii=False)}")
+        result_lines.append(f"{indent}Unhandled Node Type: {json.dumps(json_data, indent=2, ensure_ascii=False)}")
     
     return "\n".join(result_lines)
 
