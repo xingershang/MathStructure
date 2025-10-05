@@ -63,7 +63,114 @@
         "id": 2,
         "domain": "Abstract Algebra",
         "informal": "**Theorem**\n\nLet $G$ be a group which acts on a finite set $X$.\n\nLet $x \\in X$.\n\nLet $\\text{Orb}(x)$ denote the orbit of $x$.\n\nLet $\\text{Stab}(x)$ denote the stabilizer of $x$ by $G$.\n\nLet $[G : \\text{Stab}(x)]$ denote the index of $\\text{Stab}(x)$ in $G$.\n\nThen:\n\n$$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$$\n\n**Proof**\n\nLet us define the mapping:\n\n$a : G \\to \\text{Orb}(x)$\n\nsuch that:\n\n$a(g) = g * x$\n\nwhere $*$ denotes the group action.\n\nIt is clear that $a$ is surjective, because from the definition $x$ was acted on by all the elements of $G$.\n\nNext, from Stabilizer is Subgroup: Corollary:\n\n$a(g) = a(h) \\iff g^{-1}h \\in \\text{Stab}(x)$\n\nThis means:\n\n$g \\equiv h \\pmod{\\text{Stab}(x)}$\n\nThus there is a well-defined bijection:\n\n$G / \\text{Stab}(x) \\to \\text{Orb}(x)$\n\ngiven by:\n\n$g \\text{Stab}(x) \\mapsto g * x$\n\nSo $\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$.\n\nThat is:\n\n$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$\n\nThe result follows.",
-        "structure": []
+        "structure": {
+            "structure": [
+                {
+                    "type": "Hint",
+                    "text": "Theorem"
+                },
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$G$",
+                        "$X$"
+                    ],
+                    "condition": [
+                        "$G$ is a group",
+                        "$X$ is a finite set",
+                        "$G$ acts on $X$"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$x$"
+                            ],
+                            "condition": [
+                                "$x \\in X$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Define",
+                                    "term": "$\\text{Orb}(x)$",
+                                    "definition": "the orbit of $x$"
+                                },
+                                {
+                                    "type": "Define",
+                                    "term": "$\\text{Stab}(x)$",
+                                    "definition": "the stabilizer of $x$ by $G$"
+                                },
+                                {
+                                    "type": "Define",
+                                    "term": "$[G : \\text{Stab}(x)]$",
+                                    "definition": "the index of $\\text{Stab}(x)$ in $G$"
+                                },
+                                {
+                                    "type": "Show",
+                                    "proposition": [
+                                        "$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$"
+                                    ],
+                                    "method": null,
+                                    "scope": [
+                                        {
+                                            "type": "Define",
+                                            "term": "$a$",
+                                            "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $a(g) = g * x$, where $*$ denotes the group action"
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$a$ is surjective"
+                                            ],
+                                            "reason": [
+                                                "from the definition $x$ was acted on by all the elements of $G$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\forall g, h \\in G, a(g) = a(h) \\iff g^{-1}h \\in \\text{Stab}(x)$"
+                                            ],
+                                            "reason": [
+                                                "Stabilizer is Subgroup: Corollary"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\forall g, h \\in G, a(g) = a(h) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "there is a well-defined bijection a well-defined bijection $G / \\text{Stab}(x) \\to \\text{Orb}(x)$ given by $g \\text{Stab}(x) \\mapsto g * x$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 2,
@@ -122,8 +229,222 @@
     {
         "id": 3,
         "domain": "Abstract Algebra",
-        "informal": "Theorem\nLet $\\phi : G_1 \\to G_2$ be a group homomorphism.\nLet $\\ker(\\phi)$ be the kernel of $\\phi$.\n\nThen:\n\n$$\\mathrm{Img}(\\phi) \\cong G_1 / \\ker(\\phi)$$\n\nwhere $\\cong$ denotes group isomorphism.\n\nProof\nLet $K = \\ker(\\phi)$.\nBy Kernel is Normal Subgroup of Domain, $G_1 / K$ exists.\nWe need to establish that the mapping $\\theta : G_1 / K \\to G_2$ defined as:\n$$\\forall x \\in G_1 : \\theta(xK) = \\phi(x)$$\nis well-defined.\nThat is, we need to ensure that:\n$$\\forall x,y \\in G_1 : xK = yK \\implies \\theta(xK) = \\theta(yK)$$\n\nLet $x,y \\in G_1 : xK = yK$.\nThen:\n\n$xK = yK$\n$\\iff x^{-1} y \\in K = \\ker(\\phi) \\quad \\text{(Left Cosets are Equal iff Product with Inverse in Subgroup)}$\n$\\iff \\phi(x^{-1} y) = e_{G_2}$\n$\\iff (\\phi(x))^{-1} \\phi(y) = e_{G_2} $\n$\\iff \\phi(x) = \\phi(y)$\n\nThus we see that $\\theta$ is well-defined.\n\nWe also note that:\n\n$$\\mathrm{Img}(\\theta) = \\{\\theta(xK) : x \\in G\\}$$\n\nSo:\n\n$$\n\\mathrm{Img}(\\theta) = \\{\\theta(xK) : x \\in G\\} \\\\\n= \\{\\phi(x) : x \\in G\\} \\\\\n= \\mathrm{Img}(\\phi)\n$$\n\nWe also note that $\\theta$ is a homomorphism:\n\n$$\n\\forall x,y \\in G : \\quad \\theta(xK yK) \\\\\n= \\theta(xyK) \\\\\n= \\phi(xy) \\\\\n= \\phi(x) \\phi(y) \\\\\n= \\theta(xK) \\theta(yK)\n$$\n\nThus $\\theta$ is a monomorphism whose image equals $\\mathrm{Img}(\\phi)$.\n\nThe result follows.\n\n■",
-        "structure": []
+        "informal": "Theorem\nLet $\\phi : G_1 \\to G_2$ be a group homomorphism.\nLet $\\ker(\\phi)$ be the kernel of $\\phi$.\n\nThen:\n\n$$\\mathrm{Img}(\\phi) \\cong G_1 / \\ker(\\phi)$$\n\nwhere $\\cong$ denotes group isomorphism.\n\nProof\nLet $K = \\ker(\\phi)$.\nBy Kernel is Normal Subgroup of Domain, $G_1 / K$ exists.\nWe need to establish that the mapping $\\theta : G_1 / K \\to G_2$ defined as:\n$$\\forall x \\in G_1 : \\theta(xK) = \\phi(x)$$\nis well-defined.\nThat is, we need to ensure that:\n$$\\forall x,y \\in G_1 : xK = yK \\implies \\theta(xK) = \\theta(yK)$$\n\nLet $x,y \\in G_1 : xK = yK$.\nThen:\n\n$xK = yK$\n$\\iff x^{-1} y \\in K = \\ker(\\phi) \\quad \\text{(Left Cosets are Equal iff Product with Inverse in Subgroup)}$\n$\\iff \\phi(x^{-1} y) = e_{G_2}$\n$\\iff (\\phi(x))^{-1} \\phi(y) = e_{G_2} $\n$\\iff \\phi(x) = \\phi(y)$\n\nThus we see that $\\theta$ is well-defined.\n\nWe also note that:\n\n$$\\mathrm{Img}(\\theta) = \\{\\theta(xK) : x \\in G_1\\}$$\n\nSo:\n\n$$\n\\mathrm{Img}(\\theta) = \\{\\theta(xK) : x \\in G_1\\} \\\\\n= \\{\\phi(x) : x \\in G_1\\} \\\\\n= \\mathrm{Img}(\\phi)\n$$\n\nWe also note that $\\theta$ is a homomorphism:\n\n$$\n\\forall x,y \\in G_1 : \\quad \\theta(xK yK) \\\\\n= \\theta(xyK) \\\\\n= \\phi(xy) \\\\\n= \\phi(x) \\phi(y) \\\\\n= \\theta(xK) \\theta(yK)\n$$\n\nThus $\\theta$ is a monomorphism whose image equals $\\mathrm{Img}(\\phi)$.\n\nThe result follows.\n\n■",
+        "structure": {
+            "structure": [
+                {
+                    "type": "Hint",
+                    "text": "Theorem"
+                },
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$G_1$",
+                        "$G_2$",
+                        "$\\phi$"
+                    ],
+                    "condition": [
+                        "$G_1, G_2$ are groups",
+                        "$\\phi : G_1 \\to G_2$ is a group homomorphism"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Define",
+                            "term": "$\\ker(\\phi)$",
+                            "definition": "$\\ker(\\phi)$ is the kernel of $\\phi$"
+                        },
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "$\\mathrm{Img}(\\phi) \\cong G_1 / \\ker(\\phi)$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Define",
+                                    "term": "$K$",
+                                    "definition": "$K = \\ker(\\phi)$"
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$G_1 / K$ exists"
+                                    ],
+                                    "reason": [
+                                        "Kernel is Normal Subgroup of Domain"
+                                    ]
+                                },
+                                {
+                                    "type": "Define",
+                                    "term": "$\\theta$",
+                                    "definition": "the mapping $\\theta : G_1 / K \\to G_2$ such that $\\forall x \\in G_1, \\theta(xK) = \\phi(x)$"
+                                },
+                                {
+                                    "type": "Show",
+                                    "proposition": [
+                                        "$\\theta$ is well-defined, i.e., $\\forall x,y \\in G_1 : xK = yK \\implies \\theta(xK) = \\theta(yK)$"
+                                    ],
+                                    "method": null,
+                                    "scope": [
+                                        {
+                                            "type": "Fix",
+                                            "variable": [
+                                                "$x$",
+                                                "$y$"
+                                            ],
+                                            "condition": [
+                                                "$x, y \\in G_1$",
+                                                "$xK = yK$"
+                                            ],
+                                            "scope": [
+                                                {
+                                                    "type": "LogicChain",
+                                                    "initial_proposition": [
+                                                        "$xK = yK$"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": "⇔",
+                                                            "proposition": [
+                                                                "$x^{-1} y \\in K = \\ker(\\phi)$"
+                                                            ],
+                                                            "reason": [
+                                                                "Left Cosets are Equal iff Product with Inverse in Subgroup"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "operator": "⇔",
+                                                            "proposition": [
+                                                                "$\\phi(x^{-1} y) = e_{G_2}$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "⇔",
+                                                            "proposition": [
+                                                                "$(\\phi(x))^{-1} \\phi(y) = e_{G_2}$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "⇔",
+                                                            "proposition": [
+                                                                "$\\phi(x) = \\phi(y)$"
+                                                            ],
+                                                            "reason": null
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\theta$ is well-defined"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$\\mathrm{Img}(\\theta)$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "\\{\\theta(xK) : x \\in G_1\\}"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "\\{\\phi(x) : x \\in G_1\\}"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "\\mathrm{Img}(\\phi)"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Show",
+                                    "proposition": [
+                                        "$\\theta$ is a homomorphism"
+                                    ],
+                                    "method": null,
+                                    "scope": [
+                                        {
+                                            "type": "Fix",
+                                            "variable": [
+                                                "x",
+                                                "y"
+                                            ],
+                                            "condition": [
+                                                "x, y \\in G_1"
+                                            ],
+                                            "scope": [
+                                                {
+                                                    "type": "CalculationChain",
+                                                    "initial_expression": [
+                                                        "\\theta(xK yK)"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "\\theta(xyK)"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "\\phi(xy)"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "\\phi(x) \\phi(y)"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "\\theta(xK) \\theta(yK)"
+                                                            ],
+                                                            "reason": null
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\theta$ is a monomorphism whose image equals $\\mathrm{Img}(\\phi)$"
+                                    ],
+                                    "reason": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 3,

@@ -50,7 +50,7 @@
                 {
                   "type": "Define",
                   "term": "$a$",
-                  "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $a(g) = g * x$"
+                  "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $a(g) = g * x$, where $*$ denotes the group action"
                 },
                 {
                   "type": "Have",
@@ -75,31 +75,21 @@
                   "claim": [
                     "$\\forall g, h \\in G, a(g) = a(h) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"
                   ],
-                  "reason": [
-                    "This means"
-                  ]
+                  "reason": null
                 },
                 {
-                  "type": "Obtain",
-                  "obtained_variable": [
-                    "a well-defined bijection $f$"
+                  "type": "Have",
+                  "claim": [
+                    "there is a well-defined bijection a well-defined bijection $G / \\text{Stab}(x) \\to \\text{Orb}(x)$ given by $g \\text{Stab}(x) \\mapsto g * x$"
                   ],
-                  "condition": [
-                    "$f: G / \\text{Stab}(x) \\to \\text{Orb}(x)$",
-                    "The bijection is given by $g \\text{Stab}(x) \\mapsto g * x$"
-                  ],
-                  "reason": [
-                    "$\\forall g, h \\in G, a(g) = a(h) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"
-                  ]
+                  "reason": null
                 },
                 {
                   "type": "Have",
                   "claim": [
                     "$\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$"
                   ],
-                  "reason": [
-                    "the existence of a well-defined bijection from $G / \\text{Stab}(x)$ to $\\text{Orb}(x)$"
-                  ]
+                  "reason": null
                 },
                 {
                   "type": "Have",
@@ -107,15 +97,6 @@
                     "$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$"
                   ],
                   "reason": null
-                },
-                {
-                  "type": "Have",
-                  "claim": [
-                    "$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$"
-                  ],
-                  "reason": [
-                    "The result follows"
-                  ]
                 }
               ]
             }

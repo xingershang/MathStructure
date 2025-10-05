@@ -13,10 +13,14 @@
       ],
       "condition": [
         "$G_1, G_2$ are groups",
-        "$\\phi : G_1 \\to G_2$ is a group homomorphism",
-        "$\\ker(\\phi)$ is the kernel of $\\phi$"
+        "$\\phi : G_1 \\to G_2$ is a group homomorphism"
       ],
       "scope": [
+        {
+          "type": "Define",
+          "term": "$\\ker(\\phi)$",
+          "definition": "$\\ker(\\phi)$ is the kernel of $\\phi$"
+        },
         {
           "type": "Show",
           "proposition": [
@@ -202,15 +206,6 @@
                 "$\\theta$ is a monomorphism whose image equals $\\mathrm{Img}(\\phi)$"
               ],
               "reason": null
-            },
-            {
-              "type": "Have",
-              "claim": [
-                "$\\mathrm{Img}(\\phi) \\cong G_1 / \\ker(\\phi)$"
-              ],
-              "reason": [
-                "The result follows."
-              ]
             }
           ]
         }

@@ -111,7 +111,7 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
     
     elif node_type == "LogicChain":
         initial_proposition = json_data.get("initial_proposition", []) 
-        steps = json_data.get("steps", [])                    
+        steps = json_data.get("step", [])                    
         
         result_lines.append(f"{indent}[LogicChain] {{{_format_content(initial_proposition)}}}")
         
@@ -127,7 +127,7 @@ def pretty_print_structure(json_data: Union[Dict[str, Any], List[Dict[str, Any]]
 
     elif node_type == "CalculationChain":
         initial_expression = json_data.get("initial_expression", [])
-        steps = json_data.get("steps", [])
+        steps = json_data.get("step", [])
         
         result_lines.append(f"{indent}[CalculationChain] {{{_format_content(initial_expression)}}}")
         
