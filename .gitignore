@@ -3,4 +3,8 @@ input.json
 result_pretty.md
 result.json
 run_test.py 
+1004test_log.txt
+test_json_structure_checker.py
+test_pretty_print.py
+test_top_structure_extractor.py
 /test1004
