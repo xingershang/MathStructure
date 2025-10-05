@@ -53,7 +53,7 @@ def main():
             
             if has_placeholder == 0:
                 print("SUCCESS: No place_holder nodes found after iteration", current_iteration)
-                final_json = structure_result.model_dump_json(indent=2, exclude_none=True)
+                final_json = structure_result.model_dump_json(indent=2, exclude_none=True, exclude={'thinking'})
                 final_result = structure_result
                 print("FINAL RESULT:\n")
                 print(final_json)
@@ -65,7 +65,7 @@ def main():
                 
                 if current_iteration == MAX_PLACEHOLDER_ITERATIONS:
                     print(f"WARNING: Reached maximum iterations but still has placeholders. Saving current result.")
-                    final_json = structure_result.model_dump_json(indent=2, exclude_none=True)
+                    final_json = structure_result.model_dump_json(indent=2, exclude_none=True, exclude={'thinking'})
                     print("FINAL RESULT (with placeholders):\n")
                     print(final_json)
         
@@ -75,14 +75,14 @@ def main():
         if final_result:
             result_path = os.path.join(current_dir, "result.json")
             try:
-                result_dict = final_result.model_dump()
+                result_dict = final_result.model_dump(exclude={'thinking'})
                 
                 with open(result_path, 'w', encoding='utf-8') as f:
                     json.dump(result_dict, f, indent=2, ensure_ascii=False)
                 
                 # print(f"\nFinal result has been saved to: {result_path}")
 
-                result_json_str = final_result.model_dump_json(indent=2, exclude_none=True)
+                result_json_str = final_result.model_dump_json(indent=2, exclude_none=True, exclude={'thinking'})
                 pretty_result = pretty_print_json_structure(result_json_str)
                 result_pretty_path = os.path.join(current_dir, "result_pretty.md")
                 with open(result_pretty_path, 'w', encoding='utf-8') as f:
