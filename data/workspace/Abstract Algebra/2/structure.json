@@ -1,1 +1,108 @@
-[]
+{
+    "structure": [
+        {
+            "type": "Hint",
+            "text": "Theorem"
+        },
+        {
+            "type": "Fix",
+            "variable": [
+                "$G$",
+                "$X$"
+            ],
+            "condition": [
+                "$G$ is a group",
+                "$X$ is a finite set",
+                "$G$ acts on $X$"
+            ],
+            "scope": [
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$x$"
+                    ],
+                    "condition": [
+                        "$x \\in X$"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Define",
+                            "term": "$\\text{Orb}(x)$",
+                            "definition": "the orbit of $x$"
+                        },
+                        {
+                            "type": "Define",
+                            "term": "$\\text{Stab}(x)$",
+                            "definition": "the stabilizer of $x$ by $G$"
+                        },
+                        {
+                            "type": "Define",
+                            "term": "$[G : \\text{Stab}(x)]$",
+                            "definition": "the index of $\\text{Stab}(x)$ in $G$"
+                        },
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "$|\\text{Orb}(x)| = [G : \\text{Stab}(x)] = \\frac{|G|}{|\\text{Stab}(x)|}$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Define",
+                                    "term": "$a$",
+                                    "definition": "the mapping $a: G \\to \\text{Orb}(x)$ such that $a(g) = g * x$, where $*$ denotes the group action"
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$a$ is surjective"
+                                    ],
+                                    "reason": [
+                                        "from the definition $x$ was acted on by all the elements of $G$"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\forall g, h \\in G, a(g) = a(h) \\iff g^{-1}h \\in \\text{Stab}(x)$"
+                                    ],
+                                    "reason": [
+                                        "Stabilizer is Subgroup: Corollary"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\forall g, h \\in G, a(g) = a(h) \\iff g \\equiv h \\pmod{\\text{Stab}(x)}$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "there is a well-defined bijection a well-defined bijection $G / \\text{Stab}(x) \\to \\text{Orb}(x)$ given by $g \\text{Stab}(x) \\mapsto g * x$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\text{Orb}(x)$ has the same number of elements as $G / \\text{Stab}(x)$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$|\\text{Orb}(x)| = [G : \\text{Stab}(x)]$"
+                                    ],
+                                    "reason": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

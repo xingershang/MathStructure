@@ -30,20 +30,20 @@ Thus we see that $\theta$ is well-defined.
 
 We also note that:
 
-$$\mathrm{Img}(\theta) = \{\theta(xK) : x \in G\}$$
+$$\mathrm{Img}(\theta) = \{\theta(xK) : x \in G_1\}$$
 
 So:
 
 $$
-\mathrm{Img}(\theta) = \{\theta(xK) : x \in G\} \\
-= \{\phi(x) : x \in G\} \\
+\mathrm{Img}(\theta) = \{\theta(xK) : x \in G_1\} \\
+= \{\phi(x) : x \in G_1\} \\
 = \mathrm{Img}(\phi)
 $$
 
 We also note that $\theta$ is a homomorphism:
 
 $$
-\forall x,y \in G : \quad \theta(xK yK) \\
+\forall x,y \in G_1 : \quad \theta(xK yK) \\
 = \theta(xyK) \\
 = \phi(xy) \\
 = \phi(x) \phi(y) \\
