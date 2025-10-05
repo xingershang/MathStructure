@@ -17,10 +17,7 @@ class StructureExtractor:
             return f.read()
     
     def extract(self, user_text: str, system_prompt_path: str) -> Optional[Structure]:
-        system_template = self.load_prompt_template(system_prompt_path)
-        json_schema = self.validator.get_json_schema()
-        
-        system_prompt = system_template.replace("{fill_in_json_schema}", json_schema)
+        system_prompt = self.load_prompt_template(system_prompt_path)
         
         current_dir = os.path.dirname(os.path.abspath(__file__))
         user_prompt_path = os.path.join(current_dir, "..", "prompts", "structure_extractor_prompt.md")
