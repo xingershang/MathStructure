@@ -517,71 +517,6 @@ The content within the scope of these four nodes is generally:
 - Fix: The scope of a Fix node contains text content about the newly introduced variables;
 - Find: The scope of a Find node is the specific process of finding or solving;
 
-## A Simple Example
-
-We now present a simple example to show you how a correct structure of a natural language text looks like:
-
-**Natural language text**
-"""
-If $A \subseteq B$, then $\mathcal{P}(A) \subseteq \mathcal{P}(B)$:
-
-Pf: Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. Since $A \subseteq B$, it follows that $X \subseteq B$. Therefore, $X \in \mathcal{P}(B)$. Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$. Qed.
-"""
-
-**Structure**
-```json
-{
-  "structure": [
-    {
-      "type": "Fix",
-      "variable": ["$A$", "$B$"],
-      "condition": ["$A, B$ are sets", "$A \\subseteq B$"],
-      "scope": [
-        {
-          "type": "Show",
-          "proposition": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
-          "method": null,
-          "scope": [
-            {
-              "type": "Fix",
-              "variable": ["$X$"],
-              "condition": ["$X \\in \\mathcal{P}(A)$"],
-              "scope": [
-                {
-                  "type": "Have",
-                  "claim": ["$X \\subseteq A$"],
-                  "reason": ["definition of power set"]
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$X \\subseteq B$"],
-                  "reason": ["$A \\subseteq B$"]
-                },
-                {
-                  "type": "Have",
-                  "claim": ["$X \\in \\mathcal{P}(B)$"],
-                  "reason": null
-                }
-              ]
-            },
-            {
-              "type": "Have",
-              "claim": ["every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$"],
-              "reason": null
-            },
-            {
-              "type": "Have",
-              "claim": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
-              "reason": null
-            }
-          ]
-        }
-      ]
-    }
-  ]
-}
-```
-
 ## How to Extract Structure
 
 Given a piece of natural language text, due to the ambiguity of natural language, we cannot use a precise algorithm to extract the corresponding structure. We cannot precisely define whether a structure is the correct corresponding structure or not, either. However, we can summarize some key characteristics of a "good corresponding structure" as follows:
@@ -590,7 +525,7 @@ Given a piece of natural language text, due to the ambiguity of natural language
 - No Free Variables Principle
 - Concrete-Reference Principle
 - Accurate Node-Type Identification Principle
-- Accurate Quantifier Scoping Principle
+- Accurate Scoping Principle
 - Logical Clarification Principle
 
 ### Information Equivalency Principle
@@ -969,7 +904,7 @@ This structure does not violates the No Free Variables principle. By repeating t
 }
 ```
 This structure also does not violates the No Free Variables principle. Compared to Structure 2, it achieves the goal of eliminating free variables by breaking down the natural language quantifiers into `Fix` and `Obtain` nodes.
-While both Structure 2 and Structure 3 does not violates the No Free Variables principle, **Structure 3 is generally preferred**. The reason for this preference will be detailed in the upcoming "Accurate Quantifier Scoping Principle".
+While both Structure 2 and Structure 3 does not violates the No Free Variables principle, **Structure 3 is generally preferred**. The reason for this preference will be detailed in the upcoming "Accurate Scoping Principle".
 
 #### Example 3
 
@@ -1459,7 +1394,208 @@ Other points to note:
 ]
 ```
 
-### Accurate Quantifier Scoping Principle
+### Accurate Scoping Principle
+
+A key aspect of Accurate Scoping is correctly determining when a scope ends. You must exit a scope as soon as the reasoning that depends on the introduced variables or assumptions is finished. Do not remain in the scope when the reasoning has already finished!
+
+#### Example 1
+
+**Natural language text**
+"""
+If $A \subseteq B$, then $\mathcal{P}(A) \subseteq \mathcal{P}(B)$:
+
+Pf: Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. We have $A \subseteq B$. It follows that $X \subseteq B$. Therefore, $X \in \mathcal{P}(B)$. Hence, every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$, so $\mathcal{P}(A) \subseteq \mathcal{P}(B)$. Qed.
+"""
+
+**Wrong Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Fix",
+      "variable": ["$A$", "$B$"],
+      "condition": ["$A, B$ are sets", "$A \\subseteq B$"],
+      "scope": [
+        {
+          "type": "Show",
+          "proposition": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
+          "method": null,
+          "scope": [
+            {
+              "type": "Fix",
+              "variable": ["$X$"],
+              "condition": ["$X \\in \\mathcal{P}(A)$"],
+              "scope": [
+                {
+                  "type": "Have",
+                  "claim": ["$X \\subseteq A$"],
+                  "reason": ["definition of power set"]
+                },
+                {
+                  "type": "Have",
+                  "claim": ["$A \\subseteq B$"],
+                  "reason": null
+                },
+                {
+                  "type": "Have",
+                  "claim": ["$X \\subseteq B$"],
+                  "reason": null
+                },
+                {
+                  "type": "Have",
+                  "claim": ["$X \\in \\mathcal{P}(B)$"],
+                  "reason": null
+                }
+              ]
+            },
+            {
+              "type": "Have",
+              "claim": ["every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$"],
+              "reason": null
+            },
+            {
+              "type": "Have",
+              "claim": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
+              "reason": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Correct Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Fix",
+      "variable": ["$A$", "$B$"],
+      "condition": ["$A, B$ are sets", "$A \\subseteq B$"],
+      "scope": [
+        {
+          "type": "Show",
+          "proposition": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
+          "method": null,
+          "scope": [
+            {
+              "type": "Fix",
+              "variable": ["$X$"],
+              "condition": ["$X \\in \\mathcal{P}(A)$"],
+              "scope": [
+                {
+                  "type": "Have",
+                  "claim": ["$X \\subseteq A$"],
+                  "reason": ["definition of power set"]
+                },
+                {
+                  "type": "Have",
+                  "claim": ["$A \\subseteq B$"],
+                  "reason": null
+                },
+                {
+                  "type": "Have",
+                  "claim": ["$X \\subseteq B$"],
+                  "reason": null
+                },
+                {
+                  "type": "Have",
+                  "claim": ["$X \\in \\mathcal{P}(B)$"],
+                  "reason": null
+                },
+                {
+                    "type": "Have",
+                    "claim": ["every element of $\\mathcal{P}(A)$ is also in $\\mathcal{P}(B)$"],
+                    "reason": null
+                },
+              ]
+            },
+            {
+              "type": "Have",
+              "claim": ["$\\mathcal{P}(A) \\subseteq \\mathcal{P}(B)$"],
+              "reason": null
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+In this example, the statement "every element of $\mathcal{P}(A)$ is also in $\mathcal{P}(B)$" is a conclusion that no longer depends on the specific variable `$X$` that was fixed earlier. Therefore, it should be placed **outside** the `Fix {$X$}` scope.
+
+However, pay close attention: the statement "$A \subseteq B$" also does not depend on `$X$`. We do **not** exit the scope at this point because the subsequent steps *will continue to use* `$X$`. In other words, **the reasoning about `$X$` is not yet finished.** Out principle is to exit the scope at the precise moment when the reasoning concerning the fixed variable is fully concluded.
+
+---
+
+Another important aspect of Accurate Scoping is **Accurate Quantifier Scoping**.
+
+First of all, you need to carefully distinguish which variables should be extracted, and which exist only as local-binders within a proposition.
+
+#### Example 2
+
+**Natural language text:**
+"Proof Goal: If there exists $ r > 0 $ such that for $ 0 < |x - x_0| < r $, we have $ g(x) \leq f(x) \leq h(x) $, and $ \lim_{x \to x_0} g(x) = \lim_{x \to x_0} h(x) = A $, then $ \lim_{x \to x_0} f(x) = A $."
+
+**Wrong Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Fix",
+      "variable": [
+        "$f$",
+        "$g$",
+        "$h$",
+        "$x_0$",
+        "$A$",
+        "$r$"
+      ],
+      "condition": [
+        "$f, g, h$ are real-valued functions",
+        "$x_0, A, r$ are real numbers",
+        "$\\lim_{x \\to x_0} g(x) = A$",
+        "$\\lim_{x \\to x_0} h(x) = A$",
+        "for all $x$ such that $0 < |x - x_0| < r$, we have $g(x) \\leq f(x) \\leq h(x)$"
+      ],
+      "scope": [...]
+    }
+  ]
+}
+```
+
+This is semantically incorrect. The original text does not require the condition "for all $x$ such that $0 < |x - x_0| < r$, we have $g(x) \leq f(x) \leq h(x)$" to hold for *every* $r$. It only requires that *there exists* at least one such $r$ for which this proposition holds. Therefore, `r` here is bound by a local existential quantifier and must not be elevated to the `Fix` node.
+
+**Correct Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Fix",
+      "variable": [
+        "$f$",
+        "$g$",
+        "$h$",
+        "$x_0$",
+        "$A$"
+      ],
+      "condition": [
+        "$f, g, h$ are real-valued functions",
+        "$x_0, A$ are real numbers",
+        "$\\lim_{x \\to x_0} g(x) = A$",
+        "$\\lim_{x \\to x_0} h(x) = A$",
+        "there exists $ r > 0 $ such that for all $x$ such that $0 < |x - x_0| < r$, we have $g(x) \\leq f(x) \\leq h(x)$"
+      ],
+      "scope": [...]
+    }
+  ]
+}
+```
+
+---
 
 The handling of quantifiers like $\forall$, $\exists$ in natural language is often ambiguous. Quantifiers are frequently omitted. Even when they are not omitted, their scope often extends across multiple lines of text. Therefore, when a free variable appears in a proposition, it's either because its quantifier was omitted or because it inherits a quantifier that has already appeared before.
 
@@ -1491,10 +1627,10 @@ Fix n,m
 
 Although both approaches eliminate free variables, they represent fundamentally different meanings. In the first approach, the `n,m` in the two lines are not connected; they are two independent sets of quantified variables. In the second approach, the discussion is about the same fixed pair of `n,m`. The following examples will demonstrate the difference. A good structure must not only eliminate free variables, but also correctly preserve the original meaning of the natural language text.
 
-#### Example 1
+#### Example 3
 
 **Natural language text:**
-```
+"""
 We need to find all functions $ f: \mathbb{R} \rightarrow \mathbb{R} $ such that for all $ x, y \in \mathbb{R} $, $ f(x + y) - f(x - y) = f(x)f(y). $
 Solution
 First, interchange $ x $ and $ y $ in the original equation: 
@@ -1525,7 +1661,7 @@ $ f(x)^2 = 0 \quad \Rightarrow \quad f(x) = 0. $
 Thus, the only function satisfying the condition is the zero function. 
 In conclusion, the only solution is: 
 $ \boxed{f(x) = 0} $
-```
+"""
 
 In this example, all free occurrences of `x` and `y` "varies" within individual propositions. The reasoning process involves transforming the *function equation itself*, not discussing an equality relation for fixed `x` and `y`. Wrapping the entire proof in a `Fix x,y` node would completely contradict the original meaning.
 
@@ -1620,10 +1756,10 @@ In this example, all free occurrences of `x` and `y` "varies" within individual 
 
 (Note: Actions like "Let $y=0$", "replace $y=-y$", and "let $y=x$" are all reason-hints for the statements.)
 
-#### Example 2
+#### Example 4
 
 **Natural language text:**
-```
+"""
 Find the integral $\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx$.
 First, decompose the integrand into a sum of simple fractions. Let: 
 $\displaystyle\frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2} = \frac{A}{x+1} + \frac{B}{x-2} + \frac{C}{x-1} + \frac{D}{(x-1)^2}.$ 
@@ -1637,7 +1773,7 @@ Differentiate both sides, then let $x = 1$, we get $C = 5$;
 Thus: 
 $\displaystyle\int \frac{4x^3 - 13x^2 + 3x + 8}{(x+1)(x-2)(x-1)^2}  dx = \int \left[ \frac{1}{x+1} - \frac{2}{x-2} + \frac{5}{x-1} - \frac{1}{(x-1)^2} \right]  dx$ 
 $= \ln |(x+1)(x-1)^5| - \ln |(x-2)^2| + \frac{1}{x-1} + C.$
-```
+"""
 
 In this example, the deduction from the equality of rational functions to the equality of their numerators is not for a single fixed $x$. It's based on the premise that the two rational functions are identical, which implies their corresponding polynomial numerators are also identical. Therefore, $x$ is a "mutable" variable, and an outer `Fix {x}` should not be used. Instead, `$\forall x$` should be added to each relevant line.
 
@@ -1952,275 +2088,135 @@ Therefore, for any positive integer $n$, we have $1 + 2 + \cdots + n = \frac{n(n
 
 (Remark: In the latter type of induction that reuses `n` instead of introducing `k`, we need to substitute the concrete proposition for the phrase "the equality also holds for n+1". However, this does not require extra calculation, as the resulting expression is usually available from the preceding step.)
 
-## Comprehensive Examples
-
-### Example 1: Cauchy Convergence Theorem
-
-**(Reference)** As detailed in the "Accurate Node-Type Identification Principle" section, this proof is an excellent example of handling "Actions as Reasons", quantifier scoping (`Fix`, `Obtain`), and making logical clarifications explicit. Please refer back to its full text and structure as an important example to study.
-
-### Example 2: Schröder-Bernstein's Theorem
+#### Implicit Variables
 
 **Natural language text:**
 """
-**Theorem 4** (Schröder-Bernstein's Theorem). If $f: A \to B$ and $g: B \to A$ are both injections, then there is a bijection from $A$ into $B$.
-**Proof.**
-Suppose $f: A \to B, g: B \to A$ are injections. Let’s construct the bijection $h$ from $A$ into $B$.
-$$C_0 = \{ a \in A \mid \forall b \in B. \, g(b) \neq a \}$$
-$$D_0 = \{ f(a) \mid a \in C_0 \}$$
-$$C_1 = \{ a \in A \setminus C_0 \mid \forall b \in B \setminus D_0. \, g(b) \neq a \}$$
-We can prove that $C_1 = \{ g(b) \mid b \in D_0 \}$ also.
-$$D_1 = \{ f(a) \mid a \in C_1 \}$$
-So that we can define
-$$C_{n+1} = \{ a \in A \setminus \bigcup_{i=0}^{n} C_i \mid \forall b \in B \setminus \bigcup_{i=0}^{n} D_i. \, g(b) \neq a \}$$
-$$D_{n+1} = \{ f(a) \mid a \in C_{n+1} \}$$
-And similarly, we can prove that $C_{n+1} = \{ g(b) \mid b \in D_n \}$.
-In the end, we can define
-$$h(a) := \begin{cases} 
-f(a), & \text{if} \, a \in \bigcup_{i=0}^{\infty} C_i \\
-b, \, \text{such that} \, g(b) = a, & \text{if} \, a \in A \setminus \bigcup_{i=0}^{\infty} C_i 
-\end{cases}$$
-Obviously, the $f$ part is a bijection from $C_n$ into $D_n$.
-So we just need to prove that the $g$ part is a bijection from $D := B \setminus \bigcup_{i=0}^{\infty} D_i$ into $C := A \setminus \bigcup_{i=0}^{\infty} C_i$.
-Thus, it is suffice to prove: (1) $\forall d \in D. \, \exists c \in C. \, g(d) = c$ and (2) $\forall c \in C. \, \exists d \in D. \, g(d) = c$.
+**Lemma 13.1.**  *Let $X$ be a set; let $\mathcal{B}$ be a basis for a topology $\mathcal{T}$ on $X$. Then $\mathcal{T}$ equals the collection of all unions of elements of $\mathcal{B}$.*
 
-- $\forall d \in D. \exists c \in C. g(d) = c$.
-  As $g$ is an injection from $B$ into $A$, $\exists c \in A, g(d) = c$.
-  Let prove $c \notin C_n$.
-  Suppose $c \in C_n$.
-  - $n = 0$, Obviously contradiction.
-  - $n = m + 1$, $c \in C_{m+1} \Rightarrow d \in D_m$, contradiction.
-    Therefore, $c \in C$.
-- $\forall c \in C. \exists d \in D. g(d) = c$.
-  $\exists d \in B. g(d) = c$. Otherwise, $c \in C_0$, contradiction.
-  Let’s prove $d \notin D_n$.
-  Suppose $d \in D_n$, so that $c \in C_{n+1}$, contradiction.
-  Therefore, $d \in D$.
-  Qed.
+*Proof.* Given a collection of elements of $\mathcal{B}$, they are also elements of $\mathcal{T}$. Because $\mathcal{T}$ is a topology, their union is in $\mathcal{T}$. Conversely, given $U \in \mathcal{T}$, choose for each $x \in U$ an element $B_x$ of $\mathcal{B}$ such that $x \in B_x \subset U$. Then $U = \bigcup_{x \in U} B_x$, so $U$ equals a union of elements of $\mathcal{B}$. ■
 """
 
+**Correct Structure**
 ```json
-[
+{
+  "structure": [
     {
-        "type": "Hint",
-        "text": "Theorem 4 (Schröder-Bernstein's Theorem)"
+      "type": "Hint",
+      "text": "Lemma 13.1."
     },
     {
-        "type": "Fix",
-        "variable": ["$A$", "$B$"],
-        "condition": ["$A$, $B$ are sets"],
-        "scope": [
+      "type": "Fix",
+      "variable": [
+        "$X$",
+        "$\\mathcal{B}$",
+        "$\\mathcal{T}$"
+      ],
+      "condition": [
+        "$X$ is a set",
+        "$\\mathcal{B}$ is a basis for a topology $\\mathcal{T}$ on $X$"
+      ],
+      "scope": [
+        {
+          "type": "Show",
+          "proposition": [
+            "$\\mathcal{T}$ equals the collection of all unions of elements of $\\mathcal{B}$"
+          ],
+          "method": null,
+          "scope": [
             {
-                "type": "Fix",
-                "variable": ["$f$", "$g$"],
-                "condition": ["$f: A \\to B$ is an injection", "$g: B \\to A$ is an injection"],
-                "scope": [
+              "type": "Show",
+              "proposition": [
+                "Any union of elements of $\\mathcal{B}$ is in $\\mathcal{T}$"
+              ],
+              "method": null,
+              "scope": [
+                {
+                  "type": "Fix",
+                  "variable": [
+                    "$\\mathcal{C}$"
+                  ],
+                  "condition": [
+                    "$\\mathcal{C}$ is a collection of elements of $\\mathcal{B}$"
+                  ],
+                  "scope": [
                     {
-                        "type": "Show",
-                        "proposition": ["there is a bijection from $A$ into $B$"],
-                        "method": null,
-                        "scope": [
-                            {
-                                "type": "Define",
-                                "term": "$C_0$",
-                                "definition": "$C_0=\\{ a \\in A \\mid \\forall b \\in B, g(b) \\neq a \\}$"
-                            },
-                            {
-                                "type": "Define",
-                                "term": "$D_0$",
-                                "definition": "$D_0=\\{ f(a) \\mid a \\in C_0 \\}$"
-                            },
-                            {
-                                "type": "Define",
-                                "term": "$C_1$",
-                                "definition": "$C_1=\\{ a \\in A \\setminus C_0 \\mid \\forall b \\in B \\setminus D_0, g(b) \\neq a \\}$"
-                            },
-                            {
-                                "type": "Have",
-                                "claim": ["$C_1 = \\{ g(b) \\mid b \\in D_0 \\}$"],
-                                "reason": null
-                            },
-                            {
-                                "type": "Define",
-                                "term": "$D_1$",
-                                "definition": "$D_1=\\{ f(a) \\mid a \\in C_1 \\}$"
-                            },
-                            {
-                                "type": "Define",
-                                "term": "set sequence $\\{C_{n}\\}$",
-                                "definition": "$\\forall n>1,C_{n+1}=\\{ a \\in A \\setminus \\bigcup_{i=0}^{n} C_i \\mid \\forall b \\in B \\setminus \\bigcup_{i=0}^{n} D_i, g(b) \\neq a \\}$"
-                            },
-                            {
-                                "type": "Define",
-                                "term": "set sequence $\\{D_{n}\\}$",
-                                "definition": "$\\forall n>1,D_{n+1}=\\{ f(a) \\mid a \\in C_{n+1} \\}$"
-                            },
-                            {
-                                "type": "Have",
-                                "claim": ["$\\forall n \\in \\N, C_{n+1} = \\{ g(b) \\mid b \\in D_n \\}$"],
-                                "reason": ["similarly"]
-                            },
-                            {
-                                "type": "Define",
-                                "term": "$h$",
-                                "definition": "function $h: A \\to B$ such that for any $a \\in A$, $h(a) := \\begin{cases} f(a), & \\text{if } a \\in \\bigcup_{i=0}^{\\infty} C_i \\\\ b, \\text{ such that } g(b) = a, & \\text{if } a \\in A \\setminus \\bigcup_{i=0}^{\\infty} C_i \\end{cases}$"
-                            },
-                            {
-                                "type": "Have",
-                                "claim": ["$\\forall n$, the restriction of $f$ to $C_n$ is a bijection onto $D_n$"],
-                                "reason": null
-                            },
-                            {
-                                "type": "Define",
-                                "term": "$C$",
-                                "definition": "$A \\setminus \\bigcup_{i=0}^{\\infty} C_i$"
-                            },
-                            {
-                                "type": "Define",
-                                "term": "$D$",
-                                "definition": "$B \\setminus \\bigcup_{i=0}^{\\infty} D_i$"
-                            },
-                            {
-                                "type": "SufficesToProve",
-                                "sufficient_proposition": [
-                                    "$\\forall d \\in D, \\exists c \\in C, g(d) = c$",
-                                    "$\\forall c \\in C, \\exists d \\in D, g(d) = c$"
-                                ],
-                                "reason": null
-                            },
-                            {
-                                "type": "Show",
-                                "proposition": ["$\\forall d \\in D, \\exists c \\in C, g(d) = c$"],
-                                "method": null,
-                                "scope": [
-                                    {
-                                        "type": "Fix",
-                                        "variable": ["$d$"],
-                                        "condition": ["$d \\in D$"],
-                                        "scope": [
-                                            {
-                                                "type": "Obtain",
-                                                "obtained_variable": ["$c$"],
-                                                "condition": ["$c \\in A$", "$g(d) = c$"],
-                                                "reason": ["$g$ is a function from $B$ into $A$"]
-                                            },
-                                            {
-                                                "type": "Show",
-                                                "proposition": ["$\\forall n, c \\notin C_n$"],
-                                                "method": ["contradiction"],
-                                                "scope": [
-                                                    {
-                                                        "type": "Fix",
-                                                        "variable": ["$n$"],
-                                                        "condition": ["$n \\in \\N$"],
-                                                        "scope": [
-                                                            {
-                                                                "type": "Assume",
-                                                                "assumption": ["$c \\in C_n$"],
-                                                                "scope": [
-                                                                    {
-                                                                        "type": "Assume",
-                                                                        "assumption": ["$n=0$"],
-                                                                        "scope": [
-                                                                            {
-                                                                                "type": "Have",
-                                                                                "claim": ["contradiction"],
-                                                                                "reason": null
-                                                                            }
-                                                                        ]
-                                                                    },
-                                                                    {
-                                                                        "type": "Assume",
-                                                                        "assumption": ["$n=m+1$ for some $m \\in \\N$"],
-                                                                        "scope": [
-                                                                            {
-                                                                                "type": "Have",
-                                                                                "claim": ["$c \\in C_{m+1} \\implies d \\in D_m$"],
-                                                                                "reason": null
-                                                                            },
-                                                                            {
-                                                                                "type": "Have",
-                                                                                "claim": ["contradiction"],
-                                                                                "reason": null
-                                                                            }
-                                                                        ]
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "Have",
-                                                "claim": ["$c \\in C$"],
-                                                "reason": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "type": "Show",
-                                "proposition": ["$\\forall c \\in C, \\exists d \\in D, g(d) = c$"],
-                                "method": null,
-                                "scope": [
-                                    {
-                                        "type": "Fix",
-                                        "variable": ["$c$"],
-                                        "condition": ["$c \\in C$"],
-                                        "scope": [
-                                            {
-                                                "type": "Obtain",
-                                                "obtained_variable": ["$d$"],
-                                                "condition": ["$d \\in B$", "$g(d) = c$"],
-                                                "reason": ["otherwise $c \\in C_0$, contradiction"]
-                                            },
-                                            {
-                                                "type": "Show",
-                                                "proposition": ["$\\forall n, d \\notin D_n$"],
-                                                "method": ["contradiction"],
-                                                "scope": [
-                                                    {
-                                                        "type": "Fix",
-                                                        "variable": ["$n$"],
-                                                        "condition": ["$n \\in \\N$"],
-                                                        "scope": [
-                                                            {
-                                                                "type": "Assume",
-                                                                "assumption": ["$d \\in D_n$"],
-                                                                "scope": [
-                                                                    {
-                                                                        "type": "Have",
-                                                                        "claim": ["$c \\in C_{n+1}$"],
-                                                                        "reason": null
-                                                                    },
-                                                                    {
-                                                                        "type": "Have",
-                                                                        "claim": ["contradiction"],
-                                                                        "reason": null
-                                                                    }
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            },
-                                            {
-                                                "type": "Have",
-                                                "claim": ["$d \\in D$"],
-                                                "reason": null
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
+                      "type": "Have",
+                      "claim": [
+                        "The elements of $\\mathcal{C}$ are also elements of $\\mathcal{T}$"
+                      ],
+                      "reason": null
+                    },
+                    {
+                      "type": "Have",
+                      "claim": [
+                        "The union of the elements of $\\mathcal{C}$ is in $\\mathcal{T}$"
+                      ],
+                      "reason": [
+                        "$\\mathcal{T}$ is a topology"
+                      ]
                     }
-                ]
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Show",
+              "proposition": [
+                "Any element of $\\mathcal{T}$ is a union of elements of $\\mathcal{B}$"
+              ],
+              "method": null,
+              "scope": [
+                {
+                  "type": "Fix",
+                  "variable": [
+                    "$U$"
+                  ],
+                  "condition": [
+                    "$U \\in \\mathcal{T}$"
+                  ],
+                  "scope": [
+                    {
+                      "type": "Obtain",
+                      "obtained_variable": [
+                        "collection $\\{B_x\\}_{x \\in U}$"
+                      ],
+                      "condition": [
+                        "$\\forall x \\in U, B_x \\in \\mathcal{B}$",
+                        "$\\forall x \\in U, x \\in B_x \\subset U$"
+                      ],
+                      "reason": null
+                    },
+                    {
+                      "type": "Have",
+                      "claim": [
+                        "$U = \\bigcup_{x \\in U} B_x$"
+                      ],
+                      "reason": null
+                    },
+                    {
+                      "type": "Have",
+                      "claim": [
+                        "$U$ equals a union of elements of $\\mathcal{B}$"
+                      ],
+                      "reason": null
+                    }
+                  ]
+                }
+              ]
             }
-        ]
+          ]
+        }
+      ]
     }
-]
+  ]
+}
 ```
+
+In this example, the phrase within the proof goal, "Then $\mathcal{T}$ equals the collection of all unions of elements of $\mathcal{B}$", does not use strict mathematical symbols for "the collection of all unions of elements of $\mathcal{B}$". According to the **Information Equivalency Principle**, we should not rewrite this and should instead preserve the original natural language expression.
+
+However, in the body of the argument, the natural language again fails to introduce strict symbols or variables. In the passage, "Given a collection of elements of $\mathcal{B}$, they are also elements of $\mathcal{T}$. Because $\mathcal{T}$ is a topology, their union is in $\mathcal{T}$," if we do not introduce a variable for "a collection," then the pronouns "they" and "their" cannot be resolved. This would violate the **Concrete-Reference Principle**. Therefore, as a necessary **Logical Clarification**, we must introduce an implicit variable $\mathcal{C}$ during structure extraction.
+
+---
 
 You have now been provided with the complete specification for extracting a Mathematical Structure. In all subsequent user requests, you must strictly adhere to all node definitions, principles, and examples outlined in this document. This document is your sole and definitive guide.

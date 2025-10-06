@@ -1,1 +1,99 @@
-[]
+{
+    "structure": [
+      {
+        "type": "Fix",
+        "variable": [
+          "$f$",
+          "$g$",
+          "$h$",
+          "$x_0$",
+          "$A$"
+        ],
+        "condition": [
+          "$f, g, h$ are real-valued functions",
+          "$x_0, A$ are real numbers",
+          "$\\lim_{x \\to x_0} g(x) = A$",
+          "$\\lim_{x \\to x_0} h(x) = A$",
+          "there exists $ r > 0 $ such that for all $x$ such that $0 < |x - x_0| < r$, we have $g(x) \\leq f(x) \\leq h(x)$"
+        ],
+        "scope": [
+          {
+            "type": "Show",
+            "proposition": [
+              "$\\lim_{x \\to x_0} f(x) = A$"
+            ],
+            "method": null,
+            "scope": [
+              {
+                "type": "Fix",
+                "variable": [
+                  "$\\epsilon$"
+                ],
+                "condition": [
+                  "$\\epsilon > 0$"
+                ],
+                "scope": [
+                  {
+                    "type": "Obtain",
+                    "obtained_variable": [
+                      "$\\delta_1$"
+                    ],
+                    "condition": [
+                      "$\\delta_1 > 0$",
+                      "for all $x$ satisfying $0 < |x - x_0| < \\delta_1$, $h(x) < A + \\epsilon$"
+                    ],
+                    "reason": [
+                      "$\\lim_{x \\to x_0} h(x) = A$"
+                    ]
+                  },
+                  {
+                    "type": "Obtain",
+                    "obtained_variable": [
+                      "$\\delta_2$"
+                    ],
+                    "condition": [
+                      "$\\delta_2 > 0$",
+                      "for all $x$ satisfying $0 < |x - x_0| < \\delta_2$, $A - \\epsilon < g(x)$"
+                    ],
+                    "reason": [
+                      "$\\lim_{x \\to x_0} g(x) = A$"
+                    ]
+                  },
+                  {
+                    "type": "Define",
+                    "term": "$\\delta$",
+                    "definition": "$\\delta = \\min \\{ \\delta_1, \\delta_2, r \\}$"
+                  },
+                  {
+                    "type": "Fix",
+                    "variable": [
+                      "$x$"
+                    ],
+                    "condition": [
+                      "$0 < |x - x_0| < \\delta$"
+                    ],
+                    "scope": [
+                      {
+                        "type": "Have",
+                        "claim": [
+                          "$A - \\epsilon < g(x) \\leq f(x) \\leq h(x) < A + \\epsilon$"
+                        ],
+                        "reason": null
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Have",
+                    "claim": [
+                      "$\\lim_{x \\to x_0} f(x) = A$"
+                    ],
+                    "reason": null
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
