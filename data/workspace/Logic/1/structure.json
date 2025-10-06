@@ -1,1 +1,372 @@
-[]
+{
+    "structure": [
+        {
+            "type": "Hint",
+            "text": "4.6 Coincidence Lemma"
+        },
+        {
+            "type": "Fix",
+            "variable": [
+                "$\\mathfrak{I}_1$",
+                "$\\mathfrak{I}_2$",
+                "$\\mathcal{A}_1$",
+                "$\\beta_1$",
+                "$\\mathcal{A}_2$",
+                "$\\beta_2$",
+                "$S_1$",
+                "$S_2$"
+            ],
+            "condition": [
+                "$\\mathfrak{I}_1 = (\\mathcal{A}_1, \\beta_1)$ is an $S_1$-interpretation",
+                "$\\mathfrak{I}_2 = (\\mathcal{A}_2, \\beta_2)$ is an $S_2$-interpretation",
+                "$A_1 = A_2$"
+            ],
+            "scope": [
+                {
+                    "type": "Define",
+                    "term": "$S$",
+                    "definition": "$S := S_1 \\cap S_2$"
+                },
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "Let $t$ be an $S$-term. If $\\mathfrak{I}_1$ and $\\mathfrak{I}_2$ agree on the $S$-symbols occurring in $t$ and on the variables occurring in $t$, then $\\mathfrak{I}_1(t) = \\mathfrak{I}_2(t)$."
+                    ],
+                    "method": [
+                        "induction on S-terms"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$t$",
+                                "$x$"
+                            ],
+                            "condition": [
+                                "$t$ is a $S$-term",
+                                "$x$ is a variable",
+                                "$t = x$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\beta_1(x) = \\beta_2(x)$"
+                                    ],
+                                    "reason": [
+                                        "hypothesis"
+                                    ]
+                                },
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$\\mathfrak{I}_1(x)$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\beta_1(x)$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\beta_2(x)$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\mathfrak{I}_2(x)$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$t$",
+                                "$c$"
+                            ],
+                            "condition": [
+                                "$t$ is a $S$-term",
+                                "$c$ is a constant symbol",
+                                "$t = c$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\mathfrak{I}_1(c) = \\mathfrak{I}_2(c)$"
+                                    ],
+                                    "reason": [
+                                        "similarly"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$t$",
+                                "$f$",
+                                "$n$",
+                                "$t_1, ..., t_n$"
+                            ],
+                            "condition": [
+                                "$n \\in \\mathbb{N}^*$",
+                                "$t, t_1, ..., t_n$ are $S$-terms",
+                                "$f \\in S$ is a $n$-ary function symbol",
+                                "$t = f t_1 \\ldots t_n$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$\\mathfrak{I}_1(f t_1 \\ldots t_n)$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$f^{\\mathcal{A}_1}(\\mathfrak{I}_1(t_1), \\ldots, \\mathfrak{I}_1(t_n))$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$f^{\\mathcal{A}_1}(\\mathfrak{I}_2(t_1), \\ldots, \\mathfrak{I}_2(t_n))$"
+                                            ],
+                                            "reason": [
+                                                "by induction hypothesis"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$f^{\\mathcal{A}_2}(\\mathfrak{I}_2(t_1), \\ldots, \\mathfrak{I}_2(t_n))$"
+                                            ],
+                                            "reason": [
+                                                "by hypothesis, $f^{\\mathcal{A}_1} = f^{\\mathcal{A}_2}$"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\mathfrak{I}_2(f t_1 \\ldots t_n)$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "Let $\\varphi$ be an $S$-formula. If $\\mathfrak{I}_1$ and $\\mathfrak{I}_2$ agree on the $S$-symbols and on the variables occurring free in $\\varphi$, then $\\mathfrak{I}_1 \\models \\varphi$ iff $\\mathfrak{I}_2 \\models \\varphi$."
+                    ],
+                    "method": [
+                        "induction on $S$-formulas"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$\\varphi$",
+                                "$R$",
+                                "$n$",
+                                "$t_1, ..., t_n$"
+                            ],
+                            "condition": [
+                                "$\\varphi$ is an S-formula",
+                                "$n \\in \\mathbb{N}^*$",
+                                "$R \\in S$ is an n-ary relation symbol",
+                                "$t_1, \\ldots, t_n$ are S-terms",
+                                "$\\varphi = R t_1 \\ldots t_n$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "LogicChain",
+                                    "initial_proposition": [
+                                        "$\\mathfrak{I}_1 \\models R t_1 \\ldots t_n$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "$R^{\\mathcal{A}_1} \\mathfrak{I}_1(t_1) \\ldots \\mathfrak{I}_1(t_n)$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "$R^{\\mathcal{A}_1} \\mathfrak{I}_2(t_1) \\ldots \\mathfrak{I}_2(t_n)$"
+                                            ],
+                                            "reason": [
+                                                "by for all $t$, $\\mathfrak{I}_1$ and $\\mathfrak{I}_2$ agree on the $S$-symbols occurring in $t$ and on the variables occurring in $t$, then $\\mathfrak{I}_1(t) = \\mathfrak{I}_2(t)$."
+                                            ]
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "$R^{\\mathcal{A}_2} \\mathfrak{I}_2(t_1) \\ldots \\mathfrak{I}_2(t_n)$"
+                                            ],
+                                            "reason": [
+                                                "by hypothesis, $R^{\\mathcal{A}_1} = R^{\\mathcal{A}_2}$"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "$\\mathfrak{I}_2 \\models R t_1 \\ldots t_n$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$\\varphi$",
+                                "$t_1$",
+                                "$t_2$"
+                            ],
+                            "condition": [
+                                "$\\varphi$ is an S-formula",
+                                "$t_1, t_2$ are S-terms",
+                                "$\\varphi = t_1 \\equiv t_2$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Hint",
+                                    "text": "Similarly"
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$\\varphi$",
+                                "$\\psi$"
+                            ],
+                            "condition": [
+                                "$\\varphi, \\psi$ are S-formulas",
+                                "$\\varphi = \\neg \\psi$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "LogicChain",
+                                    "initial_proposition": [
+                                        "$\\mathfrak{I}_1 \\models \\neg \\psi$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "not $\\mathfrak{I}_1 \\models \\psi$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "not $\\mathfrak{I}_2 \\models \\psi$"
+                                            ],
+                                            "reason": [
+                                                "by induction hypothesis"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "$\\mathfrak{I}_2 \\models \\neg \\psi$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$\\varphi$",
+                                "$\\psi$",
+                                "$\\chi$"
+                            ],
+                            "condition": [
+                                "$\\varphi, \\psi, \\chi$ are S-formulas",
+                                "$\\varphi = (\\psi \\lor \\chi)$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Hint",
+                                    "text": "Similarly."
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$\\varphi$",
+                                "$x$",
+                                "$\\psi$"
+                            ],
+                            "condition": [
+                                "$\\varphi, \\psi$ are S-formulas",
+                                "$x$ is a variable",
+                                "$\\varphi = \\exists x \\psi$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "LogicChain",
+                                    "initial_proposition": [
+                                        "$\\mathfrak{I}_1 \\models \\exists x \\psi$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "there is an $a \\in A_1$ such that $\\mathfrak{I}_1 \\frac{a}{x} \\models \\psi$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "there is an $a \\in A_2 (= A_1)$ such that $\\mathfrak{I}_2 \\frac{a}{x} \\models \\psi$"
+                                            ],
+                                            "reason": [
+                                                "by induction hypothesis applied to $\\psi$, $\\mathfrak{I}_1 \\frac{a}{x}$ and $\\mathfrak{I}_2 \\frac{a}{x}$; note that, because $\\operatorname{free}(\\psi) \\subset \\operatorname{free}(\\varphi) \\cup \\{x\\}$, the interpretations $\\mathfrak{I}_1 \\frac{a}{x}$ and $\\mathfrak{I}_2 \\frac{a}{x}$ agree on all symbols occurring in $\\psi$ and all variables occurring free in $\\psi$"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "⇔",
+                                            "proposition": [
+                                                "$\\mathfrak{I}_2 \\models \\exists x \\psi$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+  }
