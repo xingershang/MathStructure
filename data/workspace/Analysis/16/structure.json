@@ -1,1 +1,112 @@
-[]
+{
+    "structure": [
+      {
+        "type": "Hint",
+        "text": "Every bounded sequence of real numbers contains a convergent subsequence."
+      },
+      {
+        "type": "Fix",
+        "variable": [
+          "$\\{x_n\\}$"
+        ],
+        "condition": [
+          "$\\{x_n\\}$ is a bounded sequence of real numbers"
+        ],
+        "scope": [
+          {
+            "type": "Show",
+            "proposition": [
+              "$\\{x_n\\}$ contains a convergent subsequence"
+            ],
+            "method": null,
+            "scope": [
+              {
+                "type": "Define",
+                "term": "$E$",
+                "definition": "$E$ is the set of values of the sequence $\\{x_n\\}$"
+              },
+              {
+                "type": "Assume",
+                "assumption": [
+                  "$E$ is finite"
+                ],
+                "scope": [
+                  {
+                    "type": "Obtain",
+                    "obtained_variable": [
+                      "$x$",
+                      "$\\{x_{n_k}\\}$"
+                    ],
+                    "condition": [
+                      "$x \\in E$",
+                      "$\\{x_{n_k}\\}$ is a subsequence of $\\{x_n\\}$",
+                      "$\\forall k, x_{n_k} = x$"
+                    ],
+                    "reason": null
+                  },
+                  {
+                    "type": "Have",
+                    "claim": [
+                      "The subsequence $\\{x_{n_k}\\}$ is constant"
+                    ],
+                    "reason": null
+                  },
+                  {
+                    "type": "Have",
+                    "claim": [
+                      "The subsequence $\\{x_{n_k}\\}$ converges"
+                    ],
+                    "reason": [
+                      "The subsequence $\\{x_{n_k}\\}$ is constant"
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "Assume",
+                "assumption": [
+                  "$E$ is infinite"
+                ],
+                "scope": [
+                  {
+                    "type": "Obtain",
+                    "obtained_variable": [
+                      "$x$"
+                    ],
+                    "condition": [
+                      "$x$ is a limit point of $E$"
+                    ],
+                    "reason": [
+                      "the Bolzano–Weierstrass principle"
+                    ]
+                  },
+                  {
+                    "type": "Obtain",
+                    "obtained_variable": [
+                      "a subsequence $\\{x_{n_k}\\}$"
+                    ],
+                    "condition": [
+                      "$\\forall k \\in \\mathbb{N}, |x_{n_k} - x| < \\frac{1}{k}$"
+                    ],
+                    "reason": [
+                      "$x$ is a limit point of $E$, allowing for an inductive construction of the subsequence."
+                    ]
+                  },
+                  {
+                    "type": "Have",
+                    "claim": [
+                      "the sequence $\\{x_{n_k}\\}$ converges to $x$"
+                    ],
+                    "reason": [
+                      "$\\lim_{k \\to \\infty} \\frac{1}{k} = 0$",
+                      "the sequence was constructed such that $\\forall k, |x_{n_k} - x| < \\frac{1}{k}$"
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
