@@ -1042,6 +1042,8 @@ A good structure must correctly identify the node type for each node.
 
 In most cases, determining the node type is straightforward by literal interpretation. For example, if the natural language says "Now we prove...", it corresponds to a `Show` node; if it says "It suffices to prove...", it corresponds to a `SufficesToProve` node.
 
+#### Dealing with "Actions"
+
 However, identifying the node type can be very error-prone when dealing with natural language "Actions", which cannot be judged literally. A good structure must correctly identify the node type corresponding to these "Actions". This is explained in detail below:
 
 In natural language, sentences like "Let $a > 0$", "When $a > 0$", "Let $a=1$", or "Let $a=b$" can correspond to an `Assume` node, a `Fix` node, a `Define` node, or they might not correspond to a standalone node at all but rather be part of a hint or reason. The correct choice depends on the context. Generally:
@@ -1051,7 +1053,7 @@ In natural language, sentences like "Let $a > 0$", "When $a > 0$", "Let $a=1$", 
   * If **`a` is a newly introduced variable** that is assigned a specific, determined value, use a **`Define`** node.
   * If the action performed on `a` has no independent logical significance and serves only as a **hint for how a conclusion is reached**, include the action as part of the **`reason`** field in the relevant node.
 
-#### Example 1
+##### Example 1
 
 **Natural language text:**
 """
@@ -1149,7 +1151,7 @@ In this example, the entire proof is for a fixed positive real number `a`, so a 
 }
 ```
 
-#### Example 2
+##### Example 2
 
 **Natural language text:**
 """
@@ -1235,7 +1237,7 @@ The text "We may take $N = N(\varepsilon) = \left\lfloor \frac{1}{\varepsilon} \
 ]
 ```
 
-#### Example 3
+##### Example 3
 
 **Natural language text:**
 """
@@ -1402,6 +1404,88 @@ Other points to note:
     }
 ]
 ```
+
+#### Avoid Over-Flattening
+
+Another important aspect of the Accurate Node-Type Identification Principle is about the "over-flattening" of the structure, which we should avoid: When a passage of text presents a self-contained chain of arguments, you **must not** collapse the whole chain of argument into a single node. **You must capture the detail structure of that chain of arguments**.
+
+##### Example 4
+
+**Natural language text:**
+"""
+We have 
+$$\left(\frac{1}{a}+\frac{1}{b}+\frac{1}{c}\right)>\frac{3}{2}+\frac{1}{224}$$
+If $a>1$ then
+$$\\begin{aligned}\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}\\leqslant\\frac{1}{2}+\\frac{1}{3}+\\frac{1}{4}=\\frac{13}{12}\<\\frac{3}{2},\\end{aligned}$$
+so it must be the case that $a=1.$
+"""
+
+**Wrong Structure (Over-Flattened):**
+```json
+{
+    "type": "Have",
+    "claim": ["$\\left(\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}\right)>\\frac{3}{2}+\\frac{1}{224}$"],
+    "reason": null
+},
+{
+  "type": "Have",
+  "claim": [
+    "$a=1$"
+  ],
+  "reason": [
+    "If $a>1$ then $\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}\\leqslant\\frac{1}{2}+\\frac{1}{3}+\\frac{1}{4}=\\frac{13}{12}<\\frac{3}{2}$, which contradicts $\\left(\\frac1a+\\frac1b+\\frac1c\\right) > \\frac{3}{2}$."
+  ]
+}
+```
+
+**Correct Structure:**
+```json
+{
+    "type": "Have",
+    "claim": ["$\\left(\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}\right)>\\frac{3}{2}+\\frac{1}{224}$"],
+    "reason": null
+},
+{
+    "type": "Assume",
+    "assumption": ["$a > 1$"],
+    "scope": [
+        {
+            "type": "CalculationChain",
+            "initial_expression": ["$\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}$"],
+            "steps": [
+                {
+                    "operator": "\\leqslant",
+                    "expression": ["$\\frac{1}{2}+\\frac{1}{3}+\\frac{1}{4}$"],
+                    "reason": null
+                },
+                {
+                    "operator": "=",
+                    "expression": ["$\\frac{13}{12}$"],
+                    "reason": null
+                },
+                {
+                    "operator": "<",
+                    "expression": ["$\\frac{3}{2}$"],
+                    "reason": null
+                }
+            ]
+        },
+        {
+            "type": "Have",
+            "claim": ["$a=1$"],
+            "reason": null
+        }
+    ]
+},
+{
+    "type": "Have",
+    "claim": ["$a=1$"],
+    "reason": ["by ruling out the case $a>1$"]
+}
+```
+
+**Explanation:**
+In this case, the 'Wrong Structure' is of low quality because it collapses an entire logical argument into a single `reason` string. The 'Correct Structure' is far superior because it models the **form** of the argument: it shows the temporary `Assume`d premise, the `CalculationChain` performed under that assumption, and the resulting `Have` node stating the contradiction. This is a crucial application of the principle to avoid over-flattening and to faithfully represent the proof's structure.
 
 ### Accurate Scoping Principle
 
@@ -2225,6 +2309,82 @@ Therefore, for any positive integer $n$, we have $1 + 2 + \cdots + n = \frac{n(n
 In this example, the phrase within the proof goal, "Then $\mathcal{T}$ equals the collection of all unions of elements of $\mathcal{B}$", does not use strict mathematical symbols for "the collection of all unions of elements of $\mathcal{B}$". According to the **Information Equivalency Principle**, we should not rewrite this and should instead preserve the original natural language expression.
 
 However, in the body of the argument, the natural language again fails to introduce strict symbols or variables. In the passage, "Given a collection of elements of $\mathcal{B}$, they are also elements of $\mathcal{T}$. Because $\mathcal{T}$ is a topology, their union is in $\mathcal{T}$," if we do not introduce a variable for "a collection," then the pronouns "they" and "their" cannot be resolved. This would violate the **Concrete-Reference Principle**. Therefore, as a necessary **Logical Clarification**, we must introduce an implicit variable $\mathcal{C}$ during structure extraction.
+
+#### Implicit Concepts
+
+Sometimes, natural language repeatedly refers to a concept or property that has not been explicitly defined. When such references occur repeatedly, restating the full concept each time would be verbose and cumbersome. However, not stating it fully would involve abstract references like "the concept" or "the property", violating the **Concrete-Reference Principle**.
+
+To resolve this, we must use a `Define` node to explicitly define a concept that was not explicitly named in the original text. You may need to coin a descriptive name for it based on the context.
+
+**Natural language text:**
+"""
+Let $k\geqslant2$ be an integer. Prove that the smallest integer $n\geqslant k+1$ with the property that "there exists a set of $n$ distinct real numbers such that each of its elements can be written as a sum of $k$ other distinct elements of the set" is $n=k+4$.
+Pf.
+First we show that $n\geqslant k+4$. Suppose that there exists such a set with $n$ numbers and denote them by $a_1<a_2<\cdots<a_n$.
+...
+"""
+
+**Correct Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Fix",
+      "variable": [
+        "$k$"
+      ],
+      "condition": [
+        "$k$ is an integer",
+        "$k \\geqslant 2$"
+      ],
+      "scope": [
+        {
+            "type": "Define",
+            "term": "the k-sum property",
+            "definition": "A number $n$ has the k-sum property if there exists a set of $n$ distinct real numbers such that each of its elements can be written as a sum of $k$ other distinct elements of the set."
+        },
+        {
+          "type": "Show",
+          "proposition": [
+            "the smallest integer $n\\geqslant k+1$ with the k-sum property is $n=k+4$"
+          ],
+          "method": null,
+          "scope": [
+            {
+              "type": "Show",
+              "proposition": [
+                "$n \\geqslant k+4$ for any integer $n$ satisfying the k-sum property"
+              ],
+              "method": null,
+              "scope": [
+                {
+                  "type": "Fix",
+                  "variable": [
+                    "$n$",
+                    "$a_1, \\dots, a_n$"
+                  ],
+                  "condition": [
+                    "$n$ is an integer",
+                    "$n \\geq k+1$",
+                    "$a_1 < a_2 < \\cdots < a_n$ are real numbers",
+                    "the set $\\{a_1, \\dots, a_n\\}$ is the set that makes $n$ satisfy the k-sum property"
+                  ],
+                  "scope": [
+                    ...
+                  ]
+                }
+              ]
+            },
+            ...
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+In this example, the original text does not name "the property" and continuously uses it as an abstract reference. To address this, we use a dedicated `Define` node to name it "the k-sum property". We then use this concrete term in subsequent nodes, such as in the main `Show` node's proposition and in the `Fix` node's condition, to refer back to the full definition. This demonstrates the "Define Once, Refer Everywhere" pattern.
 
 ---
 

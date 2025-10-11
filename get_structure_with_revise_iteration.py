@@ -6,7 +6,8 @@ import json
 from typing import Optional
 from pathlib import Path
 from datetime import datetime
-
+from dotenv import load_dotenv
+load_dotenv()
 # Agent imports
 from agent.structure_extractor import StructureExtractor
 from agent.structure_eval import StructureEvaluator

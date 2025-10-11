@@ -4,6 +4,8 @@ from utils.format import create_initial_structure
 from utils.json_pretty_print import pretty_print_json_structure
 from agent.structure_extractor import StructureExtractor
 from checker.no_placeholder_checker import check_no_placeholder
+from dotenv import load_dotenv
+load_dotenv()
 
 api_key = os.getenv("OPENAI_API_KEY")
 base_url = os.getenv("OPENAI_BASE_URL")

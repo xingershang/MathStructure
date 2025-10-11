@@ -46,13 +46,17 @@ Common abstract references:
 
 ### **Principle 4: Accurate Node-Type Identification Principle**
 
+The Accurate Node-Type Identification Principle includes:
+- Correct dealing with "Actions"
+- Avoid Over-Flattening
+
 **Scoring Rubric:**
 
-- **5 (Perfect):** Every node type perfectly reflects the semantic role of its corresponding text.
-- **4 (Minor Issue):** The structure is logically sound, but there are no more than 2 instances of a suboptimal yet defensible node choice.
-- **3 (Moderate Issue):** There is at least one clear and impactful error in node type that misrepresents a logical step. For example, confusing `Fix` (introducing a new variable) with `Assume` (adding a condition to an existing one).
-- **2 (Major Issue):** There are multiple moderate errors, or a single error that creates a major structural confusion and derails the logical flow (e.g., using a `Show` node for a simple assertion, creating an unnecessary and confusing sub-proof).
-- **1 (Critical Failure):** Systemic errors in node type identification.
+- **5 (Perfect):** Every node type perfectly reflects the semantic role of its corresponding text, no over-flattening.
+- **4 (Minor Issue):** The structure is logically sound, but there are no more than 2 instances of a suboptimal yet defensible node choice. No over-flattening, or no more than 2 minor-flattening.
+- **3 (Moderate Issue):** There is at least one clear and impactful error in node type that misrepresents a logical step. For example, confusing `Fix` (introducing a new variable) with `Assume` (adding a condition to an existing one). Or, a moderate over-flattening.
+- **2 (Major Issue):** There are multiple moderate errors, or a single error that creates a major structural confusion and derails the logical flow (e.g., using a `Show` node for a simple assertion, creating an unnecessary and confusing sub-proof). Or, a major over-flattening.
+- **1 (Critical Failure):** Systemic errors in node type identification. Or, at least two major over-flattening.
 
 ### **Principle 5: Accurate Scoping Principle**
 
@@ -66,10 +70,17 @@ Common abstract references:
 
 ### **Principle 6: Logical Clarification Principle**
 
+Logical Clarification Principle includes:
+
+- Clarify **Variable Dependencies**
+- Clarify **Specific Common Math-Structure**(Induction, Case Analysis, ...)
+- Clarify **Implicit Variables**
+- Clarify **Implicit Concepts**
+
 **Scoring Rubric:**
 
 - **5 (Perfect):** All necessary logical clarifications are made perfectly and correctly. 
-- **4 (Minor Issue):** No more than 2 minor clarification was missed. But the logic(variable type/domain, variable dependency, implicit variables) was still obvious from the context.
+- **4 (Minor Issue):** No more than 2 minor clarification was missed. But the logic(variable type/domain, variable dependency, implicit variables, etc) was still obvious from the context.
 - **3 (Moderate Issue):** A clear and necessary clarification was missed, and this mistake cause some difficulty in understanding the statement.
 - **2 (Major Issue):** Multiple necessary clarifications were missed, leaving the structure ambiguous or logically incomplete in key areas.
 - **1 (Critical Failure):** A complete failure to perform necessary logical clarifications.
