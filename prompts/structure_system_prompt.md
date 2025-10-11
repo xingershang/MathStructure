@@ -1,4 +1,4 @@
-# The Structure of Mathematical Natural Language Texts
+# Guide: The Structure of Mathematical Natural Language Texts
 
 ## Definition of Structure
 
@@ -924,7 +924,16 @@ In this example, although there's no expressions like "forall" or "exists" in th
 
 ### Concrete-Reference Principle
 
-Propositions and hints in natural language often contain **abstract references**. For example, phrases like "this fact", "that equation", "those theorems", etc. Mathematical texts might also label propositions or expressions with numbers, such as $f(x)=0\quad (1)$ and $g(x)=1\quad (2)$, and then refer to these labels, for instance, "Combining (1) and (2), we get...".
+Propositions and hints in natural language often contain **abstract references**. 
+
+Common abstract references:
+- "the equality"
+- "the above equation"
+- "by (13.3)" (if (13.3) appears in the current text, not from other sources)
+- "the above property"
+- "this fact"
+
+Mathematical texts might also label propositions or expressions with numbers, such as $f(x)=0\quad (1)$ and $g(x)=1\quad (2)$, and then refer to these labels, for instance, "Combining (1) and (2), we get...".
 
 We refer to these phenomena as **"abstract references"**. A good structure must resolve these abstract references into **concrete references**. We call this the Concrete-Reference Principle.
 

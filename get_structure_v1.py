@@ -5,9 +5,11 @@ from utils.json_pretty_print import pretty_print_json_structure
 from agent.structure_extractor import StructureExtractor
 from checker.no_placeholder_checker import check_no_placeholder
 
-api_key = os.getenv("OPENAI_API_KEY", "sk-roTlKyXXDUcOI3EsnNuniF41aoCF0czrHzHDfXUdsyT6tmLH")
-base_url = os.getenv("OPENAI_BASE_URL", "https://gpt.api.zhangyichi.cn/v1")
-model = os.getenv("MODEL_NAME", "gemini-2.5-pro")
+api_key = os.getenv("OPENAI_API_KEY")
+base_url = os.getenv("OPENAI_BASE_URL")
+model = os.getenv("MODEL_NAME")
+if not api_key:
+    raise ValueError("API key not found.")
 
 MAX_PLACEHOLDER_ITERATIONS = 10
 
