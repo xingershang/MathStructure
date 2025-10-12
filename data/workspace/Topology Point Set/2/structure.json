@@ -1,114 +1,114 @@
 {
     "structure": [
-      {
-        "type": "Hint",
-        "text": "Lemma 13.1."
-      },
-      {
-        "type": "Fix",
-        "variable": [
-          "$X$",
-          "$\\mathcal{B}$",
-          "$\\mathcal{T}$"
-        ],
-        "condition": [
-          "$X$ is a set",
-          "$\\mathcal{B}$ is a basis for a topology $\\mathcal{T}$ on $X$"
-        ],
-        "scope": [
-          {
-            "type": "Show",
-            "proposition": [
-              "$\\mathcal{T}$ equals the collection of all unions of elements of $\\mathcal{B}$"
+        {
+            "type": "Hint",
+            "text": "Lemma 13.1."
+        },
+        {
+            "type": "Fix",
+            "variable": [
+                "$X$",
+                "$\\mathcal{B}$",
+                "$\\mathcal{T}$"
             ],
-            "method": [
-              "set equality"
+            "condition": [
+                "$X$ is a set",
+                "$\\mathcal{B}$ is a basis for a topology $\\mathcal{T}$ on $X$"
             ],
             "scope": [
-              {
-                "type": "Show",
-                "proposition": [
-                  "Any union of elements of $\\mathcal{B}$ is in $\\mathcal{T}$"
-                ],
-                "method": null,
-                "scope": [
-                  {
-                    "type": "Fix",
-                    "variable": [
-                      "$\\mathcal{C}$"
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "$\\mathcal{T}$ equals the collection of all unions of elements of $\\mathcal{B}$"
                     ],
-                    "condition": [
-                      "$\\mathcal{C}$ is a collection of elements of $\\mathcal{B}$"
+                    "method": [
+                        "set equality"
                     ],
                     "scope": [
-                      {
-                        "type": "Have",
-                        "claim": [
-                          "The elements of $\\mathcal{C}$ are also elements of $\\mathcal{T}$"
-                        ],
-                        "reason": null
-                      },
-                      {
-                        "type": "Have",
-                        "claim": [
-                          "The union of the elements of $\\mathcal{C}$ is in $\\mathcal{T}$"
-                        ],
-                        "reason": [
-                          "$\\mathcal{T}$ is a topology"
-                        ]
-                      }
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "Any union of elements of $\\mathcal{B}$ is in $\\mathcal{T}$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Fix",
+                                    "variable": [
+                                        "$\\mathcal{C}$"
+                                    ],
+                                    "condition": [
+                                        "$\\mathcal{C}$ is a collection of elements of $\\mathcal{B}$"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "The elements of $\\mathcal{C}$ are also elements of $\\mathcal{T}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "The union of the elements of $\\mathcal{C}$ is in $\\mathcal{T}$"
+                                            ],
+                                            "reason": [
+                                                "$\\mathcal{T}$ is a topology"
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "Any element of $\\mathcal{T}$ is a union of elements of $\\mathcal{B}$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Fix",
+                                    "variable": [
+                                        "$U$"
+                                    ],
+                                    "condition": [
+                                        "$U \\in \\mathcal{T}$"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "Obtain",
+                                            "obtained_variable": [
+                                                "collection $\\{B_x\\}_{x \\in U}$"
+                                            ],
+                                            "condition": [
+                                                "$\\forall x \\in U, B_x \\in \\mathcal{B}$",
+                                                "$\\forall x \\in U, x \\in B_x \\subset U$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$U = \\bigcup_{x \\in U} B_x$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$U$ equals a union of elements of $\\mathcal{B}$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     ]
-                  }
-                ]
-              },
-              {
-                "type": "Show",
-                "proposition": [
-                  "Any element of $\\mathcal{T}$ is a union of elements of $\\mathcal{B}$"
-                ],
-                "method": null,
-                "scope": [
-                  {
-                    "type": "Fix",
-                    "variable": [
-                      "$U$"
-                    ],
-                    "condition": [
-                      "$U \\in \\mathcal{T}$"
-                    ],
-                    "scope": [
-                      {
-                        "type": "Obtain",
-                        "obtained_variable": [
-                          "collection $\\{B_x\\}_{x \\in U}$"
-                        ],
-                        "condition": [
-                          "$\\forall x \\in U, B_x \\in \\mathcal{B}$",
-                          "$\\forall x \\in U, x \\in B_x \\subset U$"
-                        ],
-                        "reason": null
-                      },
-                      {
-                        "type": "Have",
-                        "claim": [
-                          "$U = \\bigcup_{x \\in U} B_x$"
-                        ],
-                        "reason": null
-                      },
-                      {
-                        "type": "Have",
-                        "claim": [
-                          "$U$ equals a union of elements of $\\mathcal{B}$"
-                        ],
-                        "reason": null
-                      }
-                    ]
-                  }
-                ]
-              }
+                }
             ]
-          }
-        ]
-      }
+        }
     ]
-  }
+}

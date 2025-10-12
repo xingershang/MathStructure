@@ -21,7 +21,201 @@
         "id": 1,
         "domain": "IMO",
         "informal": "## Goal\n\nLet $(a_{n})_{n\\geqslant1}$ be a sequence of positive real numbers with the property that $(a_{n+1})^2+a_na_{n+2}\\leqslant a_n+a_{n+2}$ for all positive integers $n$. Prove that $a_{2022}\\leqslant1$.\n\n## Proof\n\nWe begin by observing that $(a_{n+1})^{2}-1\\leqslant a_{n}+a_{n+2}-a_{n}a_{n+2}-1$, which is equivalent to $$(a_{n+1})^2-1\\leqslant(1-a_n)(a_{n+2}-1).$$ Suppose now that there exists a positive integer $n$ such that $a_{n+1}>1$ and $a_{n+2}>1$. Since $( a_{n+ 1}) ^{2}- 1$ $\\leqslant$ $( 1- a_{n}) ( a_{n+ 2}- 1)$ ,we deduce that $0 < 1- a_{n} < 1 < 1 + a_{n+ 2}$ ，thus $(a_{n+1})^{2}-1<(a_{n+2}+1)(a_{n+2}-1)=(a_{n+2})^{2}-1$.\n\nOn the other hand, $(a_{n+2})^{2}-1\\leqslant(1-a_{n+3})(a_{n+1}-1)$$<(1+a_{n+1})(a_{n+1}-1)=(a_{n+1})^{2}-1$, a contradiction. We have shown that we cannot have two consecutive terms,except maybe $a_1$ and $a_2$ ,strictly greater than 1.\n\nFinally, suppose $a_{2022}>1$. This implies that $a_{2021}\\leqslant1$ and $a_{2023}\\leqslant1$ . Therefore $0<(a_{2022})^{2}-1\\leqslant(1-a_{2021})(a_{2023}-1)\\leqslant0$, a contradiction. We conclude that $a_{2022}\\leqslant 1$.\n\n$Qed.$",
-        "structure": []
+        "structure": {
+            "structure": [
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$(a_n)_{n \\ge 1}$"
+                    ],
+                    "condition": [
+                        "$(a_n)_{n \\ge 1}$ is a sequence of positive real numbers",
+                        "$\\forall n \\in \\mathbb{Z}^+, (a_{n+1})^2+a_na_{n+2}\\leqslant a_n+a_{n+2}$"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "$a_{2022} \\le 1$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\forall n \\in \\mathbb{Z}^+, (a_{n+1})^2-1 \\le (1-a_n)(a_{n+2}-1)$"
+                                    ],
+                                    "reason": [
+                                        "observing that $(a_{n+1})^{2}-1\\leqslant a_{n}+a_{n+2}-a_{n}a_{n+2}-1$"
+                                    ]
+                                },
+                                {
+                                    "type": "Show",
+                                    "proposition": [
+                                        "We cannot have two consecutive terms, except maybe $a_1$ and $a_2$, strictly greater than 1."
+                                    ],
+                                    "method": [
+                                        "contradiction"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "Fix",
+                                            "variable": [
+                                                "$n$"
+                                            ],
+                                            "condition": [
+                                                "$n$ is a positive integer",
+                                                "$a_{n+1}>1$",
+                                                "$a_{n+2}>1$"
+                                            ],
+                                            "scope": [
+                                                {
+                                                    "type": "Have",
+                                                    "claim": [
+                                                        "$0 < 1- a_{n} < 1 < 1 + a_{n+ 2}$"
+                                                    ],
+                                                    "reason": [
+                                                        "$( a_{n+ 1}) ^{2}- 1 \\leqslant ( 1- a_{n}) ( a_{n+ 2}- 1)$"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "CalculationChain",
+                                                    "initial_expression": [
+                                                        "$(a_{n+1})^{2}-1$"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": "<",
+                                                            "expression": [
+                                                                "$(a_{n+2}+1)(a_{n+2}-1)$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "$(a_{n+2})^{2}-1$"
+                                                            ],
+                                                            "reason": null
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "CalculationChain",
+                                                    "initial_expression": [
+                                                        "$(a_{n+2})^{2}-1$"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": "<=",
+                                                            "expression": [
+                                                                "$(1-a_{n+3})(a_{n+1}-1)$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "<",
+                                                            "expression": [
+                                                                "$(1+a_{n+1})(a_{n+1}-1)$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "$(a_{n+1})^{2}-1$"
+                                                            ],
+                                                            "reason": null
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Have",
+                                                    "claim": [
+                                                        "contradiction"
+                                                    ],
+                                                    "reason": null
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Show",
+                                    "proposition": [
+                                        "$a_{2022} \\le 1$"
+                                    ],
+                                    "method": [
+                                        "contradiction"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "Assume",
+                                            "assumption": [
+                                                "$a_{2022}>1$"
+                                            ],
+                                            "scope": [
+                                                {
+                                                    "type": "Have",
+                                                    "claim": [
+                                                        "$a_{2021} \\le 1$",
+                                                        "$a_{2023} \\le 1$"
+                                                    ],
+                                                    "reason": null
+                                                },
+                                                {
+                                                    "type": "CalculationChain",
+                                                    "initial_expression": [
+                                                        "0"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": "<",
+                                                            "expression": [
+                                                                "$(a_{2022})^{2}-1$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "<=",
+                                                            "expression": [
+                                                                "$(1-a_{2021})(a_{2023}-1)$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "<=",
+                                                            "expression": [
+                                                                "0"
+                                                            ],
+                                                            "reason": null
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Have",
+                                                    "claim": [
+                                                        "contradiction"
+                                                    ],
+                                                    "reason": null
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$a_{2022} \\le 1$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 1,
@@ -1390,7 +1584,402 @@
         "id": 3,
         "domain": "IMO",
         "informal": "## Goal\n\nA number is called Norwegian if it has three distinct positive divisors whose sum is equal to $2022$. Show that the smallest Norwegian number is $1344$.\n(Note: The total number of positive divisors of a Norwegian number is allowed to be larger than 3.)\n\n## Proof\n\nObserve that $1344$ is a Norwegian number as $6$, $672$ and $1344$ are three distinct divisors of $1344$ and $6+672+1344=2022$. It remains to show that this is the smallest such number.\n\nAssume for contradiction that $N<1344$ is Norwegian and let $N/a,N/b$ and $N/c$ be the three distinct divisors of $N$, with $a<b<c.$ Then\n\n$$\n2022=N\\left(\\frac1a+\\frac1b+\\frac1c\\right)<1344\\left(\\frac1a+\\frac1b+\\frac1c\\right)\n$$\n\nand so\n\n$$\n\\left(\\frac1a+\\frac1b+\\frac1c\\right)>\\frac{2022}{1344}=\\frac{337}{224}=\\frac32+\\frac1{224}\n$$\n\nIf $a>1$ then\n\n$$\n\\begin{aligned}\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}\\leqslant\\frac{1}{2}+\\frac{1}{3}+\\frac{1}{4}=\\frac{13}{12}<\\frac{3}{2},\\end{aligned}\n$$\n\nso it must be the case that $a=1.$ Similarly, it must hold that $b<4$ since otherwise\n\n$$\n1+\\dfrac{1}{b}+\\dfrac{1}{c}\\leqslant1+\\dfrac{1}{4}+\\dfrac{1}{5}<\\dfrac{3}{2}\n$$\n\nThis leaves two cases to check, $b=2$ and $b=3$.\n\n$\\textbf{Case }b= 3.$ Then\n\n$$\n\\begin{aligned}\\frac1c>\\frac32+\\frac1{224}-1-\\frac13>\\frac16,\\end{aligned}\n$$\n\nso $c=4$ or $c=5.$ If $c=4$ then\n\n$$\n2022=N\\left(1+\\dfrac{1}{3}+\\dfrac{1}{4}\\right)=\\dfrac{19}{12}N\n$$\n\nbut this is impossible as $19\\not\\mid 2022$. If $c=5$ then\n\n$$\n2022=N\\left(1+\\frac13+\\frac15\\right)=\\frac{23}{15}N\n$$\n\nwhich again is impossible, as 23 $\\nmid2022.$\n\nCase $b=2.$ Note that $c<224$ since\n\n$$\n\\frac1c>\\frac32+\\frac1{224}-1-\\frac12=\\frac1{224}\n$$\n\nIt holds that\n\n$$\n2022=N\\left(1+\\frac12+\\frac1c\\right)=\\frac{3c+2}{2c}N\\Rightarrow(3c+2)N=4044c\n$$\n\nSince $(c,3c-2)=(c,2)\\in\\{1,2\\}$, then $3c+2\\mid8088=2^3\\cdot3\\cdot337$ which implies that $3c+2\\mid2^3\\cdot337.$ But since $3c+2\\geqslant3\\cdot3+2>8=2^3$ and $3c+2\\neq337$, then it must hold that $3c+2\\geqslant2\\cdot337$, contradicting $c<224.$\n\n$Qed.$\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-        "structure": []
+        "structure": {
+            "structure": [
+                {
+                    "type": "Define",
+                    "term": "Norwegian number",
+                    "definition": "A number is called Norwegian if it has three distinct positive divisors whose sum is equal to 2022."
+                },
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "The smallest Norwegian number is 1344"
+                    ],
+                    "method": null,
+                    "scope": [
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "1344 is a Norwegian number"
+                            ],
+                            "reason": [
+                                "6, 672 and 1344 are three distinct divisors of 1344",
+                                "6+672+1344=2022"
+                            ]
+                        },
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "1344 is the smallest Norwegian number"
+                            ],
+                            "method": [
+                                "contradiction"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Fix",
+                                    "variable": [
+                                        "$N$"
+                                    ],
+                                    "condition": [
+                                        "$N$ is a Norwegian number",
+                                        "$N$ is an integer",
+                                        "$N < 1344$"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "Fix",
+                                            "variable": [
+                                                "$a$",
+                                                "$b$",
+                                                "$c$"
+                                            ],
+                                            "condition": [
+                                                "$a, b, c$ are positive integers",
+                                                "$N/a, N/b, N/c$ are three distinct divisors of $N$",
+                                                "$a<b<c$"
+                                            ],
+                                            "scope": [
+                                                {
+                                                    "type": "CalculationChain",
+                                                    "initial_expression": [
+                                                        "$2022$"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "$N\\left(\\frac1a+\\frac1b+\\frac1c\\right)$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "<",
+                                                            "expression": [
+                                                                "$1344\\left(\\frac1a+\\frac1b+\\frac1c\\right)$"
+                                                            ],
+                                                            "reason": [
+                                                                "$N<1344$"
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "CalculationChain",
+                                                    "initial_expression": [
+                                                        "$\\left(\\frac1a+\\frac1b+\\frac1c\\right)$"
+                                                    ],
+                                                    "step": [
+                                                        {
+                                                            "operator": ">",
+                                                            "expression": [
+                                                                "$\\frac{2022}{1344}$"
+                                                            ],
+                                                            "reason": [
+                                                                "From $2022 < 1344\\left(\\frac1a+\\frac1b+\\frac1c\\right)$"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "$\\frac{337}{224}$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "operator": "=",
+                                                            "expression": [
+                                                                "$\\frac32+\\frac1{224}$"
+                                                            ],
+                                                            "reason": null
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Assume",
+                                                    "assumption": [
+                                                        "$a>1$"
+                                                    ],
+                                                    "scope": [
+                                                        {
+                                                            "type": "CalculationChain",
+                                                            "initial_expression": [
+                                                                "$\\frac{1}{a}+\\frac{1}{b}+\\frac{1}{c}$"
+                                                            ],
+                                                            "step": [
+                                                                {
+                                                                    "operator": "\\leqslant",
+                                                                    "expression": [
+                                                                        "$\\frac{1}{2}+\\frac{1}{3}+\\frac{1}{4}$"
+                                                                    ],
+                                                                    "reason": null
+                                                                },
+                                                                {
+                                                                    "operator": "=",
+                                                                    "expression": [
+                                                                        "$\\frac{13}{12}$"
+                                                                    ],
+                                                                    "reason": null
+                                                                },
+                                                                {
+                                                                    "operator": "<",
+                                                                    "expression": [
+                                                                        "$\\frac{3}{2}$"
+                                                                    ],
+                                                                    "reason": null
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Have",
+                                                    "claim": [
+                                                        "$a=1$"
+                                                    ],
+                                                    "reason": [
+                                                        "The case $a>1$ leads to a contradiction with $\\left(\\frac1a+\\frac1b+\\frac1c\\right) > \\frac32+\\frac1{224}$"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Assume",
+                                                    "assumption": [
+                                                        "$b \\ge 4$"
+                                                    ],
+                                                    "scope": [
+                                                        {
+                                                            "type": "CalculationChain",
+                                                            "initial_expression": [
+                                                                "$1+\\dfrac{1}{b}+\\dfrac{1}{c}$"
+                                                            ],
+                                                            "step": [
+                                                                {
+                                                                    "operator": "\\leqslant",
+                                                                    "expression": [
+                                                                        "$1+\\dfrac{1}{4}+\\dfrac{1}{5}$"
+                                                                    ],
+                                                                    "reason": null
+                                                                },
+                                                                {
+                                                                    "operator": "<",
+                                                                    "expression": [
+                                                                        "$\\frac{3}{2}$"
+                                                                    ],
+                                                                    "reason": null
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Have",
+                                                    "claim": [
+                                                        "$b<4$"
+                                                    ],
+                                                    "reason": [
+                                                        "The case $b \\ge 4$ leads to a contradiction with $\\left(1+\\frac1b+\\frac1c\\right) > \\frac32+\\frac1{224}$"
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Hint",
+                                                    "text": "This leaves two cases to check, $b=2$ and $b=3$."
+                                                },
+                                                {
+                                                    "type": "Assume",
+                                                    "assumption": [
+                                                        "$b=3$"
+                                                    ],
+                                                    "scope": [
+                                                        {
+                                                            "type": "CalculationChain",
+                                                            "initial_expression": [
+                                                                "$\\frac1c$"
+                                                            ],
+                                                            "step": [
+                                                                {
+                                                                    "operator": ">",
+                                                                    "expression": [
+                                                                        "$\\frac32+\\frac1{224}-1-\\frac13$"
+                                                                    ],
+                                                                    "reason": null
+                                                                },
+                                                                {
+                                                                    "operator": ">",
+                                                                    "expression": [
+                                                                        "$\\frac16$"
+                                                                    ],
+                                                                    "reason": null
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Have",
+                                                            "claim": [
+                                                                "$c=4$ or $c=5$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "type": "Assume",
+                                                            "assumption": [
+                                                                "$c=4$"
+                                                            ],
+                                                            "scope": [
+                                                                {
+                                                                    "type": "CalculationChain",
+                                                                    "initial_expression": [
+                                                                        "$2022$"
+                                                                    ],
+                                                                    "step": [
+                                                                        {
+                                                                            "operator": "=",
+                                                                            "expression": [
+                                                                                "$N\\left(1+\\dfrac{1}{3}+\\dfrac{1}{4}\\right)$"
+                                                                            ],
+                                                                            "reason": null
+                                                                        },
+                                                                        {
+                                                                            "operator": "=",
+                                                                            "expression": [
+                                                                                "$\\dfrac{19}{12}N$"
+                                                                            ],
+                                                                            "reason": null
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "Have",
+                                                                    "claim": [
+                                                                        "This is impossible"
+                                                                    ],
+                                                                    "reason": [
+                                                                        "$19\\not\\mid 2022$"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Assume",
+                                                            "assumption": [
+                                                                "$c=5$"
+                                                            ],
+                                                            "scope": [
+                                                                {
+                                                                    "type": "CalculationChain",
+                                                                    "initial_expression": [
+                                                                        "$2022$"
+                                                                    ],
+                                                                    "step": [
+                                                                        {
+                                                                            "operator": "=",
+                                                                            "expression": [
+                                                                                "$N\\left(1+\\frac13+\\frac15\\right)$"
+                                                                            ],
+                                                                            "reason": null
+                                                                        },
+                                                                        {
+                                                                            "operator": "=",
+                                                                            "expression": [
+                                                                                "$\\frac{23}{15}N$"
+                                                                            ],
+                                                                            "reason": null
+                                                                        }
+                                                                    ]
+                                                                },
+                                                                {
+                                                                    "type": "Have",
+                                                                    "claim": [
+                                                                        "This is impossible"
+                                                                    ],
+                                                                    "reason": [
+                                                                        "$23 \\nmid 2022$"
+                                                                    ]
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "type": "Assume",
+                                                    "assumption": [
+                                                        "$b=2$"
+                                                    ],
+                                                    "scope": [
+                                                        {
+                                                            "type": "Have",
+                                                            "claim": [
+                                                                "$c<224$"
+                                                            ],
+                                                            "reason": [
+                                                                "since $\\frac1c>\\frac32+\\frac1{224}-1-\\frac12=\\frac1{224}$"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "LogicChain",
+                                                            "initial_proposition": [
+                                                                "$2022=N\\left(1+\\frac12+\\frac1c\\right)=\\frac{3c+2}{2c}N$"
+                                                            ],
+                                                            "step": [
+                                                                {
+                                                                    "operator": "=>",
+                                                                    "proposition": [
+                                                                        "$(3c+2)N=4044c$"
+                                                                    ],
+                                                                    "reason": null
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Have",
+                                                            "claim": [
+                                                                "$3c+2\\mid8088=2^3\\cdot3\\cdot337$"
+                                                            ],
+                                                            "reason": [
+                                                                "Since $(c,3c+2)=(c,2)\\in\\{1,2\\}$"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Have",
+                                                            "claim": [
+                                                                "$3c+2\\mid2^3\\cdot337$"
+                                                            ],
+                                                            "reason": null
+                                                        },
+                                                        {
+                                                            "type": "Have",
+                                                            "claim": [
+                                                                "$3c+2\\geqslant2\\cdot337$"
+                                                            ],
+                                                            "reason": [
+                                                                "since $3c+2\\geqslant3\\cdot3+2>8=2^3$ and $3c+2\\neq337$"
+                                                            ]
+                                                        },
+                                                        {
+                                                            "type": "Have",
+                                                            "claim": [
+                                                                "Contradiction"
+                                                            ],
+                                                            "reason": [
+                                                                "This contradicts $c<224$"
+                                                            ]
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Hint",
+                            "text": "Qed."
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 3,
@@ -1797,8 +2386,222 @@
     {
         "id": 11,
         "domain": "IMO",
+        "quality": "checked",
         "informal": "## Goal\n\nProve that there exist infinitely many positive integers $n$ such that $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$.\n\n## Proof\n\nLet $p \\equiv 1 \\pmod{8}$ be a prime. The congruence $x^2 \\equiv -1 \\pmod{p}$ has two solutions in $[1, p-1]$ whose sum is $p$. If $n$ is the smaller one of them then $p$ divides $n^2 + 1$ and $n \\leq (p-1)/2$. We show that $p > 2n + \\sqrt{10n}$.\n\nLet $n = (p-1)/2 - \\ell$ where $\\ell \\geq 0$. Then $n^2 \\equiv -1 \\pmod{p}$ gives\n\n$$\n\\left(\\frac{p-1}{2} - \\ell\\right)^2 \\equiv -1 \\pmod{p}\n$$\n\nor\n\n$$\n(2\\ell + 1)^2 + 4 \\equiv 0 \\pmod{p}.\n$$\n\nThus $(2\\ell + 1)^2 + 4 = rp$ for some $r \\geq 0$. As $(2\\ell + 1)^2 \\equiv 1 \\pmod{8} \\equiv p \\pmod{8}$, we have $r \\equiv 5 \\pmod{8}$, so that $r \\geq 5$. Hence $(2\\ell + 1)^2 + 4 \\geq 5p$, implying $\\ell \\geq (\\sqrt{5p - 4} - 1)/2$. Set $\\sqrt{5p - 4} = u$ for clarity; then $\\ell \\geq (u - 1)/2$. Therefore\n\n$$\nn = \\frac{p-1}{2} - \\ell \\leq \\frac{1}{2} (p - u).\n$$\n\nCombined with $p = (u^2 + 4)/5$, this leads to $u^2 - 5u - 10n + 4 \\geq 0$. Solving this quadratic inequality with respect to $u \\geq 0$ gives $u \\geq (5 + \\sqrt{40n + 9})/2$. So the estimate $n \\leq (p - u)/2$ leads to\n\n$$\np \\geq 2n + u \\geq 2n + \\frac{1}{2}(5 + \\sqrt{40n + 9}) > 2n + \\sqrt{10n}.\n$$\n\nSince there are infinitely many primes of the form $8k + 1$, it follows easily that there are also infinitely many $n$ with the stated property.",
-        "structure": []
+        "structure": {
+            "structure": [
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "There exist infinitely many positive integers $n$ with the target property."
+                    ],
+                    "method": null,
+                    "scope": [
+                        {
+                            "type": "Define",
+                            "term": "the target property",
+                            "definition": "A positive integer $n$ has the target property if $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+                        },
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$p$"
+                            ],
+                            "condition": [
+                                "$p$ is a prime",
+                                "$p \\equiv 1 \\pmod{8}$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Define",
+                                    "term": "$n$",
+                                    "definition": "$n$ is the smaller solution in $[1, p-1]$ to the congruence $x^2 \\equiv -1 \\pmod{p}$, which has two solutions in this range whose sum is $p$."
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$p$ divides $n^2 + 1$",
+                                        "$n \\leq (p-1)/2$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Show",
+                                    "proposition": [
+                                        "$p > 2n + \\sqrt{10n}$"
+                                    ],
+                                    "method": null,
+                                    "scope": [
+                                        {
+                                            "type": "Define",
+                                            "term": "$\\ell$",
+                                            "definition": "$\\ell = (p-1)/2 - n$, where $\\ell \\geq 0$"
+                                        },
+                                        {
+                                            "type": "LogicChain",
+                                            "initial_proposition": [
+                                                "$n^2 \\equiv -1 \\pmod{p}$"
+                                            ],
+                                            "step": [
+                                                {
+                                                    "operator": "=>",
+                                                    "proposition": [
+                                                        "$\\left(\\frac{p-1}{2} - \\ell\\right)^2 \\equiv -1 \\pmod{p}$"
+                                                    ],
+                                                    "reason": null
+                                                },
+                                                {
+                                                    "operator": "<=>",
+                                                    "proposition": [
+                                                        "$(2\\ell + 1)^2 + 4 \\equiv 0 \\pmod{p}$"
+                                                    ],
+                                                    "reason": null
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Obtain",
+                                            "obtained_variable": [
+                                                "$r$"
+                                            ],
+                                            "condition": [
+                                                "$r \\geq 0$",
+                                                "$(2\\ell + 1)^2 + 4 = rp$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$r \\equiv 5 \\pmod{8}$"
+                                            ],
+                                            "reason": [
+                                                "$(2\\ell + 1)^2 \\equiv 1 \\pmod{8} \\equiv p \\pmod{8}$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$r \\geq 5$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$(2\\ell + 1)^2 + 4 \\geq 5p$"
+                                            ],
+                                            "reason": [
+                                                "$(2\\ell + 1)^2 + 4 = rp$",
+                                                "$r \\geq 5$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\ell \\geq (\\sqrt{5p - 4} - 1)/2$"
+                                            ],
+                                            "reason": [
+                                                "implying from $(2\\ell + 1)^2 + 4 \\geq 5p$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Define",
+                                            "term": "$u$",
+                                            "definition": "$u = \\sqrt{5p - 4}$"
+                                        },
+                                        {
+                                            "type": "CalculationChain",
+                                            "initial_expression": [
+                                                "$n$"
+                                            ],
+                                            "step": [
+                                                {
+                                                    "operator": "=",
+                                                    "expression": [
+                                                        "$\\frac{p-1}{2} - \\ell$"
+                                                    ],
+                                                    "reason": null
+                                                },
+                                                {
+                                                    "operator": "\\leq",
+                                                    "expression": [
+                                                        "$\\frac{1}{2} (p - u)$"
+                                                    ],
+                                                    "reason": [
+                                                        "$\\ell \\geq (u - 1)/2$"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$u^2 - 5u - 10n + 4 \\geq 0$"
+                                            ],
+                                            "reason": [
+                                                "Combined with $p = (u^2 + 4)/5$ and the estimate $n \\leq (p - u)/2$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$u \\geq (5 + \\sqrt{40n + 9})/2$"
+                                            ],
+                                            "reason": [
+                                                "Solving the quadratic inequality $u^2 - 5u - 10n + 4 \\geq 0$ with respect to $u \\geq 0$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "CalculationChain",
+                                            "initial_expression": [
+                                                "$p$"
+                                            ],
+                                            "step": [
+                                                {
+                                                    "operator": "\\geq",
+                                                    "expression": [
+                                                        "$2n + u$"
+                                                    ],
+                                                    "reason": [
+                                                        "from the estimate $n \\leq (p - u)/2$"
+                                                    ]
+                                                },
+                                                {
+                                                    "operator": "\\geq",
+                                                    "expression": [
+                                                        "$2n + \\frac{1}{2}(5 + \\sqrt{40n + 9})$"
+                                                    ],
+                                                    "reason": [
+                                                        "$u \\geq (5 + \\sqrt{40n + 9})/2$"
+                                                    ]
+                                                },
+                                                {
+                                                    "operator": ">",
+                                                    "expression": [
+                                                        "$2n + \\sqrt{10n}$"
+                                                    ],
+                                                    "reason": null
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "There are infinitely many $n$ with the target property."
+                            ],
+                            "reason": [
+                                "There are infinitely many primes of the form $8k + 1$."
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 12,
@@ -1815,8 +2618,195 @@
     {
         "id": 12,
         "domain": "IMO",
+        "quality": "checked",
         "informal": "## Goal\n\nLet $a, b, c$ be positive real numbers such that $\\frac{1}{a} + \\frac{1}{b} + \\frac{1}{c} = a + b + c$. Prove that\n\n$$\n\\frac{1}{(2a + b + c)^2} + \\frac{1}{(2b + c + a)^2} + \\frac{1}{(2c + a + b)^2} \\leq \\frac{3}{16}.\n$$\n\n## Proof\n\nFor positive real numbers $x, y, z$, from the arithmetic-geometric-mean inequality,\n\n$$\n2x + y + z = (x + y) + (x + z) \\geq 2\\sqrt{(x + y)(x + z)},\n$$\n\nwe obtain\n\n$$\n\\frac{1}{(2x + y + z)^2} \\leq \\frac{1}{4(x + y)(x + z)}.\n$$\n\nApplying this to the left-hand side terms of the inequality to prove, we get\n$$\n\\frac{1}{(2a + b + c)^2} + \\frac{1}{(2b + c + a)^2} + \\frac{1}{(2c + a + b)^2}\n$$\n\n$$\n\\leq \\frac{1}{4(a + b)(a + c)} + \\frac{1}{4(b + c)(b + a)} + \\frac{1}{4(c + a)(c + b)}\n$$\n\n$$\n= \\frac{(b + c) + (c + a) + (a + b)}{4(a + b)(b + c)(c + a)} = \\frac{a + b + c}{2(a + b)(b + c)(c + a)}\\tag{1}\n$$\n\nA second application of the inequality of the arithmetic-geometric mean yields\n\n$$\na^2b + a^2c + b^2a + b^2c + c^2a + c^2b \\geq 6abc,\n$$\n\nor, equivalently,\n\n$$\n9(a + b)(b + c)(c + a) \\geq 8(a + b + c)(ab + bc + ca). \\tag{2}\n$$\n\nThe supposition $\\frac{1}{a} + \\frac{1}{b} + \\frac{1}{c} = a + b + c$ can be written as\n$$\nab + bc + ca = abc(a + b + c). \\tag{3}\n$$\n\nApplying the arithmetic-geometric-mean inequality $x^2y^2 + x^2z^2 \\geq 2x^2yz$ thrice, we get\n\n$$\na^2b^2 + b^2c^2 + c^2a^2 \\geq a^2bc + ab^2c + abc^2,\n$$\n\nwhich is equivalent to\n\n$$\n(ab + bc + ca)^2 \\geq 3abc(a + b + c). \\tag{4}\n$$\n\nCombining (1), (2), (3), and (4), we will finish the proof:\n$$\n\\frac{a + b + c}{2(a + b)(b + c)(c + a)} = \\frac{(a + b + c)(ab + bc + ca)}{2(a + b)(b + c)(c + a)} \\cdot \\frac{ab + bc + ca}{abc(a + b + c)} = \\frac{abc(a + b + c)}{(ab + bc + ca)^2}\n$$\n\n$$\n\\leq \\frac{9}{2} \\cdot \\frac{1}{8} \\cdot \\frac{1}{3} = \\frac{3}{16}.\n$$\n",
-        "structure": []
+        "structure": {
+            "structure": [
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$a$",
+                        "$b$",
+                        "$c$"
+                    ],
+                    "condition": [
+                        "$a, b, c$ are positive real numbers",
+                        "$\\frac{1}{a} + \\frac{1}{b} + \\frac{1}{c} = a + b + c$"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "$\\frac{1}{(2a + b + c)^2} + \\frac{1}{(2b + c + a)^2} + \\frac{1}{(2c + a + b)^2} \\leq \\frac{3}{16}$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Fix",
+                                    "variable": [
+                                        "$x$",
+                                        "$y$",
+                                        "$z$"
+                                    ],
+                                    "condition": [
+                                        "$x, y, z$ are positive real numbers"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "CalculationChain",
+                                            "initial_expression": [
+                                                "$2x + y + z$"
+                                            ],
+                                            "step": [
+                                                {
+                                                    "operator": "=",
+                                                    "expression": [
+                                                        "$(x + y) + (x + z)$"
+                                                    ],
+                                                    "reason": null
+                                                },
+                                                {
+                                                    "operator": "\\geq",
+                                                    "expression": [
+                                                        "$2\\sqrt{(x + y)(x + z)}$"
+                                                    ],
+                                                    "reason": [
+                                                        "arithmetic-geometric-mean inequality"
+                                                    ]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\frac{1}{(2x + y + z)^2} \\leq \\frac{1}{4(x + y)(x + z)}$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$\\frac{1}{(2a + b + c)^2} + \\frac{1}{(2b + c + a)^2} + \\frac{1}{(2c + a + b)^2}$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "\\leq",
+                                            "expression": [
+                                                "$\\frac{1}{4(a + b)(a + c)} + \\frac{1}{4(b + c)(b + a)} + \\frac{1}{4(c + a)(c + b)}$"
+                                            ],
+                                            "reason": [
+                                                "Applying the inequality $\\frac{1}{(2x + y + z)^2} \\leq \\frac{1}{4(x + y)(x + z)}$ to each term"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\frac{(b + c) + (c + a) + (a + b)}{4(a + b)(b + c)(c + a)}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\frac{a + b + c}{2(a + b)(b + c)(c + a)}$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$a^2b + a^2c + b^2a + b^2c + c^2a + c^2b \\geq 6abc$"
+                                    ],
+                                    "reason": [
+                                        "A second application of the inequality of the arithmetic-geometric mean"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$9(a + b)(b + c)(c + a) \\geq 8(a + b + c)(ab + bc + ca)$"
+                                    ],
+                                    "reason": [
+                                        "equivalently from $a^2b + a^2c + b^2a + b^2c + c^2a + c^2b \\geq 6abc$"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$ab + bc + ca = abc(a + b + c)$"
+                                    ],
+                                    "reason": [
+                                        "The supposition $\\frac{1}{a} + \\frac{1}{b} + \\frac{1}{c} = a + b + c$ can be written in this form"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$a^2b^2 + b^2c^2 + c^2a^2 \\geq a^2bc + ab^2c + abc^2$"
+                                    ],
+                                    "reason": [
+                                        "Applying the arithmetic-geometric-mean inequality $x^2y^2 + x^2z^2 \\geq 2x^2yz$ thrice"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$(ab + bc + ca)^2 \\geq 3abc(a + b + c)$"
+                                    ],
+                                    "reason": [
+                                        "equivalent to $a^2b^2 + b^2c^2 + c^2a^2 \\geq a^2bc + ab^2c + abc^2$"
+                                    ]
+                                },
+                                {
+                                    "type": "Hint",
+                                    "text": "Combining $\\frac{(b + c) + (c + a) + (a + b)}{4(a + b)(b + c)(c + a)} = \\frac{a + b + c}{2(a + b)(b + c)(c + a)}$, $9(a + b)(b + c)(c + a) \\geq 8(a + b + c)(ab + bc + ca)$, $ab + bc + ca = abc(a + b + c)$, and $(ab + bc + ca)^2 \\geq 3abc(a + b + c)$, we will finish the proof"
+                                },
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$\\frac{a + b + c}{2(a + b)(b + c)(c + a)}$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\frac{(a + b + c)(ab + bc + ca)}{2(a + b)(b + c)(c + a)} \\cdot \\frac{ab + bc + ca}{abc(a + b + c)}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\frac{abc(a + b + c)}{(ab + bc + ca)^2}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "\\leq",
+                                            "expression": [
+                                                "$\\frac{9}{2} \\cdot \\frac{1}{8} \\cdot \\frac{1}{3}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\frac{3}{16}$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 13,

@@ -1,1 +1,214 @@
-[]
+{
+    "structure": [
+        {
+            "type": "Show",
+            "proposition": [
+                "There exist infinitely many positive integers $n$ with the target property."
+            ],
+            "method": null,
+            "scope": [
+                {
+                    "type": "Define",
+                    "term": "the target property",
+                    "definition": "A positive integer $n$ has the target property if $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+                },
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$p$"
+                    ],
+                    "condition": [
+                        "$p$ is a prime",
+                        "$p \\equiv 1 \\pmod{8}$"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Define",
+                            "term": "$n$",
+                            "definition": "$n$ is the smaller solution in $[1, p-1]$ to the congruence $x^2 \\equiv -1 \\pmod{p}$, which has two solutions in this range whose sum is $p$."
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "$p$ divides $n^2 + 1$",
+                                "$n \\leq (p-1)/2$"
+                            ],
+                            "reason": null
+                        },
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "$p > 2n + \\sqrt{10n}$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Define",
+                                    "term": "$\\ell$",
+                                    "definition": "$\\ell = (p-1)/2 - n$, where $\\ell \\geq 0$"
+                                },
+                                {
+                                    "type": "LogicChain",
+                                    "initial_proposition": [
+                                        "$n^2 \\equiv -1 \\pmod{p}$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=>",
+                                            "proposition": [
+                                                "$\\left(\\frac{p-1}{2} - \\ell\\right)^2 \\equiv -1 \\pmod{p}$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "<=>",
+                                            "proposition": [
+                                                "$(2\\ell + 1)^2 + 4 \\equiv 0 \\pmod{p}$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Obtain",
+                                    "obtained_variable": [
+                                        "$r$"
+                                    ],
+                                    "condition": [
+                                        "$r \\geq 0$",
+                                        "$(2\\ell + 1)^2 + 4 = rp$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$r \\equiv 5 \\pmod{8}$"
+                                    ],
+                                    "reason": [
+                                        "$(2\\ell + 1)^2 \\equiv 1 \\pmod{8} \\equiv p \\pmod{8}$"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$r \\geq 5$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$(2\\ell + 1)^2 + 4 \\geq 5p$"
+                                    ],
+                                    "reason": [
+                                        "$(2\\ell + 1)^2 + 4 = rp$",
+                                        "$r \\geq 5$"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\ell \\geq (\\sqrt{5p - 4} - 1)/2$"
+                                    ],
+                                    "reason": [
+                                        "implying from $(2\\ell + 1)^2 + 4 \\geq 5p$"
+                                    ]
+                                },
+                                {
+                                    "type": "Define",
+                                    "term": "$u$",
+                                    "definition": "$u = \\sqrt{5p - 4}$"
+                                },
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$n$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$\\frac{p-1}{2} - \\ell$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "\\leq",
+                                            "expression": [
+                                                "$\\frac{1}{2} (p - u)$"
+                                            ],
+                                            "reason": [
+                                                "$\\ell \\geq (u - 1)/2$"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$u^2 - 5u - 10n + 4 \\geq 0$"
+                                    ],
+                                    "reason": [
+                                        "Combined with $p = (u^2 + 4)/5$ and the estimate $n \\leq (p - u)/2$"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$u \\geq (5 + \\sqrt{40n + 9})/2$"
+                                    ],
+                                    "reason": [
+                                        "Solving the quadratic inequality $u^2 - 5u - 10n + 4 \\geq 0$ with respect to $u \\geq 0$"
+                                    ]
+                                },
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$p$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "\\geq",
+                                            "expression": [
+                                                "$2n + u$"
+                                            ],
+                                            "reason": [
+                                                "from the estimate $n \\leq (p - u)/2$"
+                                            ]
+                                        },
+                                        {
+                                            "operator": "\\geq",
+                                            "expression": [
+                                                "$2n + \\frac{1}{2}(5 + \\sqrt{40n + 9})$"
+                                            ],
+                                            "reason": [
+                                                "$u \\geq (5 + \\sqrt{40n + 9})/2$"
+                                            ]
+                                        },
+                                        {
+                                            "operator": ">",
+                                            "expression": [
+                                                "$2n + \\sqrt{10n}$"
+                                            ],
+                                            "reason": null
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "Have",
+                    "claim": [
+                        "There are infinitely many $n$ with the target property."
+                    ],
+                    "reason": [
+                        "There are infinitely many primes of the form $8k + 1$."
+                    ]
+                }
+            ]
+        }
+    ]
+}

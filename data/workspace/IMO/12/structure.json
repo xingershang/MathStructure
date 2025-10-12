@@ -1,1 +1,187 @@
-[]
+{
+    "structure": [
+        {
+            "type": "Fix",
+            "variable": [
+                "$a$",
+                "$b$",
+                "$c$"
+            ],
+            "condition": [
+                "$a, b, c$ are positive real numbers",
+                "$\\frac{1}{a} + \\frac{1}{b} + \\frac{1}{c} = a + b + c$"
+            ],
+            "scope": [
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "$\\frac{1}{(2a + b + c)^2} + \\frac{1}{(2b + c + a)^2} + \\frac{1}{(2c + a + b)^2} \\leq \\frac{3}{16}$"
+                    ],
+                    "method": null,
+                    "scope": [
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$x$",
+                                "$y$",
+                                "$z$"
+                            ],
+                            "condition": [
+                                "$x, y, z$ are positive real numbers"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "CalculationChain",
+                                    "initial_expression": [
+                                        "$2x + y + z$"
+                                    ],
+                                    "step": [
+                                        {
+                                            "operator": "=",
+                                            "expression": [
+                                                "$(x + y) + (x + z)$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "operator": "\\geq",
+                                            "expression": [
+                                                "$2\\sqrt{(x + y)(x + z)}$"
+                                            ],
+                                            "reason": [
+                                                "arithmetic-geometric-mean inequality"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\frac{1}{(2x + y + z)^2} \\leq \\frac{1}{4(x + y)(x + z)}$"
+                                    ],
+                                    "reason": null
+                                }
+                            ]
+                        },
+                        {
+                            "type": "CalculationChain",
+                            "initial_expression": [
+                                "$\\frac{1}{(2a + b + c)^2} + \\frac{1}{(2b + c + a)^2} + \\frac{1}{(2c + a + b)^2}$"
+                            ],
+                            "step": [
+                                {
+                                    "operator": "\\leq",
+                                    "expression": [
+                                        "$\\frac{1}{4(a + b)(a + c)} + \\frac{1}{4(b + c)(b + a)} + \\frac{1}{4(c + a)(c + b)}$"
+                                    ],
+                                    "reason": [
+                                        "Applying the inequality $\\frac{1}{(2x + y + z)^2} \\leq \\frac{1}{4(x + y)(x + z)}$ to each term"
+                                    ]
+                                },
+                                {
+                                    "operator": "=",
+                                    "expression": [
+                                        "$\\frac{(b + c) + (c + a) + (a + b)}{4(a + b)(b + c)(c + a)}$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "operator": "=",
+                                    "expression": [
+                                        "$\\frac{a + b + c}{2(a + b)(b + c)(c + a)}$"
+                                    ],
+                                    "reason": null
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "$a^2b + a^2c + b^2a + b^2c + c^2a + c^2b \\geq 6abc$"
+                            ],
+                            "reason": [
+                                "A second application of the inequality of the arithmetic-geometric mean"
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "$9(a + b)(b + c)(c + a) \\geq 8(a + b + c)(ab + bc + ca)$"
+                            ],
+                            "reason": [
+                                "equivalently from $a^2b + a^2c + b^2a + b^2c + c^2a + c^2b \\geq 6abc$"
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "$ab + bc + ca = abc(a + b + c)$"
+                            ],
+                            "reason": [
+                                "The supposition $\\frac{1}{a} + \\frac{1}{b} + \\frac{1}{c} = a + b + c$ can be written in this form"
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "$a^2b^2 + b^2c^2 + c^2a^2 \\geq a^2bc + ab^2c + abc^2$"
+                            ],
+                            "reason": [
+                                "Applying the arithmetic-geometric-mean inequality $x^2y^2 + x^2z^2 \\geq 2x^2yz$ thrice"
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "$(ab + bc + ca)^2 \\geq 3abc(a + b + c)$"
+                            ],
+                            "reason": [
+                                "equivalent to $a^2b^2 + b^2c^2 + c^2a^2 \\geq a^2bc + ab^2c + abc^2$"
+                            ]
+                        },
+                        {
+                            "type": "Hint",
+                            "text": "Combining $\\frac{(b + c) + (c + a) + (a + b)}{4(a + b)(b + c)(c + a)} = \\frac{a + b + c}{2(a + b)(b + c)(c + a)}$, $9(a + b)(b + c)(c + a) \\geq 8(a + b + c)(ab + bc + ca)$, $ab + bc + ca = abc(a + b + c)$, and $(ab + bc + ca)^2 \\geq 3abc(a + b + c)$, we will finish the proof"
+                        },
+                        {
+                            "type": "CalculationChain",
+                            "initial_expression": [
+                                "$\\frac{a + b + c}{2(a + b)(b + c)(c + a)}$"
+                            ],
+                            "step": [
+                                {
+                                    "operator": "=",
+                                    "expression": [
+                                        "$\\frac{(a + b + c)(ab + bc + ca)}{2(a + b)(b + c)(c + a)} \\cdot \\frac{ab + bc + ca}{abc(a + b + c)}$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "operator": "=",
+                                    "expression": [
+                                        "$\\frac{abc(a + b + c)}{(ab + bc + ca)^2}$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "operator": "\\leq",
+                                    "expression": [
+                                        "$\\frac{9}{2} \\cdot \\frac{1}{8} \\cdot \\frac{1}{3}$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "operator": "=",
+                                    "expression": [
+                                        "$\\frac{3}{16}$"
+                                    ],
+                                    "reason": null
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
