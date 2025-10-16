@@ -1,1 +1,87 @@
-[]
+{
+    "structure": [
+        {
+            "type": "Hint",
+            "text": "Theorem 16.3."
+        },
+        {
+            "type": "Fix",
+            "variable": [
+                "$X$",
+                "$Y$",
+                "$A$",
+                "$B$"
+            ],
+            "condition": [
+                "$X, Y$ are topological spaces",
+                "$A$ is a subspace of $X$",
+                "$B$ is a subspace of $Y$"
+            ],
+            "scope": [
+                {
+                    "type": "Show",
+                    "proposition": [
+                        "the product topology on $A \\times B$ is the same as the topology $A \\times B$ inherits as a subspace of $X \\times Y$"
+                    ],
+                    "method": null,
+                    "scope": [
+                        {
+                            "type": "Fix",
+                            "variable": [
+                                "$U$",
+                                "$V$"
+                            ],
+                            "condition": [
+                                "$U$ is an open set in $X$",
+                                "$V$ is an open set in $Y$"
+                            ],
+                            "scope": [
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$(U \\times V) \\cap (A \\times B)$ is a basis element for the subspace topology on $A \\times B$"
+                                    ],
+                                    "reason": [
+                                        "The set $U \\times V$ is a basis element for the product topology on $X \\times Y$"
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$(U \\times V) \\cap (A \\times B) = (U \\cap A) \\times (V \\cap B)$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "the set $(U \\cap A) \\times (V \\cap B)$ is a basis element for the product topology on $A \\times B$"
+                                    ],
+                                    "reason": [
+                                        "$U \\cap A$ and $V \\cap B$ are the general open sets for the subspace topologies on $A$ and $B$, respectively"
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "the bases for the subspace topology on $A \\times B$ and for the product topology on $A \\times B$ are the same"
+                            ],
+                            "reason": null
+                        },
+                        {
+                            "type": "Have",
+                            "claim": [
+                                "the product topology on $A \\times B$ is the same as the topology $A \\times B$ inherits as a subspace of $X \\times Y$"
+                            ],
+                            "reason": [
+                                "the bases for the subspace topology on $A \\times B$ and for the product topology on $A \\times B$ are the same"
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

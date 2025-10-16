@@ -2068,8 +2068,95 @@
     {
         "id": 4,
         "domain": "Topology Point Set",
+        "quality": "checked",
         "informal": "**Theorem 16.3.** *If $A$ is a subspace of $X$ and $B$ is a subspace of $Y$, then the product topology on $A \\times B$ is the same as the topology $A \\times B$ inherits as a subspace of $X \\times Y$.*\n\n*Proof.* The set $U \\times V$ is the general basis element for $X \\times Y$, where $U$ is open in $X$ and $V$ is open in $Y$. Therefore, $(U \\times V) \\cap (A \\times B)$ is the general basis element for the subspace topology on $A \\times B$. Now\n\n$$(U \\times V) \\cap (A \\times \\mathbf{B}) = (U \\cap A) \\times (V \\cap \\mathbf{B}).$$\n\nSince $U \\cap A$ and $V \\cap B$ are the general open sets for the subspace topologies on $A$ and $B$, respectively, the set $(U \\cap A) \\times (V \\cap B)$ is the general basis element for the product topology on $A \\times B$.\n\nThe conclusion we draw is that the bases for the subspace topology on $A \\times B$ and for the product topology on $A \\times B$ are the same. Hence the topologies are the same. ■\n\n",
-        "structure": []
+        "structure": {
+            "structure": [
+                {
+                    "type": "Hint",
+                    "text": "Theorem 16.3."
+                },
+                {
+                    "type": "Fix",
+                    "variable": [
+                        "$X$",
+                        "$Y$",
+                        "$A$",
+                        "$B$"
+                    ],
+                    "condition": [
+                        "$X, Y$ are topological spaces",
+                        "$A$ is a subspace of $X$",
+                        "$B$ is a subspace of $Y$"
+                    ],
+                    "scope": [
+                        {
+                            "type": "Show",
+                            "proposition": [
+                                "the product topology on $A \\times B$ is the same as the topology $A \\times B$ inherits as a subspace of $X \\times Y$"
+                            ],
+                            "method": null,
+                            "scope": [
+                                {
+                                    "type": "Fix",
+                                    "variable": [
+                                        "$U$",
+                                        "$V$"
+                                    ],
+                                    "condition": [
+                                        "$U$ is an open set in $X$",
+                                        "$V$ is an open set in $Y$"
+                                    ],
+                                    "scope": [
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$(U \\times V) \\cap (A \\times B)$ is a basis element for the subspace topology on $A \\times B$"
+                                            ],
+                                            "reason": [
+                                                "The set $U \\times V$ is a basis element for the product topology on $X \\times Y$"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$(U \\times V) \\cap (A \\times B) = (U \\cap A) \\times (V \\cap B)$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "the set $(U \\cap A) \\times (V \\cap B)$ is a basis element for the product topology on $A \\times B$"
+                                            ],
+                                            "reason": [
+                                                "$U \\cap A$ and $V \\cap B$ are the general open sets for the subspace topologies on $A$ and $B$, respectively"
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "the bases for the subspace topology on $A \\times B$ and for the product topology on $A \\times B$ are the same"
+                                    ],
+                                    "reason": null
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "the product topology on $A \\times B$ is the same as the topology $A \\times B$ inherits as a subspace of $X \\times Y$"
+                                    ],
+                                    "reason": [
+                                        "the bases for the subspace topology on $A \\times B$ and for the product topology on $A \\times B$ are the same"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
     },
     {
         "id": 5,
@@ -2391,17 +2478,17 @@
         "structure": {
             "structure": [
                 {
+                    "type": "Define",
+                    "term": "the target property",
+                    "definition": "A positive integer $n$ has the target property if $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+                },
+                {
                     "type": "Show",
                     "proposition": [
                         "There exist infinitely many positive integers $n$ with the target property."
                     ],
                     "method": null,
                     "scope": [
-                        {
-                            "type": "Define",
-                            "term": "the target property",
-                            "definition": "A positive integer $n$ has the target property if $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
-                        },
                         {
                             "type": "Fix",
                             "variable": [
@@ -2435,7 +2522,14 @@
                                         {
                                             "type": "Define",
                                             "term": "$\\ell$",
-                                            "definition": "$\\ell = (p-1)/2 - n$, where $\\ell \\geq 0$"
+                                            "definition": "$\\ell = (p-1)/2 - n$"
+                                        },
+                                        {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\ell \\geq 0$"
+                                            ],
+                                            "reason": null
                                         },
                                         {
                                             "type": "LogicChain",
@@ -2491,10 +2585,7 @@
                                             "claim": [
                                                 "$(2\\ell + 1)^2 + 4 \\geq 5p$"
                                             ],
-                                            "reason": [
-                                                "$(2\\ell + 1)^2 + 4 = rp$",
-                                                "$r \\geq 5$"
-                                            ]
+                                            "reason": null
                                         },
                                         {
                                             "type": "Have",
@@ -2511,6 +2602,13 @@
                                             "definition": "$u = \\sqrt{5p - 4}$"
                                         },
                                         {
+                                            "type": "Have",
+                                            "claim": [
+                                                "$\\ell \\geq (u - 1)/2$"
+                                            ],
+                                            "reason": null
+                                        },
+                                        {
                                             "type": "CalculationChain",
                                             "initial_expression": [
                                                 "$n$"
@@ -2524,7 +2622,7 @@
                                                     "reason": null
                                                 },
                                                 {
-                                                    "operator": "\\leq",
+                                                    "operator": "$\\leq$",
                                                     "expression": [
                                                         "$\\frac{1}{2} (p - u)$"
                                                     ],
@@ -2540,7 +2638,7 @@
                                                 "$u^2 - 5u - 10n + 4 \\geq 0$"
                                             ],
                                             "reason": [
-                                                "Combined with $p = (u^2 + 4)/5$ and the estimate $n \\leq (p - u)/2$"
+                                                "Combined with $p = (u^2 + 4)/5$"
                                             ]
                                         },
                                         {
@@ -2559,7 +2657,7 @@
                                             ],
                                             "step": [
                                                 {
-                                                    "operator": "\\geq",
+                                                    "operator": "$\\geq$",
                                                     "expression": [
                                                         "$2n + u$"
                                                     ],
@@ -2568,7 +2666,7 @@
                                                     ]
                                                 },
                                                 {
-                                                    "operator": "\\geq",
+                                                    "operator": "$\\geq$",
                                                     "expression": [
                                                         "$2n + \\frac{1}{2}(5 + \\sqrt{40n + 9})$"
                                                     ],

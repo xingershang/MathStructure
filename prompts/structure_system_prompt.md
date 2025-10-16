@@ -929,9 +929,8 @@ Propositions and hints in natural language often contain **abstract references**
 Common abstract references:
 - "the equality"
 - "the above equation"
-- "by (13.3)" (if (13.3) appears in the current text, not from other sources)
+- "by (13.3)" (if (13.3) appears in the current text, not from other sources. If it is from other sources, then this is not a abstract reference, we should keep it in hints)
 - "the above property"
-- "this fact"
 
 Mathematical texts might also label propositions or expressions with numbers, such as $f(x)=0\quad (1)$ and $g(x)=1\quad (2)$, and then refer to these labels, for instance, "Combining (1) and (2), we get...".
 
@@ -1035,6 +1034,51 @@ Combining equations (1) and (2), we get $f(x)+g(x)=1$.
 ```
 
 For references to numbered labels, we handle them as follows: in the nodes that assert the original propositions (`$f(x)=0$`), we do not store the labels `(1)` and `(2)`. When these labels are later referenced in a reason, we replace the reference with the full proposition that the label points to.
+
+#### Example 4
+
+**Natural language text:**
+"""
+...
+$f(x)=g(x)$ (1)
+$f(x)=h(x)$ (2)
+...
+Combining (1) and (2), we will finish the proof.
+g(x)=h(x)
+"""
+
+**Correct Structure:**
+```json
+...
+{
+  "type": "Have",
+  "claim": [
+    "$f(x)=g(x)$"
+  ],
+  "reason": null
+},
+{
+  "type": "Have",
+  "claim": [
+    "$f(x)=h(x)$"
+  ],
+  "reason": null
+},
+...
+{
+  "type": "Hint",
+  "text": "Combining $f(x)=g(x)$ and $f(x)=h(x)$, we will finish the proof:"
+},
+{
+  "type": "Have",
+  "claim": [
+    "$g(x)=h(x)$"
+  ],
+  "reason": null
+},
+```
+
+The Concrete-Reference Principle also applies to the content of Hint nodes. If a hint refers to numbered equations or other abstract references, these should be resolved just as they would be in a reason field. The goal is to make the entire structure, including its explanatory hints, as self-contained as possible.
 
 ### Accurate Node-Type Identification Principle
 
@@ -1484,8 +1528,93 @@ so it must be the case that $a=1.$
 }
 ```
 
-**Explanation:**
 In this case, the 'Wrong Structure' is of low quality because it collapses an entire logical argument into a single `reason` string. The 'Correct Structure' is far superior because it models the **form** of the argument: it shows the temporary `Assume`d premise, the `CalculationChain` performed under that assumption, and the resulting `Have` node stating the contradiction. This is a crucial application of the principle to avoid over-flattening and to faithfully represent the proof's structure.
+
+##### Example 5
+
+**Natural language text:**
+"""
+Prove that there exist infinitely many positive integers $n$ such that $n^2 + 1$ has a prime divisor greater than $2n + \sqrt{10n}$.
+Pf.
+Let $p \equiv 1 \pmod{8}$ be a prime. The congruence $x^2 \equiv -1 \pmod{p}$ has two solutions in $[1, p-1]$ whose sum is $p$. If $n$ is the smaller one of them then $p$ divides $n^2 + 1$ and $n \leq (p-1)/2$. We show that $p > 2n + \sqrt{10n}$.
+...
+"""
+
+**Wrong Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Show",
+      "proposition": [
+        "There exist infinitely many positive integers $n$ such that $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+      ],
+      "method": null,
+      "scope": [
+        {
+          "type": "Fix",
+          "variable": [
+            "$p$"
+          ],
+          "condition": [
+            "$p$ is a prime",
+            "$p \\equiv 1 \\pmod{8}$"
+          ],
+          "scope": [
+            {
+              "type": "Obtain",
+              "obtained_variable": [
+                "$n$"
+              ],
+              "condition": [
+                "$n$ is the smaller solution in $[1, p-1]$ to the congruence $x^2 \\equiv -1 \\pmod{p}$",
+                "$p$ divides $n^2 + 1$",
+                "$n \\leq (p-1)/2$"
+              ],
+              "reason": null
+            },
+            ...
+```
+
+While the facts in the above structure are mathematically correct, the structure itself is a misrepresentation of the author's reasoning. The text does not treat "$p$ divides $n^2 + 1$" and "$n \leq (p-1)/2$" as co-equal conditions for obtaining `$n$`. Instead, the text first **defines** `$n$` as the smaller solution, and **then** states that two properties follow as a consequence. The structure above has "over-flattened" this causal relationship.
+
+**Correct Structure**
+```json
+{
+  "structure": [
+    {
+      "type": "Show",
+      "proposition": [
+        "There exist infinitely many positive integers $n$ such that $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+      ],
+      "method": null,
+      "scope": [
+        {
+          "type": "Fix",
+          "variable": [
+            "$p$"
+          ],
+          "condition": [
+            "$p$ is a prime",
+            "$p \\equiv 1 \\pmod{8}$"
+          ],
+          "scope": [
+            {
+              "type": "Obtain",
+              "obtained_variable": [
+                "$n$"
+              ],
+              "condition": [
+                "$n$ is the smaller solution in $[1, p-1]$ to the congruence $x^2 \\equiv -1 \\pmod{p}$"
+              ],
+              "reason": null
+            },
+            {
+                "type": "Have",
+                "claim": ["$p$ divides $n^2 + 1$", "$n \\leq (p-1)/2$"],
+                "reason": null
+            }
+```
 
 ### Accurate Scoping Principle
 

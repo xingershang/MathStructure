@@ -1,17 +1,17 @@
 {
     "structure": [
         {
+            "type": "Define",
+            "term": "the target property",
+            "definition": "A positive integer $n$ has the target property if $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+        },
+        {
             "type": "Show",
             "proposition": [
                 "There exist infinitely many positive integers $n$ with the target property."
             ],
             "method": null,
             "scope": [
-                {
-                    "type": "Define",
-                    "term": "the target property",
-                    "definition": "A positive integer $n$ has the target property if $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
-                },
                 {
                     "type": "Fix",
                     "variable": [
@@ -45,7 +45,14 @@
                                 {
                                     "type": "Define",
                                     "term": "$\\ell$",
-                                    "definition": "$\\ell = (p-1)/2 - n$, where $\\ell \\geq 0$"
+                                    "definition": "$\\ell = (p-1)/2 - n$"
+                                },
+                                {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\ell \\geq 0$"
+                                    ],
+                                    "reason": null
                                 },
                                 {
                                     "type": "LogicChain",
@@ -101,10 +108,7 @@
                                     "claim": [
                                         "$(2\\ell + 1)^2 + 4 \\geq 5p$"
                                     ],
-                                    "reason": [
-                                        "$(2\\ell + 1)^2 + 4 = rp$",
-                                        "$r \\geq 5$"
-                                    ]
+                                    "reason": null
                                 },
                                 {
                                     "type": "Have",
@@ -121,6 +125,13 @@
                                     "definition": "$u = \\sqrt{5p - 4}$"
                                 },
                                 {
+                                    "type": "Have",
+                                    "claim": [
+                                        "$\\ell \\geq (u - 1)/2$"
+                                    ],
+                                    "reason": null
+                                },
+                                {
                                     "type": "CalculationChain",
                                     "initial_expression": [
                                         "$n$"
@@ -134,7 +145,7 @@
                                             "reason": null
                                         },
                                         {
-                                            "operator": "\\leq",
+                                            "operator": "$\\leq$",
                                             "expression": [
                                                 "$\\frac{1}{2} (p - u)$"
                                             ],
@@ -150,7 +161,7 @@
                                         "$u^2 - 5u - 10n + 4 \\geq 0$"
                                     ],
                                     "reason": [
-                                        "Combined with $p = (u^2 + 4)/5$ and the estimate $n \\leq (p - u)/2$"
+                                        "Combined with $p = (u^2 + 4)/5$"
                                     ]
                                 },
                                 {
@@ -169,7 +180,7 @@
                                     ],
                                     "step": [
                                         {
-                                            "operator": "\\geq",
+                                            "operator": "$\\geq$",
                                             "expression": [
                                                 "$2n + u$"
                                             ],
@@ -178,7 +189,7 @@
                                             ]
                                         },
                                         {
-                                            "operator": "\\geq",
+                                            "operator": "$\\geq$",
                                             "expression": [
                                                 "$2n + \\frac{1}{2}(5 + \\sqrt{40n + 9})$"
                                             ],

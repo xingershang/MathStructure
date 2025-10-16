@@ -28,12 +28,12 @@ The structure must faithfully preserve the information of the original text. It 
 
 ### **Principle 3: Concrete-Reference Principle**
 
-Abstract references should not appear.
+Abstract references should not appear in all nodes (including hints).
 
 Common abstract references:
 - "the equality"
 - "the above equation"
-- "by (13.3)" (if (13.3) appears in the current text, not from other sources)
+- "by (13.3)" (if (13.3) appears in the current text, not from other sources. If it is from other sources, then this is not a abstract reference, we should keep it in hints)
 - "the above property"
 
 **Scoring Rubric:**
@@ -226,8 +226,6 @@ Pf: Let $X \in \mathcal{P}(A)$. By definition of power set, $X \subseteq A$. We 
 
 **Natural language text:**
 """
-## Goal
-
 If there exists $ r > 0 $ such that for $ 0 < |x - x_0| < r $, we have $ g(x) \leq f(x) \leq h(x) $, and $ \lim_{x \to x_0} g(x) = \lim_{x \to x_0} h(x) = A $, then $ \lim_{x \to x_0} f(x) = A $.
 
 **Proof**: For any $ \epsilon > 0 $, since $ \lim_{x \to x_0} h(x) = A $, there exists $ \delta_1 > 0 $ such that for all $ x $ satisfying $ 0 < |x - x_0| < \delta_1 $,
@@ -386,6 +384,268 @@ Thus, $ \lim_{x \to x_0} f(x) = A $.
       "score": 5
     }
   }
+}
+```
+
+### Example 3
+
+**Natural language text:**
+"""
+Prove that there exist infinitely many positive integers $n$ such that $n^2 + 1$ has a prime divisor greater than $2n + \sqrt{10n}$.
+
+Pf.
+
+Let $p \equiv 1 \pmod{8}$ be a prime. The congruence $x^2 \equiv -1 \pmod{p}$ has two solutions in $[1, p-1]$ whose sum is $p$. If $n$ is the smaller one of them then $p$ divides $n^2 + 1$ and $n \leq (p-1)/2$. We show that $p > 2n + \sqrt{10n}$.
+
+Let $n = (p-1)/2 - \ell$ where $\ell \geq 0$. Then $n^2 \equiv -1 \pmod{p}$ gives
+
+$$
+\left(\frac{p-1}{2} - \ell\right)^2 \equiv -1 \pmod{p}
+$$
+
+or
+
+$$
+(2\ell + 1)^2 + 4 \equiv 0 \pmod{p}.
+$$
+
+Thus $(2\ell + 1)^2 + 4 = rp$ for some $r \geq 0$. As $(2\ell + 1)^2 \equiv 1 \pmod{8} \equiv p \pmod{8}$, we have $r \equiv 5 \pmod{8}$, so that $r \geq 5$. Hence $(2\ell + 1)^2 + 4 \geq 5p$, implying $\ell \geq (\sqrt{5p - 4} - 1)/2$. Set $\sqrt{5p - 4} = u$ for clarity; then $\ell \geq (u - 1)/2$. Therefore
+
+$$
+n = \frac{p-1}{2} - \ell \leq \frac{1}{2} (p - u).
+$$
+
+Combined with $p = (u^2 + 4)/5$, this leads to $u^2 - 5u - 10n + 4 \geq 0$. Solving this quadratic inequality with respect to $u \geq 0$ gives $u \geq (5 + \sqrt{40n + 9})/2$. So the estimate $n \leq (p - u)/2$ leads to
+
+$$
+p \geq 2n + u \geq 2n + \frac{1}{2}(5 + \sqrt{40n + 9}) > 2n + \sqrt{10n}.
+$$
+
+Since there are infinitely many primes of the form $8k + 1$, it follows easily that there are also infinitely many $n$ with the stated property.
+"""
+
+**Structure:**
+```json
+{
+  "structure": [
+    {
+      "type": "Show",
+      "proposition": [
+        "There exist infinitely many positive integers $n$ such that $n^2 + 1$ has a prime divisor greater than $2n + \\sqrt{10n}$."
+      ],
+      "method": null,
+      "scope": [
+        {
+          "type": "Fix",
+          "variable": [
+            "$p$"
+          ],
+          "condition": [
+            "$p$ is a prime",
+            "$p \\equiv 1 \\pmod{8}$"
+          ],
+          "scope": [
+            {
+              "type": "Obtain",
+              "obtained_variable": [
+                "$n$"
+              ],
+              "condition": [
+                "$n$ is the smaller solution in $[1, p-1]$ to the congruence $x^2 \\equiv -1 \\pmod{p}$",
+                "$p$ divides $n^2 + 1$",
+                "$n \\leq (p-1)/2$"
+              ],
+              "reason": null
+            },
+            {
+              "type": "Show",
+              "proposition": [
+                "$p > 2n + \\sqrt{10n}$"
+              ],
+              "method": null,
+              "scope": [
+                {
+                  "type": "Define",
+                  "term": "$\\ell$",
+                  "definition": "$\\ell = (p-1)/2 - n$"
+                },
+                {
+                  "type": "Have",
+                  "claim": [
+                    "$\\ell \\geq 0$"
+                  ],
+                  "reason": [
+                    "$n \\leq (p-1)/2$"
+                  ]
+                },
+                {
+                  "type": "Obtain",
+                  "obtained_variable": [
+                    "$r$"
+                  ],
+                  "condition": [
+                    "$r \\geq 0$",
+                    "$(2\\ell + 1)^2 + 4 = rp$"
+                  ],
+                  "reason": [
+                    "From $n^2 \\equiv -1 \\pmod{p}$ and the definition of $\\ell$, we have $(2\\ell + 1)^2 + 4 \\equiv 0 \\pmod{p}$"
+                  ]
+                },
+                {
+                  "type": "Have",
+                  "claim": [
+                    "$r \\equiv 5 \\pmod{8}$",
+                    "$r \\geq 5$"
+                  ],
+                  "reason": [
+                    "$(2\\ell + 1)^2 \\equiv 1 \\pmod{8}$",
+                    "$p \\equiv 1 \\pmod{8}$",
+                    "$(2\\ell + 1)^2 + 4 = rp$"
+                  ]
+                },
+                {
+                  "type": "Have",
+                  "claim": [
+                    "$(2\\ell + 1)^2 + 4 \\geq 5p$",
+                    "$\\ell \\geq (\\sqrt{5p - 4} - 1)/2$"
+                  ],
+                  "reason": [
+                    "$r \\geq 5$"
+                  ]
+                },
+                {
+                  "type": "Define",
+                  "term": "$u$",
+                  "definition": "$u = \\sqrt{5p - 4}$"
+                },
+                {
+                  "type": "Have",
+                  "claim": [
+                    "$\\ell \\geq (u - 1)/2$"
+                  ],
+                  "reason": null
+                },
+                {
+                  "type": "CalculationChain",
+                  "initial_expression": [
+                    "$n$"
+                  ],
+                  "step": [
+                    {
+                      "operator": "=",
+                      "expression": [
+                        "\\frac{p-1}{2} - \\ell"
+                      ],
+                      "reason": null
+                    },
+                    {
+                      "operator": "\\leq",
+                      "expression": [
+                        "\\frac{1}{2} (p - u)"
+                      ],
+                      "reason": null
+                    }
+                  ]
+                },
+                {
+                  "type": "Have",
+                  "claim": [
+                    "$u^2 - 5u - 10n + 4 \\geq 0$"
+                  ],
+                  "reason": [
+                    "Combined with $p = (u^2 + 4)/5$"
+                  ]
+                },
+                {
+                  "type": "Have",
+                  "claim": [
+                    "$u \\geq (5 + \\sqrt{40n + 9})/2$"
+                  ],
+                  "reason": [
+                    "Solving the quadratic inequality $u^2 - 5u - 10n + 4 \\geq 0$ with respect to $u \\geq 0$"
+                  ]
+                },
+                {
+                  "type": "CalculationChain",
+                  "initial_expression": [
+                    "$p$"
+                  ],
+                  "step": [
+                    {
+                      "operator": "\\geq",
+                      "expression": [
+                        "$2n + u$"
+                      ],
+                      "reason": [
+                        "the estimate $n \\leq (p - u)/2$"
+                      ]
+                    },
+                    {
+                      "operator": "\\geq",
+                      "expression": [
+                        "$2n + \\frac{1}{2}(5 + \\sqrt{40n + 9})$"
+                      ],
+                      "reason": [
+                        "$u \\geq (5 + \\sqrt{40n + 9})/2$"
+                      ]
+                    },
+                    {
+                      "operator": ">",
+                      "expression": [
+                        "$2n + \\sqrt{10n}$"
+                      ],
+                      "reason": null
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "Have",
+              "claim": [
+                "there are also infinitely many $n$ with the stated property"
+              ],
+              "reason": [
+                "there are infinitely many primes of the form $8k + 1$"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Evaluation:**
+```json
+{
+    "evaluation": {
+        "InformationEquivalency": {
+            "issues": "There are two instances of over-flattening the logical structure. First, the `Obtain` node for `r` collapses the derivation of `(2l+1)^2+4≡0(mod p)` into its `reason` field, instead of presenting it as a preceding `Have` node. Second, the `Have` node for `r >= 5` incorrectly lists `r ≡ 5 (mod 8)` as a parallel conclusion, when it should be a separate, preceding `Have` node, as the former is a direct consequence of the latter.",
+            "score": 3
+        },
+        "NoFreeVariables": {
+            "issues": "All variables (`p`, `n`, `l`, `r`, `u`) are properly introduced via `Fix`, `Obtain`, or `Define` nodes before they are used. There are no free variables at any level of the structure.",
+            "score": 5
+        },
+        "ConcreteReference": {
+            "issues": "The original text does not contain abstract references, so this principle is trivially satisfied.",
+            "score": 5
+        },
+        "AccurateNodeType": {
+            "issues": "The choice of nodes is generally correct. However, there is a moderate error in the first `Obtain` node for `n`. The text states 'If n is..., then p divides... and n <= ...'. This causal flow is not preserved. The structure incorrectly combines the definition of `n` and its consequences into a single `Obtain` node's `condition` field, which is a form of over-flattening.",
+            "score": 3
+        },
+        "AccurateScoping": {
+            "issues": "There is a major scoping error. The final `Have` node, 'there are also infinitely many n with the stated property', is a global conclusion that generalizes from the argument about a single `p`. It should be placed **outside** the `Fix {p}` scope, as its reasoning no longer depends on that specific, fixed prime. Placing it inside the `Fix {p}` scope is a fundamental misrepresentation of the proof's logical hierarchy.",
+            "score": 2
+        },
+        "LogicalClarification": {
+            "issues": "The structure does a good job of clarifying the logic in some places (e.g., separating the definition of `l` and the claim `l >= 0`). However, it misses the crucial clarification needed for the final `Have` node. It should have added a concrete reference for 'the stated property' by using the 'Define-and-Refer' pattern, which was not done.",
+            "score": 3
+        }
+    }
 }
 ```
 
